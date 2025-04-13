@@ -127,6 +127,33 @@
     <div class="specialty">Терапевт</div>
     <div class="specialty">Дерматолог</div>
     <div class="specialty">Хірург</div>
+    <div class="specialty">Офтальмолог</div>
+    <div class="specialty">Отоларинголог</div>
+    <div class="specialty">Уролог</div>
+    <div class="specialty">Травматолог</div>
+    <div class="specialty">Невропатолог</div>
+    <div class="specialty">Нарколог</div>
+    <div class="specialty">Онколог</div>
+    <div class="specialty">Ендокринолог</div>
+    <div class="specialty">Гастроентеролог</div>
+    <div class="specialty">Пульмонолог</div>
+    <div class="specialty">Ревматолог</div>
+    <div class="specialty">Алерголог</div>
+    <div class="specialty">Інфекціоніст</div>
+    <div class="specialty">Гінеколог</div>
+    <div class="specialty">Андролог</div>
+    <div class="specialty">Нефролог</div>
+    <div class="specialty">Гематолог</div>
+    <div class="specialty">Психіатр</div>
+    <div class="specialty">Психотерапевт</div>
+    <div class="specialty">Логопед</div>
+    <div class="specialty">Стоматолог</div>
+    <div class="specialty">Фізіотерапевт</div>
+    <div class="specialty">Мамолог</div>
+    <div class="specialty">Проктолог</div>
+    <div class="specialty">Венеролог</div>
+    <div class="specialty">Дієтолог</div>
+
   </div>
   <div class="choose-doctor-info">
     <h3>Як правильно обрати лікаря?</h3>

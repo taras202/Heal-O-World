@@ -11,12 +11,12 @@
 <body>
     <header>
         <div class="nav-buttons">
-            <a href="#">Головна</a>
-            <a href="#">Лікарі</a>
-            <a href="#">Про нас</a>
-            <a href="#">Контакти</a>
-            <a href="#">Вхід</a>
-            <a href="#">Реєстрація</a>
+            <a href="{{ route('landing') }}">Головна</a>
+            <a href="{{ route('doctor.index') }}">Лікарі</a>
+            <a href="{{ route('about') }}">Про нас</a>
+            <a href="{{ route('contact') }}">Контакти</a>
+            <a href>Вхід</a>
+            <a href>Реєстрація</a>
         </div>
     </header>
 
