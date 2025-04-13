@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('work_schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('doctor_id')->constrained('doctors');
+            $table->foreignId('doctor_id')->constrained('my_office_doctors')->onDelete('cascade');
             $table->string('day_of_the_week');
             $table->time('hours_with');
             $table->time('hours_after');

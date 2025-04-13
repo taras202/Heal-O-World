@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('diplomas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('doctor_id')->constrained('doctors');
+            $table->foreignId('doctor_id')->constrained('my_office_doctors')->onDelete('cascade');
             $table->string('title');
             $table->text('description');
             $table->string('foto');

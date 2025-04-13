@@ -8,8 +8,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('patient_list_allergic_reactions', function (Blueprint $table) {
-            $table->foreignId('patient_id')->constrained()->onDelete('cascade');
-            $table->foreignId('list_allergic_reactions_id')->constrained('list_allergic_reactions')->onDelete('cascade');
+            $table->id();
+            $table->foreignId('patient_id')->constrained('my_office_patients')->onDelete('cascade');
+            $table->unsignedBigInteger(column: 'list_allergic_reactions_id');
+            $table->foreign('list_allergic_reactions_id', 'patient_list_allergic_reactions_foreign')
+                  ->references('id')->on('list_allergic_reactions')->onDelete('cascade');
             $table->timestamps();
         });
     }

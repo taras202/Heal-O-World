@@ -6,22 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class HospitalRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
@@ -32,11 +22,6 @@ class HospitalRequest extends FormRequest
         ];
     }
 
-    /**
-     * Get custom error messages for validation rules.
-     *
-     * @return array
-     */
     public function messages()
     {
         return [
@@ -52,11 +37,6 @@ class HospitalRequest extends FormRequest
         ];
     }
 
-    /**
-     * Get custom attribute names for validation rules.
-     *
-     * @return array
-     */
     public function attributes()
     {
         return [

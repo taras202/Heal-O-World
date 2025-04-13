@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('patient_card', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('my_office_patient')->onDelete('cascade');
+            $table->foreignId('patient_id')->constrained('my_office_patients')->onDelete('cascade');
             $table->date('visit_date');
             $table->string('diagnosis');
             $table->text('notes')->nullable();

@@ -9,14 +9,12 @@ return new class extends Migration {
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
-            $table->foreignId('patient_id')->constrained()->onDelete('cascade');
+            $table->foreignId('doctor_id')->constrained('my_office_doctors')->onDelete('cascade');
+            $table->foreignId('patient_id')->constrained('my_office_patients')->onDelete('cascade');
             $table->decimal('transaction_amount', 10, 2); 
             $table->string('status');
             $table->timestamp('payment_date');
-            $table->foreignId('appointment_id')->nullable()->constrained()->onDelete('set null'); 
             $table->text('notes')->nullable();
-            $table->foreignId('transaction_id')->nullable()->constrained()->onDelete('set null'); 
             $table->timestamps();
         });
     }
