@@ -27,7 +27,7 @@ class MyOfficeDoctor extends Model
     
     public function hospital()
     {
-        return $this->belongsTo(Hospitals::class);
+        return $this->belongsTo(Hospital::class);
     }
 
     public $timestamps = true; 

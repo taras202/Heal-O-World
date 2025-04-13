@@ -24,8 +24,4 @@ class DoctorLanguage extends Model
         return $this->belongsTo(MyOfficeDoctor::class, 'doctor_id');
     }
 
-    public function language()
-    {
-        return $this->belongsTo(Language::class, 'language_id');
-    }
 }
