@@ -9,22 +9,8 @@
       font-family: 'Segoe UI', sans-serif;
     }
     body {
-      background-color: #f8f9fa;
+      background-color:rgb(255, 255, 255);
       color: #212529;
-    }
-    header {
-      background: #0d6efd;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
-    .nav-buttons a {
-      margin: 0 1rem;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
     }
     .search {
       margin-top: 1rem;
@@ -34,7 +20,7 @@
     .search input {
       padding: 0.5rem;
       width: 300px;
-      border: 1px solid #ced4da;
+      border: 1px solidrgb(4, 50, 95);
       border-radius: 5px;
     }
     .section {
@@ -49,7 +35,7 @@
       margin-top: 1rem;
     }
     .specialty {
-      background: #e9ecef;
+      background:rgb(152, 173, 194);
       border-radius: 50%;
       width: 100px;
       height: 100px;
@@ -67,7 +53,7 @@
       margin-top: 2rem;
     }
     .contact-button {
-      background: #0d6efd;
+      background:rgb(37, 79, 141);
       color: white;
       border: none;
       padding: 0.75rem 1.5rem;
@@ -75,9 +61,31 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
+    .btn-doctor-list {
+    background-color: rgb(37, 79, 141);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s ease-in-out;
+    display: inline-block;
+    }
+
+    .btn-doctor-list:hover {
+        background-color: rgb(37, 79, 141);
+    }
+
+    .btn-doctor-list:focus {
+        background-color: rgb(37, 79, 141);
+        outline: none;
+    }
+
     .modal {
       display: none;
       position: fixed;
+      z-index: 1000;
       top: 0;
       left: 0;
       width: 100vw;
@@ -98,18 +106,13 @@
       width: 100%;
       margin-bottom: 1rem;
       padding: 0.5rem;
-      border: 1px solid #ced4da;
+      border: 1px solidrgb(100, 105, 109);
       border-radius: 5px;
     }
-    .mission, .why-us, .reviews, footer {
+    .mission, .why-us, .reviews{
       padding: 2rem;
       background: white;
       margin-top: 1rem;
-    }
-    footer {
-      background: #343a40;
-      color: white;
-      text-align: center;
     }
   </style>
 @endsection
@@ -152,25 +155,15 @@
     <div class="specialty">Мамолог</div>
     <div class="specialty">Проктолог</div>
     <div class="specialty">Венеролог</div>
-    <div class="specialty">Дієтолог</div>
+  </div>
 
-  </div>
-  <div class="choose-doctor-info">
-    <h3>Як правильно обрати лікаря?</h3>
-    <p>Зверніть увагу на спеціалізацію, досвід та відгуки пацієнтів.</p>
-    <button class="contact-button" onclick="document.getElementById('modal').style.display='flex'">Зв'язатися</button>
-  </div>
+  {{-- Кнопка весь список лікарів --}}
+    <div class="doctor-list-button">
+        <a href="{{ route('doctor.index') }}" class="btn-doctor-list">
+            Весь список лікарів
+        </a>
+    </div>
 </section>
-
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h3>Зв'язатися з нами</h3>
-    <input type="text" placeholder="Ім'я">
-    <input type="tel" placeholder="Телефон">
-    <textarea rows="4" placeholder="Опис проблеми..."></textarea>
-    <button class="contact-button" onclick="document.getElementById('modal').style.display='none'">Надіслати</button>
-  </div>
-</div>
 
 <section class="mission">
   <h2>Наша місія</h2>
@@ -186,13 +179,28 @@
   </ul>
 </section>
 
+<section class="mission">
+    <div class="choose-doctor-info">
+        <h3>Як правильно обрати лікаря?</h3>
+        <p>Зверніть увагу на спеціалізацію, досвід та відгуки пацієнтів.</p>
+        <button class="contact-button" onclick="document.getElementById('modal').style.display='flex'">Зв'язатися</button>
+    </div>
+
+    <div class="modal" id="modal">
+    <div class="modal-content">
+        <h3>Зв'язатися з нами</h3>
+        <input type="text" placeholder="Ім'я">
+        <input type="tel" placeholder="Телефон">
+        <textarea rows="4" placeholder="Опис проблеми..."></textarea>
+        <button class="contact-button" onclick="document.getElementById('modal').style.display='none'">Надіслати</button>
+    </div>
+    </div>
+</section>
+
 <section class="reviews">
   <h2>Відгуки</h2>
   <p>"Дуже зручний сервіс, рекомендую всім!" - Ірина</p>
 </section>
 
-<footer>
-  <p>&copy; 2025 Heal-O-World. Всі права захищено.</p>
-</footer>
 @endsection
 

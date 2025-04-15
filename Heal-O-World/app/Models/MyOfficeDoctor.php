@@ -17,18 +17,20 @@ class MyOfficeDoctor extends Model
         'bio',
         'gender',
         'photo',
-        'hospital_id',
         'country_of_residence',
         'city_of_residence',
         'contact',
+        'workplace', 
+        'position',
         'time_zone',
     ];
 
-    
-    public function hospital()
-    {
-        return $this->belongsTo(Hospital::class);
-    }
+    public $timestamps = true;
 
-    public $timestamps = true; 
+    public function specialties()
+    {
+        return $this->belongsToMany(Specialty::class, 'doctor_specialty', 'doctor_id', 'specialty_id')
+                    ->withPivot('experience', 'price')
+                    ->withTimestamps();
+    }
 }

@@ -12,16 +12,20 @@ class DoctorSpecialty extends Model
     protected $table = 'doctor_specialty';
 
     protected $fillable = [
-        'doctors_id',
+        'doctor_id',
         'specialty_id',
         'experience',
     ];
 
-    
+    public $timestamps = true;
+
     public function doctor()
     {
-        return $this->belongsTo(MyOfficeDoctor::class, 'doctors_id');
+        return $this->belongsTo(MyOfficeDoctor::class, 'doctor_id');
     }
 
-    public $timestamps = true; 
+    public function specialty()
+    {
+        return $this->belongsTo(Specialty::class, 'specialty_id');
+    }
 }

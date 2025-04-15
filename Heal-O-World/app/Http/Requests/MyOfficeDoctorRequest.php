@@ -20,10 +20,11 @@ class MyOfficeDoctorRequest extends FormRequest
             'bio' => 'nullable|string',                    
             'gender' => 'nullable|string|in:male,female',  
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',  
-            'hospital_id' => 'nullable|exists:hospitals,id',  
             'country_of_residence' => 'nullable|string|max:255', 
             'city_of_residence' => 'nullable|string|max:255', 
-            'contact' => 'nullable|string|max:255',         
+            'contact' => 'nullable|string|max:255',   
+            'workplace' => 'nullable|string|max:255', 
+            'position' => 'nullable|string|max:255',      
             'time_zone' => 'nullable|string|max:255',       
         ];
     }

@@ -8,11 +8,20 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('doctor_specialty', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('doctors_id')->constrained('my_office_doctors')->onDelete('cascade');
-            $table->string('specialty_id');
-            $table->string('experience')->nullable();
+
+            $table->foreignId('doctor_id')
+                ->constrained('my_office_doctors')
+                ->onDelete('cascade'); 
+
+            $table->foreignId('specialty_id')
+                ->constrained('specialties')
+                ->onDelete('cascade'); 
+
+            $table->string('experience');
+            $table->decimal('price', 8, 2);
             $table->timestamps();
+
+            $table->primary(['doctor_id', 'specialty_id']);
         });
     }
 

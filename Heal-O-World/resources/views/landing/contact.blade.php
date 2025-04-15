@@ -16,22 +16,6 @@
             color: #212529;
         }
 
-        header {
-            background: #0d6efd;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: white;
-        }
-
-        .nav-buttons a {
-            margin: 0 1rem;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
         .about-container {
             padding: 30px;
             background-color: #f9f9f9;
@@ -60,14 +44,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-
-        footer {
-            background: #343a40;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-            margin-top: auto; 
-        }
     </style>
 @endsection
 
@@ -75,14 +51,9 @@
     <div class="about-container">
         <h1 class="about-header">Контакти</h1>
         <div class="about-content">
-            <p>
-                Ви можете записатися на консультацію через наш вебсайт або звернутися до нашого кол-центру для отримання додаткової інформації.
-            </p>
+           
 
         </div>
     </div>
 
-    <footer>
-        <p>&copy; 2025 Heal-O-World. Всі права захищено.</p>
-    </footer>
 @endsection
