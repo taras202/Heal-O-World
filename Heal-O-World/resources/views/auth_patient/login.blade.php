@@ -118,6 +118,6 @@
             <button type="submit" class="btn-primary">Увійти</button>
         </form>
         
-        <p class="mt-3">Ще немає акаунта? <a href="{{ route('register') }}">Повернутись</a></p>
+        <p class="mt-3">Ще немає акаунта? <a href="{{ route('login') }}">Повернутись</a></p>
     </div>
 @endsection
