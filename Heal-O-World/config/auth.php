@@ -36,11 +36,22 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
     ],
+
+    'patient' => [   
+        'driver' => 'session',
+        'provider' => 'patients', 
+    ],
+
+    'doctor' => [
+        'driver' => 'session',
+        'provider' => 'doctors',
+    ],
+],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -60,16 +71,22 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+    'users' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
     ],
+
+    'patients' => [  
+        'driver' => 'eloquent',
+        'model' => App\Models\Patient::class,  
+    ],
+
+    'doctors' => [
+        'driver' => 'eloquent',
+        'model' => App\Models\Doctor::class,
+    ],
+],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -93,6 +110,18 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'patients' => [
+            'provider' => 'patients',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'doctors' => [
+            'provider' => 'doctors',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

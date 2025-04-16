@@ -71,6 +71,74 @@
             margin: 0 auto;
         }
 
+        .role-selection-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 1rem 1rem 1rem 1rem;
+        }
+
+        .role-selection-container h2 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #0d3681;
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .role-buttons a {
+            background: linear-gradient(135deg, #1e60c2, #3c8dfc);
+            color: #fff;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-buttons a:hover {
+            background: linear-gradient(135deg, #154798, #2c72d4);
+            transform: translateY(-2px);
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #fff;
+            background-color: #1e60c2;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background-color: #154798;
+            color: #fff;
+            transform: translateY(-3px);  
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);  
+            text-decoration: none;
+        }
+
+        .back-button:active {
+            transform: translateY(1px);  
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
         footer {
             background: linear-gradient(180deg,rgb(13, 54, 129),rgb(39, 95, 151));
             color: white;
@@ -98,22 +166,21 @@
 <body>
     <header>
         <img src="{{ asset('images/logo.webp') }}" alt="GMS Logo" class="logo">
-        <div class="nav-buttons">
-            <a href="{{ route('landing') }}">Головна</a>
-            <a href="{{ route('doctor.index') }}">Лікарі</a>
-            <a href="{{ route('about') }}">Про нас</a>
-            <a href="{{ route('contact') }}">Контакти</a>
-            
-            <a href="{{ route('login') }}">Вхід</a>
-            
-            <a href="{{ route('register') }}">Реєстрація</a>
+        
+    </header>
+   
+    <div class="role-selection-container">
+        <h1>Авторизація</h1>
+        <h2>Оберіть ваш тип користувача</h2>
+
+        <div class="role-buttons">
+            <a href="{{ route('patient.login') }}"> Вхід як пацієнт</a>
+            <a href="{{ route('doctor.login') }}"> Вхід як лікар</a>
         </div>
-    </header>
 
-    
-    </header>
-
-    <main class="@yield('main-class')">
+        <a href="{{ route('landing') }}" class="back-button">← Повернутися на головну</a>
+    </div>
+    <main>
         @yield('content')
     </main>
 
