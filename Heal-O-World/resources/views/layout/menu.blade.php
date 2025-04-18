@@ -104,9 +104,16 @@
             <a href="{{ route('about') }}">Про нас</a>
             <a href="{{ route('contact') }}">Контакти</a>
             
-            <a href="{{ route('login') }}">Вхід</a>
-            
-            <a href="{{ route('register') }}">Реєстрація</a>
+            @if(Auth::check())
+                <form method="POST" action="{{ route('auth.logout') }}" style="display: inline;">
+                    @csrf
+                    <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; font: inherit;">
+                        Вихід
+                    </button>
+                </form>
+                @else
+                    <a href="{{ route('auth.select-role') }}">Вхід</a>
+                @endif
         </div>
     </header>
 

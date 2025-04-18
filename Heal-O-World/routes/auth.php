@@ -1,41 +1,31 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\auth\AuthController;
+use App\Http\Controllers\auth\RoleSelectionController;
+use App\Http\Controllers\auth\PatientRedirectController;
+use App\Http\Controllers\auth\DoctorRedirectController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthDoctorController;
-use App\Http\Controllers\AuthPatientController;
 
+    Route::get('/select-role', [RoleSelectionController::class, 'index'])->name('auth.select-role');
 
-
-    Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
-
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
+    Route::prefix('auth/doctor')->group(function () {
+        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.doctor.login.form')->defaults('role', 'doctor');
+        Route::post('/login', [AuthController::class, 'login'])->name('auth.doctor.login');
+        
+        Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.doctor.register.form')->defaults('role', 'doctor');
+        Route::post('/register', [AuthController::class, 'register'])->name('auth.doctor.register');
     });
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    
+    Route::prefix('auth/patient')->group(function () {
+        Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.patient.login.form')->defaults('role', 'patient');
+        Route::post('/login/{role}', [AuthController::class, 'login'])->name('auth.patient.login');
+        
+        Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.patient.register.form')->defaults('role', 'patient');
+        Route::post('/register/{role}', [AuthController::class, 'register'])->name('auth.patient.register');
 
-
-    Route::middleware(['guest'])->group(function () {
-        Route::get('/select-role', function () {
-            return view('auth.select-role');
-        })->name('select_role');
     });
+    
+    Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
-    Route::prefix('doctor')->middleware('guest')->group(function () {
-        Route::get('/register', [AuthDoctorController::class, 'showRegisterForm'])->name('doctor.register');
-        Route::post('/register', [AuthDoctorController::class, 'register']);
-        Route::get('/login', [AuthDoctorController::class, 'showLoginForm'])->name('doctor.login');
-        Route::post('/login', [AuthDoctorController::class, 'login']);
-    });
-
-    Route::prefix('patient')->middleware('guest')->group(function () {
-        Route::get('/register', [AuthPatientController::class, 'showRegisterForm'])->name('patient.register');
-        Route::post('/register', [AuthPatientController::class, 'register']);
-        Route::get('/login', [AuthPatientController::class, 'showLoginForm'])->name('patient.login');
-        Route::post('/login', [AuthPatientController::class, 'login']);
-        Route::post('/logout', [AuthPatientController::class, 'logout'])->name('patient.logout');
-    });
-
+    Route::get('/doctor-redirect', [DoctorRedirectController::class, 'index'])->name('doctor.redirect');
+    Route::get('/patient-redirect', [PatientRedirectController::class, 'index'])->name('patient.redirect');

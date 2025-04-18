@@ -62,8 +62,6 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
-        // Ваші кастомні middleware
-        'auth.patient' => \App\Http\Middleware\AuthenticatePatient::class,
-        'auth.doctor' => \App\Http\Middleware\AuthenticateDoctor::class,
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 }

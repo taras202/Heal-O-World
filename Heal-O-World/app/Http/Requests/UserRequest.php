@@ -18,6 +18,7 @@ class UserRequest extends FormRequest
             'email'    => 'required|email|unique:users,email',
             'status'   => 'nullable|string|max:50',
             'password' => 'required|string|min:6',
+            'role'     => 'required|in:doctor,patient', 
         ];
     }
 
@@ -29,6 +30,8 @@ class UserRequest extends FormRequest
             'email.unique'      => 'Цей емейл вже використовується.',
             'password.required' => 'Пароль обовʼязковий.',
             'password.min'      => 'Пароль має містити щонайменше 6 символів.',
+            'role.required'     => 'Роль обовʼязкова.',
+            'role.in'           => 'Невірна роль. Доступні ролі: doctor, patient.', 
         ];
     }
 }

@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Controllers\auth;
+
+use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+
+class AuthController 
+{
+    public function showLoginForm(Request $request)
+    {
+        $role = $request->route('role'); 
+        return view('auth.login', compact('role'));
+    }
+
+    public function showRegisterForm(Request $request)
+    {
+        $role = $request->route('role'); 
+        return view('auth.register', compact('role'));
+    }
+
+    public function register(UserRequest $request)
+    {
+        $role = $request->route('role');
+    
+        if (!$role) {
+            return redirect()->route('auth.select-role')->withErrors('Роль не визначена');
+        }
+    
+        $user = User::create([
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $role,
+        ]);
+    
+        Auth::login($user);
+    
+        return $this->redirectByRole($role); 
+    }
+
+    public function login(UserRequest $request)
+    {
+        $role = $request->route('role');
+    
+        if (!$role) {
+            return redirect()->route('auth.select-role')->withErrors('Роль не визначена');
+        }
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt(array_merge($credentials, ['role' => $role]))) {
+            return $this->redirectByRole($role);
+        }
+
+        return back()->withErrors(['email' => 'Невірні дані для входу']);
+    }
+
+    protected function redirectByRole($role)
+    {
+        return match ($role) {
+            'doctor' => redirect()->route('landing'),
+            'patient' => redirect()->route('landing'),
+            default => abort(403),
+        };
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('landing');
+    }
+}
