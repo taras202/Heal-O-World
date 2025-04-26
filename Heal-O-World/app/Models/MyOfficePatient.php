@@ -24,7 +24,13 @@ class MyOfficePatient extends Model
         'weight',
         'notes',
         'contact',
+        'user_id',
     ];
 
     public $timestamps = true; 
+
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class, 'patient_id');
+    }
 }

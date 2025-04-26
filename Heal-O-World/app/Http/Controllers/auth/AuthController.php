@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\auth;
 
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserLoginRequest;
+use App\Http\Requests\UserRegisterRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,7 @@ class AuthController
         return view('auth.register', compact('role'));
     }
 
-    public function register(UserRequest $request)
+    public function register(UserRegisterRequest $request)
     {
         $role = $request->route('role');
     
@@ -42,7 +43,7 @@ class AuthController
         return $this->redirectByRole($role); 
     }
 
-    public function login(UserRequest $request)
+    public function login(UserLoginRequest $request)
     {
         $role = $request->route('role');
     
@@ -61,8 +62,8 @@ class AuthController
     protected function redirectByRole($role)
     {
         return match ($role) {
-            'doctor' => redirect()->route('landing'),
-            'patient' => redirect()->route('landing'),
+            'doctor' => redirect()->route('doctor.office'),
+            'patient' => redirect()->route('patient.office'),
             default => abort(403),
         };
     }

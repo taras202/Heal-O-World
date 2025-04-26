@@ -20,7 +20,10 @@ return new class extends Migration {
             $table->integer('height');
             $table->integer('weight');
             $table->text('notes')->nullable();
-            $table->string('contact')->nullable(); 
+            $table->string('contact')->nullable();
+            
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            
             $table->timestamps();
         });
     }

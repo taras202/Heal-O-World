@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRequest extends FormRequest
+class UserLoginRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -15,10 +15,9 @@ class UserRequest extends FormRequest
     {
         return [
             'phone'    => 'nullable|string|max:20',
-            'email'    => 'required|email|unique:users,email',
+            'email' => 'required|email',
             'status'   => 'nullable|string|max:50',
             'password' => 'required|string|min:6',
-            'role'     => 'required|in:doctor,patient', 
         ];
     }
 
@@ -30,8 +29,6 @@ class UserRequest extends FormRequest
             'email.unique'      => 'Цей емейл вже використовується.',
             'password.required' => 'Пароль обовʼязковий.',
             'password.min'      => 'Пароль має містити щонайменше 6 символів.',
-            'role.required'     => 'Роль обовʼязкова.',
-            'role.in'           => 'Невірна роль. Доступні ролі: doctor, patient.', 
         ];
     }
 }

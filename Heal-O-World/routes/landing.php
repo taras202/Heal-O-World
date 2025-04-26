@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/landing', function () {return view('landing.landing');})->name('landing');

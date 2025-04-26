@@ -40,4 +40,12 @@ class User extends Authenticatable
     {
         return $this->role === 'patient';
     }
+    public function patient()
+    {
+        return $this->hasOne(MyOfficePatient::class); 
+    }
+    public function doctor()
+    {
+        return $this->hasOne(MyOfficeDoctor::class);
+    }
 }

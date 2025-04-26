@@ -9,9 +9,10 @@ class MyOfficeDoctor extends Model
 {
     use HasFactory;
 
-    protected $table = 'my_office_doctors'; 
+    protected $table = 'my_office_doctors';
 
     protected $fillable = [
+        'user_id',
         'first_name',
         'last_name',
         'bio',
@@ -20,17 +21,25 @@ class MyOfficeDoctor extends Model
         'country_of_residence',
         'city_of_residence',
         'contact',
-        'workplace', 
+        'workplace',
         'position',
         'time_zone',
     ];
 
-    public $timestamps = true;
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function specialties()
     {
         return $this->belongsToMany(Specialty::class, 'doctor_specialty', 'doctor_id', 'specialty_id')
                     ->withPivot('experience', 'price')
                     ->withTimestamps();
+    }
+
+    public function educations()
+    {
+        return $this->hasMany(Education::class, 'doctor_id');
     }
 }

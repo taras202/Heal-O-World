@@ -10,7 +10,6 @@ class MyOfficeDoctorsSeeder extends Seeder
 {
     public function run(): void
     {
-        // Створення 10 спеціалізацій
         $specialties = [
             'Терапевт',
             'Кардіолог',
@@ -24,12 +23,10 @@ class MyOfficeDoctorsSeeder extends Seeder
             'Стоматолог'
         ];
 
-        // Створюємо всі спеціалізації в базі даних
         foreach ($specialties as $specialtyName) {
             Specialty::create(['name' => $specialtyName]);
         }
 
-        // Дані лікарів
         $doctors = [
             [
                 'first_name' => 'Іван',
@@ -164,18 +161,15 @@ class MyOfficeDoctorsSeeder extends Seeder
         ];
 
 
-        // Створюємо лікарів
         foreach ($doctors as $doctorData) {
             $doctor = MyOfficeDoctor::create($doctorData);
 
-            // Випадкова кількість спеціальностей для кожного лікаря (від 1 до 3)
             $specialties = Specialty::inRandomOrder()->take(rand(1, 3))->pluck('id');
 
-            // Прив'язуємо спеціальності до лікаря з випадковою ціною
             foreach ($specialties as $specialtyId) {
                 $doctor->specialties()->attach($specialtyId, [
-                    'experience' => '7 років', // Ви можете змінити цей досвід для кожної спеціальності
-                    'price' => rand(200, 2000), // Генерація випадкової ціни від 200 до 2000
+                    'experience' => '7 років', 
+                    'price' => rand(200, 2000), 
                 ]);
             }
         }

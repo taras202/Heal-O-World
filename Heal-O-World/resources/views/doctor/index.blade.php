@@ -115,7 +115,6 @@
                     .then(html => {
                         document.querySelector('#doctors-list').innerHTML = html;
 
-                        // Активна кнопка
                         document.querySelectorAll('.filter-bar a').forEach(link => {
                             link.classList.remove('active');
                         });

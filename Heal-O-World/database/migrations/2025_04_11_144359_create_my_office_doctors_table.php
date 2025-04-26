@@ -9,6 +9,10 @@ return new class extends Migration {
     {
         Schema::create('my_office_doctors', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')
+            ->constrained()
+            ->onDelete('cascade')
+            ->unique();
             $table->string('first_name');
             $table->string('last_name');
             $table->text('bio')->nullable();
@@ -20,7 +24,6 @@ return new class extends Migration {
             $table->string('workplace')->nullable();
             $table->string('position')->nullable();
             $table->integer('time_zone');
-
             $table->timestamps();
         });
     }

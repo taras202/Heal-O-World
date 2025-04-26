@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Route;
 
     Route::prefix('auth/doctor')->group(function () {
         Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.doctor.login.form')->defaults('role', 'doctor');
-        Route::post('/login', [AuthController::class, 'login'])->name('auth.doctor.login');
+        Route::post('/login/{role}', [AuthController::class, 'login'])->name('auth.doctor.login');
         
         Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.doctor.register.form')->defaults('role', 'doctor');
-        Route::post('/register', [AuthController::class, 'register'])->name('auth.doctor.register');
+        Route::post('/register/{role}', [AuthController::class, 'register'])->name('auth.doctor.register');
     });
     
     Route::prefix('auth/patient')->group(function () {
