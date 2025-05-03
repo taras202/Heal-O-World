@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Doctor;
+use Illuminate\Support\Facades\DB;
 use App\Models\MyOfficeDoctor;
 use Illuminate\Http\Request;
 
@@ -10,10 +10,40 @@ class DoctorAdminController extends Controller
 {
 
     public function index()
-    {
-        $doctors = MyOfficeDoctor::all();
-        return view('admin.doctor.index', compact('doctors'));
+{
+    $doctors = MyOfficeDoctor::with(['specialties', 'educations', 'placeOfWork'])->get();
+
+    $monthlyDoctorData = DB::table('consultations')
+    ->selectRaw('doctor_id, DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as total')
+    ->groupBy('doctor_id', 'month')
+    ->get()
+    ->groupBy('doctor_id');
+
+
+
+    $doctorChartLabels = [];
+    $doctorChartDatasets = [];
+
+    foreach ($doctors as $doctor) {
+        $data = collect($monthlyDoctorData[$doctor->id] ?? []);
+        $months = $data->pluck('month')->unique()->sort()->values();
+        $doctorChartLabels = $doctorChartLabels + $months->all(); 
+
+        $dataset = [
+            'label' => $doctor->first_name . ' ' . $doctor->last_name,
+            'data' => [],
+        ];
+
+        foreach ($doctorChartLabels as $month) {
+            $value = $data->firstWhere('month', $month)->total ?? 0;
+            $dataset['data'][] = $value;
+        }
+
+        $doctorChartDatasets[] = $dataset;
     }
+
+    return view('admin.doctor.index', compact('doctors', 'doctorChartLabels', 'doctorChartDatasets'));
+}
 
     public function create()
     {

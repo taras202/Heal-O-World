@@ -59,4 +59,14 @@ class PatientAnalyticsController extends Controller
     ));
 }
 
+    public function index()
+    {
+        $patients = MyOfficePatient::all();
+
+        $months = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень'];
+        $consultationsData = [12, 18, 9, 24, 15];
+
+        return view('admin.patients.index', compact('patients', 'months', 'consultationsData'));
+    }
+
 }
