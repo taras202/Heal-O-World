@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class MyConsultationController extends Controller
 {
-    public function myConsultations(Request $request)
+    public function index(Request $request)
     {
         $user = auth()->user();
         $status = $request->query('status');
@@ -28,7 +28,7 @@ class MyConsultationController extends Controller
         return view('office-patient.consultation.patient-consultations', compact('consultations', 'status'));
     }    
 
-    public function showConsultation($id)
+    public function show($id)
     {
         $user = auth()->user();
     
@@ -36,7 +36,7 @@ class MyConsultationController extends Controller
     
         $consultation = $patient->consultations()->with('doctor')->findOrFail($id);
     
-        return view('office-patient.consultation.consultation-details', compact('consultation'));
+        return view('office-patient.consultation.consultation-show', compact('consultation'));
     }
     
 
@@ -53,6 +53,6 @@ class MyConsultationController extends Controller
         $consultation->status = 'cancelled';
         $consultation->save();
     
-        return redirect()->route('patient.office.consultations')->with('success', 'Консультацію скасовано.');
+        return redirect()->route('patient.consultations.index')->with('success', 'Консультацію скасовано.');
     }
 }

@@ -18,11 +18,7 @@ class MyOfficeDoctor extends Model
         'bio',
         'gender',
         'photo',
-        'country_of_residence',
-        'city_of_residence',
         'contact',
-        'workplace',
-        'position',
         'time_zone',
     ];
 
@@ -41,5 +37,13 @@ class MyOfficeDoctor extends Model
     public function educations()
     {
         return $this->hasMany(Education::class, 'doctor_id');
+    }
+    public function placeOfWork()
+    {
+        return $this->hasOne(PlaceOfWork::class, 'doctor_id');
+    }
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class, 'doctor_id');
     }
 }

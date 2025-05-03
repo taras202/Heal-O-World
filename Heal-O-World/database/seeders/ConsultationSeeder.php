@@ -15,7 +15,7 @@ class ConsultationSeeder extends Seeder
         for ($i = 0; $i < 5; $i++) {
             DB::table('consultations')->insert([
                 'patient_id' => 1,
-                'doctor_id' => 2,
+                'doctor_id' => 1,
                 'google_meet_link' => 'https://meet.google.com/' . Str::random(10),
                 'appointment_date' => now()->addDays(rand(1, 10))->format('Y-m-d'),
                 'consultation_time' => rand(9, 17) . ':00',

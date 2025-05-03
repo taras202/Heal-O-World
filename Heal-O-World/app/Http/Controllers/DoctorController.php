@@ -10,13 +10,13 @@ class DoctorController extends Controller
     public function index()
     {
         $doctors = MyOfficeDoctor::with('specialties')->get();
-        return view('doctor.index', compact('doctors'));
+        return view('doctor.open-view.index', compact('doctors'));
     }
 
     public function show($id)
     {
-        $doctor = MyOfficeDoctor::findOrFail($id);
-        return view('doctor.show', compact('doctor'));
+        $doctor = MyOfficeDoctor::with('placeOfWork')->findOrFail($id);
+        return view('doctor.open-view.show', compact('doctor'));
     }
 
     public function filter(Request $request)

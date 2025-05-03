@@ -31,8 +31,6 @@
                 </ul>
             @endif
 
-            <p><strong>Місто:</strong> {{ $doctor->city_of_residence }}</p>
-            <p><strong>Країна:</strong> {{ $doctor->country_of_residence }}</p>
             <p>{{ $doctor->bio }}</p>
             <p><strong>Контакт:</strong> {{ $doctor->contact ?? 'Немає' }}</p>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\officeDoctor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EducationRequest;
+use App\Http\Requests\MyOfficeDoctorRequest;
 use App\Models\Education;
 use App\Models\Specialty;
 use Illuminate\Http\Request;
@@ -25,45 +26,44 @@ class DoctorActivationController extends Controller
     public function editPersonalData()
     {
         $doctor = $this->getDoctor(); 
-        return view('doctor-activation.personal', compact('doctor'));
+        return view('doctor.doctor-activation.personal', compact('doctor'));
     }
 
-    public function updatePersonalData(Request $request)
+    public function updatePersonalData(MyOfficeDoctorRequest $request)
     {
         $user = Auth::user();
-    
-        $data = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name'  => 'required|string|max:255',
-            'bio'        => 'nullable|string',
-            'gender'     => 'nullable|string',
-            'photo'      => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'country_of_residence' => 'required|string|max:255',
-            'city_of_residence'    => 'required|string|max:255',
-            'contact'    => 'nullable|string|max:255',
-            'workplace'  => 'nullable|string|max:255',
-            'position'   => 'nullable|string|max:255',
-            'time_zone'  => 'required|integer',
-        ]);
+        
+        $data = $request->validated(); 
     
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('doctors');
         }
-    
-        $user->doctor()->updateOrCreate(
-            ['user_id' => $user->id], 
+        
+        $doctor = $user->doctor()->updateOrCreate(
+            ['user_id' => $user->id],
             $data
         );
+        
+        if ($request->has('workplace') && $request->has('position') && $request->has('country_of_residence') && $request->has('city_of_residence')) {
+            $doctor->placeOfWork()->updateOrCreate(
+                ['doctor_id' => $doctor->id], 
+                [
+                    'workplace' => $request->input('workplace'),
+                    'position' => $request->input('position'),
+                    'country_of_residence' => $request->input('country_of_residence'),
+                    'city_of_residence' => $request->input('city_of_residence')
+                ]
+            );
+        }
     
         return redirect()->route('activation.specialties');
-    }
-    
+    }    
 
     public function editSpecialties()
     {
         $specialties = Specialty::all();
         $doctor = $this->getDoctor(); 
-        return view('doctor-activation.specialties', compact('specialties', 'doctor'));
+        return view('doctor.doctor-activation.specialties', compact('specialties', 'doctor'));
     }
 
     public function updateSpecialties(Request $request)
@@ -92,7 +92,7 @@ class DoctorActivationController extends Controller
     public function editEducation()
     {
         $doctor = $this->getDoctor();
-        return view('doctor-activation.education', compact('doctor'));
+        return view('doctor.doctor-activation.education', compact('doctor'));
     }
 
     public function updateEducation(EducationRequest $request)
@@ -137,6 +137,6 @@ class DoctorActivationController extends Controller
             return redirect()->route('activation.education');
         }
     
-        return view('office-doctor.doctor-office', compact('user'));
+        return view('doctor.office-doctor.doctor-office', compact('user'));
     }
 }

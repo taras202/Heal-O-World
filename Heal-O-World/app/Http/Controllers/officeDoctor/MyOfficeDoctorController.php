@@ -3,14 +3,86 @@
 namespace App\Http\Controllers\officeDoctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\Education;
+use App\Models\MyOfficeDoctor;
+use App\Models\PlaceOfWork;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class MyOfficeDoctorController extends Controller
 {
     public function index()
     {  
         $user = Auth::user();
-
-        return view('office-doctor.doctor-office', ['user' => Auth::user()]);
-    }
+        $doctor = MyOfficeDoctor::with(['specialties', 'educations', 'placeOfWork'])
+                    ->where('user_id', $user->id)
+                    ->first();
+    
+        return view('doctor.office-doctor.doctor-office', [
+            'user' => $user,
+            'doctor' => $doctor,
+        ]);
+    }   
+    public function update(Request $request)
+    {
+        $user = Auth::user();
+        $doctor = MyOfficeDoctor::where('user_id', $user->id)->firstOrFail();
+    
+        $request->validate([
+            'photo' => 'nullable|image|max:2048',
+        ]);
+    
+        $doctor->update($request->only([
+            'first_name',
+            'last_name',
+            'bio',
+            'gender',
+            'contact',
+            'time_zone',
+        ]));
+    
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('photo', 'public');
+            $doctor->photo = $path;
+            $doctor->save();
+        }
+    
+        if ($request->has('specialties')) {
+            foreach ($request->input('specialties') as $specData) {
+                if (isset($specData['id'])) {
+                    $doctor->specialties()->updateExistingPivot($specData['id'], [
+                        'experience' => $specData['experience'] ?? 0,
+                        'price' => $specData['price'] ?? 0,
+                    ]);
+                }
+            }
+        }
+    
+        if ($request->has('educations')) {
+            foreach ($request->input('educations') as $eduData) {
+                if (isset($eduData['id'])) {
+                    $education = Education::where('id', $eduData['id'])->where('doctor_id', $doctor->id)->first();
+                    if ($education) {
+                        $education->update([
+                            'institution' => $eduData['institution'] ?? '',
+                            'degree' => $eduData['degree'] ?? '',
+                            'start_year' => $eduData['start_year'] ?? '',
+                            'end_year' => $eduData['end_year'] ?? '',
+                        ]);
+                    }
+                }
+            }
+        }
+    
+        $place = $doctor->placeOfWork;
+        if (!$place) {
+            $place = new PlaceOfWork(['doctor_id' => $doctor->id]);
+        }
+    
+        $place->fill($request->input('place_of_work', []));
+        $place->doctor_id = $doctor->id;
+        $place->save();
+    
+        return redirect()->back()->with('success', 'Профіль оновлено успішно.');
+    }    
 }

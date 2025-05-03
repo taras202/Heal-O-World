@@ -1,4 +1,4 @@
-@extends('layout.menu-consultation')
+@extends('layout.menu-consultation-patient')
 
 @section('content')
 <style> 
@@ -99,7 +99,7 @@
                     <p><strong>Лікар:</strong> {{ $consultation->doctor->full_name ?? '—' }}</p>
                     <p><strong>Статус:</strong> {{ ucfirst($consultation->status) }}</p>
                 </div>
-                <a href="{{ route('consultation.view', $consultation->id) }}" class="btn-outline">Детальніше</a>
+                <a href="{{ route('patient.consultations.show', $consultation->id) }}" class="btn-outline">Детальніше</a>
             </li>
         @empty
             <p class="empty-message">Консультацій не знайдено.</p>

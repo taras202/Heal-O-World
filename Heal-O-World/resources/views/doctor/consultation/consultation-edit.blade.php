@@ -1,4 +1,4 @@
-@extends('layout.menu')
+@extends('layout.menu-consultation-doctor')
 
 @section('content')
     <h2>Редагувати консультацію</h2>

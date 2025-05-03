@@ -220,9 +220,10 @@
                 <li class="{{ request()->routeIs('patient.office') ? 'active' : '' }}">
                     <a href="{{ route('patient.office') }}">Мій профіль</a>
                 </li>
-                <li class="{{ request()->routeIs('patient.office.consultations') ? 'active' : '' }}">
-                    <a href="{{ route('patient.office.consultations') }}">Мої консультації</a>
+                <li class="{{ request()->routeIs('patient.consultations.index') ? 'active' : '' }}">
+                    <a href="{{ route('patient.consultations.index') }}">Мої консультації</a>
                 </li>
+
                 <li>Карта пацієнта</li>
                 <li>Обране</li>
                 <li>Баланс</li>

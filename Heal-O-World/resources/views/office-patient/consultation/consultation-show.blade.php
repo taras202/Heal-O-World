@@ -1,4 +1,4 @@
-@extends('layout.menu-consultation')
+@extends('layout.menu-consultation-patient')
 
 <style>
     .consultation-details {
@@ -71,7 +71,7 @@
         <li><strong>Дата:</strong> {{ \Carbon\Carbon::parse($consultation->appointment_date)->format('d.m.Y') }}</li>
         <li><strong>Час:</strong> {{ $consultation->consultation_time }}</li>
         <li><strong>Статус:</strong> {{ ucfirst($consultation->status) }}</li>
-        <li><strong>Лікар:</strong> {{ $consultation->doctor->full_name ?? '—' }}</li>
+        <li><strong>Лікар:</strong> {{ $consultation->doctor->first_name ?? '—' }} {{ $consultation->doctor->last_name ?? '' }}</li>
         <li><strong>Діагноз:</strong> {{ $consultation->diagnosis ?? 'Немає' }}</li>
         <li><strong>Призначення:</strong> {{ $consultation->prescription ?? 'Немає' }}</li>
         <li><strong>Лікування:</strong> {{ $consultation->treatment ?? 'Немає' }}</li>
@@ -85,10 +85,10 @@
         </li>
     </ul>
 
-    <a href="{{ route('patient.office.consultations') }}" class="btn-outline">← Назад</a>
+    <a href="{{ route('patient.consultations.index') }}" class="btn-outline">← Назад</a>
 
     @if($consultation->status !== 'cancelled')
-        <form method="POST" action="{{ route('consultation.cancel', $consultation->id) }}" onsubmit="return confirm('Ви впевнені, що хочете скасувати консультацію?')" style="display:inline;">
+        <form method="POST" action="{{ route('patient.consultations.cancel', $consultation->id) }}" onsubmit="return confirm('Ви впевнені, що хочете скасувати консультацію?')" style="display:inline;">
             @csrf
             <button type="submit" class="btn-outline text-red-600">Скасувати консультацію</button>
         </form>

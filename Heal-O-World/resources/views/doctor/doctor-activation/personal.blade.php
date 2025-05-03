@@ -2,66 +2,76 @@
 
 @section('content')
 
+@section('styles')
 <style>
-  .stepper {
-    border-left: 3px solid #d1d5db;
-    padding-left: 20px;
-    margin-left: 20px;
-    margin-top: 50px;
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f9fafb;
   }
 
-  .step {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
+  .form-container {
+    background: white;
+    padding: 3rem;
+    border-radius: 2rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+    border: 1px solid #bfdbfe;
   }
 
-  .circle {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+  input[type="text"],
+  input[type="number"],
+  input[type="file"],
+  select,
+  textarea {
+    border-radius: 1rem;
+    border: 1px solid #d1d5db;
+    padding: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    background: #f9fafb;
+  }
+
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="file"]:focus,
+  select:focus,
+  textarea:focus {
+    border-color: #3b82f6;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    outline: none;
+  }
+
+  button[type="submit"] {
     background: #d1d5db;
+    border: none;
+    padding: 1rem;
+    width: 100%;
+    font-size: 1.25rem;
+    font-weight: 700;
     color: white;
-    text-align: center;
-    line-height: 30px;
-    font-weight: bold;
-    margin-right: 15px;
-    flex-shrink: 0;
+    border-radius: 1rem;
+    transition: background 0.3s ease;
   }
 
-  .step span {
-    color: #4b5563;
-    font-size: 16px;
+  button[type="submit"]:hover {
+    background: #d1d5db;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
   }
 
-  .step.active .circle {
-    background: #3b82f6;
-  }
-
-  .step.active span {
-    font-weight: 600;
-    color: #3b82f6;
+  /* Адаптивність */
+  @media (max-width: 1024px) {
+    .stepper {
+      display: none;
+    }
   }
 </style>
+@endsection
 
 <div class="flex min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
 
-    <!-- Сторона: Stepper -->
-    <div class="hidden lg:flex w-1/4 justify-center">
-        <div class="stepper">
-            <div class="step active">
-                <div class="circle">1</div>
-                <span>Персональні дані</span>
-            </div>
-            <div class="step">
-                <div class="circle">2</div>
-                <span>Додаткові відомості</span>
-            </div>
-            <div class="step">
-                <div class="circle">3</div>
-                <span>Підтвердження</span>
-            </div>
-        </div>
+    <!-- Компонент з лівої сторони -->
+    <div class="flex-shrink-0 w-1/4 p-6">
+        @include('components.activation-steps', ['step' => 1])
     </div>
 
     <!-- Сторона: Форма -->
@@ -70,8 +80,17 @@
             <h2 class="text-4xl font-bold text-center text-blue-700 mb-10">
                 Заповніть персональні дані
             </h2>
+            @if ($errors->any())
+                <div class="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
+                    <ul class="list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-            <form method="POST" enctype="multipart/form-data" action="{{ url('/activation/personal-data') }}" class="space-y-10">
+            <form method="POST" enctype="multipart/form-data" action="{{ route('activation.personal') }}" class="space-y-10">
                 @csrf
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -114,20 +133,6 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div>
-                        <label for="country_of_residence" class="block text-base font-medium text-gray-700">Країна</label>
-                        <input type="text" name="country_of_residence" id="country_of_residence" placeholder="Україна"
-                            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
-                    </div>
-
-                    <div>
-                        <label for="city_of_residence" class="block text-base font-medium text-gray-700">Місто</label>
-                        <input type="text" name="city_of_residence" id="city_of_residence" placeholder="Київ"
-                            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-                    <div>
                         <label for="contact" class="block text-base font-medium text-gray-700">Контактний телефон</label>
                         <input type="text" name="contact" id="contact" placeholder="+380..."
                             class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
@@ -136,6 +141,35 @@
                     <div>
                         <label for="time_zone" class="block text-base font-medium text-gray-700">Часовий пояс</label>
                         <input type="number" name="time_zone" id="time_zone" placeholder="+2"
+                            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
+                    </div>
+                </div>
+
+                <!-- Поля з PlaceOfWork -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div>
+                        <label for="workplace" class="block text-base font-medium text-gray-700">Місце роботи</label>
+                        <input type="text" name="workplace" id="workplace" placeholder="Місце роботи"
+                            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
+                    </div>
+
+                    <div>
+                        <label for="position" class="block text-base font-medium text-gray-700">Посада</label>
+                        <input type="text" name="position" id="position" placeholder="Посада"
+                            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div>
+                        <label for="country_of_residence" class="block text-base font-medium text-gray-700">Країна проживання</label>
+                        <input type="text" name="country_of_residence" id="country_of_residence" placeholder="Країна"
+                            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
+                    </div>
+
+                    <div>
+                        <label for="city_of_residence" class="block text-base font-medium text-gray-700">Місто проживання</label>
+                        <input type="text" name="city_of_residence" id="city_of_residence" placeholder="Місто"
                             class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
                     </div>
                 </div>

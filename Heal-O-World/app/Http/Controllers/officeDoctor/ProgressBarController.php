@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\officeDoctor;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
-class ActivationController extends Controller
+class ProgressBarController extends Controller
 {
     public function step($step)
     {
@@ -19,6 +18,6 @@ class ActivationController extends Controller
             abort(404); 
         }
 
-        return view('doctor-activation.' . strtolower($steps[$step]), compact('step'));
+        return view('doctor.doctor-activation.' . strtolower($steps[$step]), compact('step'));
     }
 }

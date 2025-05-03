@@ -18,11 +18,7 @@ return new class extends Migration {
             $table->text('bio')->nullable();
             $table->string('gender')->nullable();
             $table->string('photo')->nullable();
-            $table->string('country_of_residence');
-            $table->string('city_of_residence');
             $table->string('contact')->nullable();
-            $table->string('workplace')->nullable();
-            $table->string('position')->nullable();
             $table->integer('time_zone');
             $table->timestamps();
         });

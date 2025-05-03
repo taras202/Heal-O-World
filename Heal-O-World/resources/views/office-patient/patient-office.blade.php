@@ -1,4 +1,4 @@
-@extends('layout.menu-consultation')
+@extends('layout.menu-consultation-patient')
 
 @section('content')
 <style>
