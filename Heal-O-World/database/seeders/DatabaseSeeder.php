@@ -10,8 +10,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call(MyOfficeDoctorsSeeder::class);
+
         $this->call(ConsultationSeeder::class); 
 
-        $this->call(MyOfficeDoctorsSeeder::class);
     }
 }

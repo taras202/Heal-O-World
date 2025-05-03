@@ -20,11 +20,6 @@ class WorkSchedule extends Model
         'hours_after', 
     ];
 
-    /**
-     * Визначення зв'язку "один до багатьох" з моделлю Doctor.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function doctor()
     {
         return $this->belongsTo(MyOfficeDoctor::class);
