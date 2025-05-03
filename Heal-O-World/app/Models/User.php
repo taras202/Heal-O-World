@@ -13,10 +13,9 @@ class User extends Authenticatable
     protected $fillable = [
         'phone',
         'email',
-        'status',
+        'status',        
         'password',
-        'role', 
-        'is_activated',
+        'role',
     ];
 
     protected $hidden = [
@@ -24,13 +23,9 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 
     public function isDoctor(): bool
     {
@@ -41,10 +36,17 @@ class User extends Authenticatable
     {
         return $this->role === 'patient';
     }
+
+    public function isActivated(): bool
+    {
+        return $this->status === 'active';
+    }
+
     public function patient()
     {
-        return $this->hasOne(MyOfficePatient::class); 
+        return $this->hasOne(MyOfficePatient::class);
     }
+
     public function doctor()
     {
         return $this->hasOne(MyOfficeDoctor::class);
