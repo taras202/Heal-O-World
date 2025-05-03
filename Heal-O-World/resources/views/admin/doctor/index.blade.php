@@ -25,7 +25,7 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <label>Лікар</label>
+                <label>Пацієнт</label>
                 <select name="doctor_id" class="form-control">
                     <option value="">Всі</option>
                     @foreach($doctors as $doctor)
