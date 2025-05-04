@@ -33,4 +33,14 @@ class MyOfficePatient extends Model
     {
         return $this->hasMany(Consultation::class, 'patient_id');
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    public function doctor()
+    {
+        return $this->hasOne(MyOfficeDoctor::class);
+    }
+
+
 }

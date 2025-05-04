@@ -64,24 +64,24 @@ class DoctorAdminController extends Controller
     public function store(MyOfficeDoctorRequest $request)
     {
         $data = $request->validated();
-    
+
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('photos/doctors', 'public');
+            $data['photo'] = $this->savePhoto($request->file('photo'), 'doctors');
         }
-    
+
         $doctor = MyOfficeDoctor::create($data);
-    
+
         if (!empty($data['educations'])) {
             foreach ($data['educations'] as $educationData) {
                 foreach (['diploma_photo_1', 'diploma_photo_2', 'diploma_photo_3'] as $photoField) {
                     if ($request->hasFile("educations.{$loop->index}.$photoField")) {
-                        $educationData[$photoField] = $request->file("educations.{$loop->index}.$photoField")->store('photos/diplomas', 'public');
+                        $educationData[$photoField] = $this->savePhoto($request->file("educations.{$loop->index}.$photoField"), 'diplomas');
                     }
                 }
                 $doctor->educations()->create($educationData);
             }
         }
-    
+
         if (!empty($data['specialties'])) {
             foreach ($data['specialties'] as $index => $specialtyId) {
                 $pivotData = $data['specialty_data'][$index] ?? [];
@@ -91,12 +91,17 @@ class DoctorAdminController extends Controller
                 ]);
             }
         }
-    
+
         if (!empty($data['place_of_work'])) {
             $doctor->placeOfWork()->create($data['place_of_work']);
         }
-    
+
         return redirect()->route('admin.doctors.index')->with('status', 'Лікар створений!');
+    }
+
+    private function savePhoto($file, $folder)
+    {
+        return $file->store("photos/$folder", 'public');
     }
     
     public function show(MyOfficeDoctor $doctor)
@@ -115,18 +120,18 @@ class DoctorAdminController extends Controller
     public function update(MyOfficeDoctorRequest $request, MyOfficeDoctor $doctor)
     {
         $data = $request->validated();
-    
+
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('photos/doctors', 'public');
+            $data['photo'] = $this->savePhoto($request->file('photo'), 'doctors');
         }
-    
+
         $doctor->update($data);
-    
+
         if (!empty($data['place_of_work'])) {
             $doctor->placeOfWork()->updateOrCreate(['doctor_id' => $doctor->id], $data['place_of_work']);
         }
-    
-        $doctor->specialties()->detach(); 
+
+        $doctor->specialties()->detach();
         if (!empty($data['specialties'])) {
             foreach ($data['specialties'] as $index => $specialtyId) {
                 $pivotData = $data['specialty_data'][$index] ?? [];
@@ -136,19 +141,19 @@ class DoctorAdminController extends Controller
                 ]);
             }
         }
-    
+
         $doctor->educations()->delete();
         if (!empty($data['educations'])) {
             foreach ($data['educations'] as $i => $educationData) {
                 foreach (['diploma_photo_1', 'diploma_photo_2', 'diploma_photo_3'] as $photoField) {
                     if ($request->hasFile("educations.{$i}.$photoField")) {
-                        $educationData[$photoField] = $request->file("educations.{$i}.$photoField")->store('photos/diplomas', 'public');
+                        $educationData[$photoField] = $this->savePhoto($request->file("educations.{$i}.$photoField"), 'diplomas');
                     }
                 }
                 $doctor->educations()->create($educationData);
             }
         }
-    
+
         return redirect()->route('admin.doctors.index')->with('status', 'Інформацію про лікаря оновлено!');
     }
     

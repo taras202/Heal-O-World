@@ -1,26 +1,33 @@
 <?php
 
-
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MyOfficePatientRequest;
 use App\Models\MyOfficeDoctor;
 use App\Models\MyOfficePatient;
+use App\Models\User;
+use Illuminate\Container\Attributes\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PatientAdminController extends Controller
 {
     public function index(Request $request)
     {
-        $doctors = MyOfficeDoctor::all();
-
-        $patientName = $request->get('patient_name');
-        
+        $doctorId = $request->input('doctor_id');
         $patientsQuery = MyOfficePatient::with('consultations', 'consultations.doctor');
 
+        $patientName = $request->get('patient_name');
         if ($patientName) {
-            $patientsQuery = $patientsQuery->where('first_name', 'like', '%' . $patientName . '%')
-                                        ->orWhere('last_name', 'like', '%' . $patientName . '%');
+            $patientsQuery->where('first_name', 'like', '%' . $patientName . '%')
+                          ->orWhere('last_name', 'like', '%' . $patientName . '%');
+        }
+
+        if ($doctorId) {
+            $patientsQuery->whereHas('consultations', function ($query) use ($doctorId) {
+                $query->where('doctor_id', $doctorId);
+            });
         }
 
         $patients = $patientsQuery->get();
@@ -49,54 +56,58 @@ class PatientAdminController extends Controller
             ]
         ];
 
-        return view('admin.patient.index', compact('patients', 'doctors', 'patientChartLabels', 'patientChartDatasets'));
+        return view('admin.patient.index', compact('patients', 'patientChartLabels', 'patientChartDatasets'));
     }
 
     public function create()
     {
-        return view('admin.patient.create');
+        $users = User::all(); 
+        return view('admin.patient.create', compact('users'));
     }
 
-    public function store(Request $request)
+    public function store(MyOfficePatientRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:patients',
-            'phone' => 'required|string|max:15',
-        ]);
+        $validated = $request->validated();
 
-        MyOfficePatient::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-        ]);
+        $validated['user_id'] = auth()->user()->id;
+
+        MyOfficePatient::create($validated);
 
         return redirect()->route('admin.patients.index')->with('status', 'Пацієнт створений!');
     }
 
+
     public function show(MyOfficePatient $patient)
     {
-        return view('admin.patient.show', compact('patient'));
+        $users = User::all(); 
+        return view('admin.patient.show', compact('patient', 'users'));
     }
 
     public function edit(MyOfficePatient $patient)
     {
-        return view('admin.patient.edit', compact('patient'));
+        $users = User::all(); 
+        return view('admin.patient.edit', compact('patient', 'users'));
     }
 
-    public function update(Request $request, MyOfficePatient $patient)
+    public function update(MyOfficePatientRequest $request, MyOfficePatient $patient)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:patients,email,' . $patient->id,
-            'phone' => 'required|string|max:15',
-        ]);
+        $validated = $request->validated();
 
-        $patient->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-        ]);
+        
+        $patient->update($validated);
+
+        $user = User::findOrFail($patient->user_id);
+        $user->email = $request->input('email');
+        $user->save();
+
+        if ($request->hasFile('photo')) {
+            if ($patient->photo && Storage::disk('public')->exists($patient->photo)) {
+                Storage::disk('public')->delete($patient->photo);
+            }
+    
+            $photoPath = $request->file('photo')->store('uploads/patients', 'public');
+            $validated['photo'] = $photoPath;
+        }
 
         return redirect()->route('admin.patients.index')->with('status', 'Пацієнт оновлений!');
     }

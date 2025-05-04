@@ -20,16 +20,7 @@
         @method('PUT')
 
         {{-- USER --}}
-        <div class="mb-3">
-            <label>Користувач:</label>
-            <select name="user_id" class="form-control" required>
-                @foreach($users as $user)
-                    <option value="{{ $user->id }}" {{ old('user_id', $doctor->user_id) == $user->id ? 'selected' : '' }}>
-                        {{ $user->name }} ({{ $user->email }})
-                    </option>
-                @endforeach
-            </select>
-        </div>
+        
 
         {{-- Фото --}}
         <div class="mb-3">

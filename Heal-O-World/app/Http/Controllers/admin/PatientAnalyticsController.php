@@ -2,71 +2,55 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Models\Patient;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\MyOfficePatient;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class PatientAnalyticsController extends Controller
 {
-    public function showAnalytics()
+    public function index(Request $request)
     {
-        $totalPatients = MyOfficePatient::count();
-        
-        $insuredPatients = MyOfficePatient::where('has_insurance', true)->count();
-        
-        $malePatients = MyOfficePatient::where('gender', 'male')->count();
-        $femalePatients = MyOfficePatient::where('gender', 'female')->count();
-        $otherPatients = MyOfficePatient::where('gender', 'other')->count();
-        
-        $ageGroupUnder18 = MyOfficePatient::where('date_of_birth', '>=', now()->subYears(18))->count();
-        $ageGroup19to40 = MyOfficePatient::whereBetween('date_of_birth', [now()->subYears(40), now()->subYears(19)])->count();
-        $ageGroup41to60 = MyOfficePatient::whereBetween('date_of_birth', [now()->subYears(60), now()->subYears(41)])->count();
-        $ageGroupOver60 = MyOfficePatient::where('date_of_birth', '<=', now()->subYears(60))->count();
+        $patientId = $request->input('patient_id');
 
-        $months = ['Січень', 'Лютий', 'Березень', 'Квітень'];
-        $consultationsData = [20, 25, 30, 40]; 
+        $patientsQuery = MyOfficePatient::with(['consultations.doctor']);
 
-        $patientsWithConsultations = MyOfficePatient::with('consultations')->get();
+        if ($patientId) {
+            $patientsQuery->where('id', $patientId);
+        }
 
-        return view('admin.analytics', compact(
-            'totalPatients', 'insuredPatients', 'malePatients', 'femalePatients', 'otherPatients',
-            'ageGroupUnder18', 'ageGroup19to40', 'ageGroup41to60', 'ageGroupOver60', 
-            'months', 'consultationsData', 'patientsWithConsultations'
-        ));
+        $patients = $patientsQuery->get();
+
+        $monthlyPatientData = DB::table('consultations')
+            ->selectRaw('patient_id, DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as total')
+            ->groupBy('patient_id', 'month');
+
+        if ($patientId) {
+            $monthlyPatientData->where('patient_id', $patientId);
+        }
+
+        $monthlyPatientData = $monthlyPatientData->get()->groupBy('patient_id');
+
+        $patientChartLabels = [];
+        $patientChartDatasets = [];
+
+        foreach ($patients as $patient) {
+            $data = collect($monthlyPatientData[$patient->id] ?? []);
+            $months = $data->pluck('month')->unique()->sort()->values();
+            $patientChartLabels = array_merge($patientChartLabels, $months->all());
+
+            $dataset = [
+                'label' => $patient->first_name . ' ' . $patient->last_name,
+                'data' => $months->map(fn($month) => $data->firstWhere('month', $month)?->total ?? 0),
+                'fill' => false,
+                'borderColor' => '#' . substr(md5($patient->id), 0, 6),
+            ];
+
+            $patientChartDatasets[] = $dataset;
+        }
+
+        $patientChartLabels = array_values(array_unique($patientChartLabels));
+
+        return view('admin.patient.analytics', compact('patients', 'patientChartLabels', 'patientChartDatasets'));
     }
-
-    public function showPatients()
-{
-    $totalPatients = MyOfficePatient::count();
-    $insuredPatients = MyOfficePatient::where('has_insurance', true)->count();
-    $malePatients = MyOfficePatient::where('gender', 'male')->count();
-    $femalePatients = MyOfficePatient::where('gender', 'female')->count();
-    $otherPatients = MyOfficePatient::where('gender', 'other')->count();
-    $ageGroupUnder18 = MyOfficePatient::where('date_of_birth', '>=', now()->subYears(18))->count();
-    $ageGroup19to40 = MyOfficePatient::whereBetween('date_of_birth', [now()->subYears(40), now()->subYears(19)])->count();
-    $ageGroup41to60 = MyOfficePatient::whereBetween('date_of_birth', [now()->subYears(60), now()->subYears(41)])->count();
-    $ageGroupOver60 = MyOfficePatient::where('date_of_birth', '<=', now()->subYears(60))->count();
-
-    $months = ['Січень', 'Лютий', 'Березень', 'Квітень'];  
-    $consultationsData = [20, 25, 30, 40];  
-
-    $patientsWithConsultations = MyOfficePatient::with('consultations')->get();
-
-    return view('admin.patients.index', compact(
-        'totalPatients', 'insuredPatients', 'malePatients', 'femalePatients', 'otherPatients',
-        'ageGroupUnder18', 'ageGroup19to40', 'ageGroup41to60', 'ageGroupOver60', 'months', 'consultationsData', 'patientsWithConsultations'
-    ));
-}
-
-    public function index()
-    {
-        $patients = MyOfficePatient::all();
-
-        $months = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень'];
-        $consultationsData = [12, 18, 9, 24, 15];
-
-        return view('admin.patients.index', compact('patients', 'months', 'consultationsData'));
-    }
-
 }

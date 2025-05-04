@@ -15,8 +15,14 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.patients.store') }}" method="POST">
+    <form action="{{ route('admin.patients.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+        <div class="mb-3">
+            <label for="photo">Фото:</label><br>
+            <input type="file" name="photo" id="photo" class="form-control mt-2">
+        </div>
+
+        <hr>
 
         <div class="mb-3">
             <label for="first_name">Ім’я:</label>
@@ -26,6 +32,11 @@
         <div class="mb-3">
             <label for="last_name">Прізвище:</label>
             <input type="text" name="last_name" id="last_name" class="form-control" value="{{ old('last_name') }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
         </div>
 
         <div class="mb-3">
@@ -83,9 +94,7 @@
         <div class="mb-3">
             <label for="notes">Примітки:</label>
             <textarea name="notes" id="notes" class="form-control">{{ old('notes') }}</textarea>
-        </div>
-
-        <hr>
+        </div> 
 
         <button type="submit" class="btn btn-success">Додати пацієнта</button>
         <a href="{{ route('admin.patients.index') }}" class="btn btn-secondary">Повернутись до списку пацієнтів</a>

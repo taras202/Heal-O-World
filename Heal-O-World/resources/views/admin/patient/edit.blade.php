@@ -20,6 +20,13 @@
         @method('PUT')
 
         <div class="mb-3">
+            <label>Фото:</label><br>
+            <img src="{{ $patient->photo ? asset('storage/' . $patient->photo) : asset('photos/default-avatar.png') }}"
+                width="80" height="80" style="border-radius: 50%; margin-bottom: 10px;">
+            <input type="file" name="photo" class="form-control mt-2">
+        </div>
+
+        <div class="mb-3">
             <label for="first_name">Ім’я:</label>
             <input type="text" name="first_name" id="first_name" class="form-control" value="{{ old('first_name', $patient->first_name) }}" required>
         </div>
@@ -27,6 +34,11 @@
         <div class="mb-3">
             <label for="last_name">Прізвище:</label>
             <input type="text" name="last_name" id="last_name" class="form-control" value="{{ old('last_name', $patient->last_name) }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" class="form-control" value="{{ old('email', $patient->user?->email) }}" required>
         </div>
 
         <div class="mb-3">
@@ -73,12 +85,12 @@
 
         <div class="mb-3">
             <label for="height">Ріст (см):</label>
-            <input type="number" name="height" id="height" class="form-control" value="{{ old('height', $patient->height) }}">
+            <input type="number" step="0.01" name="height" id="height" class="form-control" value="{{ old('height', $patient->height) }}">
         </div>
 
         <div class="mb-3">
             <label for="weight">Вага (кг):</label>
-            <input type="number" name="weight" id="weight" class="form-control" value="{{ old('weight', $patient->weight) }}">
+            <input type="number" step="0.01" name="weight" id="weight" class="form-control" value="{{ old('weight', $patient->weight) }}">
         </div>
 
         <div class="mb-3">
@@ -86,9 +98,10 @@
             <textarea name="notes" id="notes" class="form-control">{{ old('notes', $patient->notes) }}</textarea>
         </div>
 
-        <hr>
-
-        <button type="submit" class="btn btn-success">Зберегти зміни</button>
-        <a href="{{ route('admin.patients.index') }}" class="btn btn-secondary">Повернутись до списку пацієнтів</a>
+        <button type="submit" class="btn btn-success mt-3">Зберегти зміни</button>
     </form>
+
+    <div class="mt-4">
+    <a href="{{ route('admin.patients.edit', $patient) }}" class="btn btn-secondary">Повернутись до редагування</a>
+    </div>
 @endsection

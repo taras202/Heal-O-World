@@ -22,5 +22,8 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 
     Route::get('admin/analytics', [PatientAnalyticsController::class, 'showAnalytics'])->name('admin.analytics');
 
+    Route::get('/admin/patient-analytics', [PatientAnalyticsController::class, 'index'])->name('patients.analytics');
+
+
 });
 

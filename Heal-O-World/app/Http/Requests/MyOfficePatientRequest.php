@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class MyOfficePatientRequest extends FormRequest
 {
@@ -26,9 +27,12 @@ class MyOfficePatientRequest extends FormRequest
             'height' => 'nullable|numeric|min:0',              
             'weight' => 'nullable|numeric|min:0',              
             'notes' => 'nullable|string',                       
-            'contact' => 'nullable|string|max:255',            
+            'contact' => 'nullable|string|max:255',
+            
+            
         ];
     }
+
 
     public function messages()
     {
