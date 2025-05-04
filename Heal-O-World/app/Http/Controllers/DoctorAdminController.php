@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MyOfficeDoctorRequest;
 use Illuminate\Support\Facades\DB;
 use App\Models\MyOfficeDoctor;
 use Illuminate\Http\Request;
@@ -85,16 +86,11 @@ class DoctorAdminController extends Controller
         return view('admin.doctor.edit', compact('doctor'));
     }
 
-    public function update(Request $request, MyOfficeDoctor $doctor)
+    public function update(MyOfficeDoctorRequest $request, MyOfficeDoctor $doctor)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:doctors,email,' . $doctor->id,
-            'specialization' => 'required|string|max:255',
-        ]);
-
+        
         $doctor->update([
-            'name' => $request->name,
+            'name' => $request->first_name . ' ' . $request->last_name, 
             'email' => $request->email,
             'specialization' => $request->specialization,
         ]);

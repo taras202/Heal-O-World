@@ -21,7 +21,7 @@ class MyOfficeDoctorRequest extends FormRequest
             'gender' => 'nullable|string|in:male,female',  
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',  
             'contact' => 'nullable|string|max:255',     
-            'time_zone' => 'nullable|string|max:255',       
+            'time_zone' => 'nullable|integer|max:255',       
         ];
     }
 
