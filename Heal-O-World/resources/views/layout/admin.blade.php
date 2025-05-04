@@ -91,7 +91,7 @@
     .navbar {
         position: fixed;
         top: 0;
-        left: 250px;
+        left: 265px;
         width: calc(100% - 250px);
         background-color: #0056b3;
         color: white;
