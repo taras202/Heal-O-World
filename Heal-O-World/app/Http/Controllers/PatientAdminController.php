@@ -13,30 +13,52 @@ class PatientAdminController extends Controller
 {
 
 
-public function index(Request $request)
-{
-    $patients = MyOfficePatient::all();  
-    $doctors = MyOfficeDoctor::all();
+    public function index(Request $request)
+    {
+        $doctors = MyOfficeDoctor::all();
+
+        $patientName = $request->get('patient_name');
+        
+        $patientsQuery = MyOfficePatient::with('consultations', 'consultations.doctor');
+
+        if ($patientName) {
+            $patientsQuery = $patientsQuery->where('first_name', 'like', '%' . $patientName . '%')
+                                        ->orWhere('last_name', 'like', '%' . $patientName . '%');
+        }
+
+        $patients = $patientsQuery->get();
+
+        $patientChartLabels = [];
+        $patientChartDatasets = [];
+
+        foreach ($patients as $patient) {
+            foreach ($patient->consultations as $consultation) {
+                $month = $consultation->created_at->format('Y-m');
+                if (!in_array($month, $patientChartLabels)) {
+                    $patientChartLabels[] = $month;
+                }
+            }
+        }
+
+        $patientChartLabels = array_values(array_unique($patientChartLabels));
+
+        $patientChartDatasets = [
+            [
+                'label' => 'Кількість консультацій по пацієнтах',
+                'data' => array_fill(0, count($patientChartLabels), 0),
+                'backgroundColor' => 'rgba(75, 192, 192, 0.2)',
+                'borderColor' => 'rgba(75, 192, 192, 1)',
+                'borderWidth' => 1
+            ]
+        ];
+
+        return view('admin.patient.index', compact('patients', 'doctors', 'patientChartLabels', 'patientChartDatasets'));
+    }
+
+
     
-    $consultations = DB::table('consultations')
-        ->select(DB::raw("MONTH(appointment_date) as month"), DB::raw("COUNT(*) as count"))
-        ->whereYear('appointment_date', now()->year)
-        ->groupBy(DB::raw("MONTH(appointment_date)"))
-        ->orderBy(DB::raw("MONTH(appointment_date)"))
-        ->get();
 
-    $months = $consultations->pluck('month');
-    $consultationsData = $consultations->pluck('count');
 
-    $monthNames = ["Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", 
-                    "Липень", "Серпень", "Вересень", "Жовтень", "Листопад", "Грудень"];
-    
-    $monthsFormatted = $months->map(function($month) use ($monthNames) {
-        return $monthNames[$month - 1];  
-    });
-
-    return view('admin.patient.index', compact('patients', 'doctors', 'monthsFormatted', 'consultationsData'));
-}
 
 
     public function create()

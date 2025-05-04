@@ -4,44 +4,56 @@
 
 @section('content')
     
-    <h2>Аналітика консультацій по лікарях</h2>
+<h2 class="mt-5 text-center">Аналітика консультацій лікарів</h2>
 
-    <form method="GET" action="{{ route('admin.patients.index') }}" class="mb-4">
-        <div class="row">
-            <div class="col-md-2">
-                <label>Вік від</label>
-                <input type="number" name="age_from" class="form-control" value="{{ request('age_from') }}">
-            </div>
-            <div class="col-md-2">
-                <label>Вік до</label>
-                <input type="number" name="age_to" class="form-control" value="{{ request('age_to') }}">
-            </div>
-            <div class="col-md-2">
-                <label>Стать</label>
-                <select name="gender" class="form-control">
-                    <option value="">Всі</option>
-                    <option value="male" {{ request('gender') == 'male' ? 'selected' : '' }}>Чоловік</option>
-                    <option value="female" {{ request('gender') == 'female' ? 'selected' : '' }}>Жінка</option>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <label>Пацієнт</label>
-                <select name="doctor_id" class="form-control">
-                    <option value="">Всі</option>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Лікар</th>
+                        <th>Кількість консультацій</th>
+                        <th>Унікальних пацієнтів</th>
+                        <th>Середній рейтинг</th>
+                        <th>Середня тривалість (хв)</th>
+                    </tr>
+                </thead>
+                <tbody>
                     @foreach($doctors as $doctor)
-                        <option value="{{ $doctor->id }}" {{ request('doctor_id') == $doctor->id ? 'selected' : '' }}>
-                            {{ $doctor->first_name }} {{ $doctor->last_name }}
-                        </option>
+                        @php
+                            $consultations = $doctor->consultations ?? collect();
+                            $uniquePatients = $consultations->pluck('patient_id')->unique()->count();
+                            $averageRating = $consultations->avg('rating');
+                            $averageDuration = $consultations->avg('duration_minutes');
+                        @endphp
+                        <tr>
+                            <td>{{ $doctor->first_name }} {{ $doctor->last_name }}</td>
+                            <td>{{ $consultations->count() }}</td>
+                            <td>{{ $uniquePatients }}</td>
+                            <td>{{ number_format($averageRating, 1) ?? '—' }}</td>
+                            <td>{{ number_format($averageDuration, 1) ?? '—' }}</td>
+                        </tr>
                     @endforeach
-                </select>
-            </div>
+                </tbody>
+            </table>
 
-            <div class="col-md-2">
-                <label>Пошук</label><br>
-                <button type="submit" class="btn btn-primary mt-2">Застосувати</button>
-            </div>
+
+            <form method="GET" action="{{ route('admin.doctors.index') }}" class="mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <label for="doctor_id">Оберіть лікаря</label>
+            <select name="doctor_id" id="doctor_id" class="form-control">
+                <option value="">Всі лікарі</option>
+                @foreach($doctors as $doctor)
+                    <option value="{{ $doctor->id }}" {{ request('doctor_id') == $doctor->id ? 'selected' : '' }}>
+                        {{ $doctor->first_name }} {{ $doctor->last_name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
-    </form>
+        <div class="col-md-2 align-self-end">
+            <button type="submit" class="btn btn-primary">Застосувати</button>
+        </div>
+    </div>
+</form>
 <canvas id="doctorConsultationChart" height="100"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

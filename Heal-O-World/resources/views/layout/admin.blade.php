@@ -4,162 +4,186 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>АДМІН ПАНЕЛЬ</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-</head>
-
-<style>
-    body, html {
+    <style>
+    html, body {
         height: 100%;
         margin: 0;
-        padding: 0;
     }
 
     #wrapper {
         display: flex;
-        height: 100vh;
+        min-height: 100vh;
     }
 
     #sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        width: 250px;
+        width: 265px;
         background-color: #343a40;
-        padding-top: 20px;
-        z-index: 1000;
+        padding: 20px;
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    #page-content-wrapper {
+        flex-grow: 1;
+        padding: 20px;
+        display: flex;  
+        flex-direction: column;
+        align-items: flex-start; 
     }
 
     #sidebar h3 {
-        margin-bottom: 30px;
         text-align: center;
+        margin-bottom: 30px;
+        font-weight: bold;
+        color: #00d1ff;
     }
 
-    #sidebar ul {
-        padding-left: 0;
-        list-style-type: none;
-    }
-
-    #sidebar ul li {
-        padding: 10px 20px;
-    }
-
-    #sidebar ul li a {
+    #sidebar a {
         display: block;
-        padding: 10px 20px;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
+        color: #cfd8dc;
+        padding: 12px 20px;
+        border-radius: 8px;
         margin-bottom: 10px;
-        background-color: #007bff;
-        transition: background-color 0.3s ease, color 0.3s ease;
+        text-decoration: none;
+        transition: all 0.3s ease;
     }
 
-    #sidebar ul li a:hover {
+    #sidebar .link-blue {
+        background-color: #007bff;
+    }
+
+    #sidebar .link-blue:hover {
         background-color: #0056b3;
     }
 
-    
-    .navbar {
-        z-index: 1050;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        left: 0;
-        padding: 10px 0;
-        background-color: rgb(10, 54, 102);
-        color: white;
-        margin-left: 250px; 
+    #sidebar .link-green {
+        background-color: #28a745;
     }
 
-        .navbar {
-        display: flex;
-        justify-content: center; 
+    #sidebar .link-green:hover {
+        background-color: #218838;
+    }
+
+    #sidebar a:hover, #sidebar a.active {
+        background-color: #00bcd4;
+        color: white;
+    }
+
+    .logout-btn button {
+        margin-top: 30px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+    .logout-btn button:hover {
+        background-color: #c82333;
+    }
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 250px;
+        width: calc(100% - 250px);
+        background-color: #0056b3;
+        color: white;
+        z-index: 1030;
+        padding: 15px 30px;
     }
 
     .navbar .navbar-brand {
-        flex-grow: 3;
-        text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .navbar-nav .nav-link {
+        color: #fff !important;
+    }
+
+    .navbar-nav .nav-link:hover {
+        color: #d1ecf1 !important;
     }
 
     #page-content-wrapper {
         margin-top: 80px;
-        margin-left: 250px; 
-        width: calc(100% - 250px); 
+        padding: 20px 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; 
+        flex-grow: 1;
     }
 
-    .nav-link.btn-danger {
-        background-color: #dc3545;
+    .btn {
+        border-radius: 10px;
+    }
+
+    .table th {
+        background-color: #007bff;
         color: white;
-        padding: 8px 15px;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
     }
 
-    .nav-link.btn-danger:hover {
-        background-color: #c82333;
+    .table td, .table th {
+        vertical-align: middle;
     }
 
-    .navbar a.navbar-brand {
-        color: black;
-        font-weight: bold;
-    }
+    @media (max-width: 768px) {
+        #sidebar {
+            display: none;
+        }
 
-    .navbar-nav .nav-item .nav-link {
-        color: white !important;
-    }
+        .navbar {
+            left: 0;
+            width: 100%;
+        }
 
-    .navbar-nav .nav-item .nav-link:hover {
-        color: rgb(23, 78, 133) !important;
+        #page-content-wrapper {
+            margin-left: 0;
+        }
     }
-
-    
 </style>
 
 
+
+</head>
 <body>
-    <div class="d-flex" id="wrapper">
-        <div class="bg-dark text-white p-4" id="sidebar">
-            <h3>АДМІН ПАНЕЛЬ</h3>
-            <ul class="list-unstyled">
-                <li>
-                    <a href="{{ route('admin.patients.index') }}" class="text-white">Пацієнти</a>
-                </li>
-                <li>
-                    <a href="{{ route('admin.doctors.index') }}" class="text-white">Лікарі</a>
-                </li>
-            </ul>
-
-            <form method="POST" action="{{ route('admin.logout') }}" class="logout-btn">
-                @csrf
-                <button type="submit" class="btn btn-danger w-100">Вийти</button>
-            </form>
-        </div>
-
-        <div id="page-content-wrapper" class="container-fluid">
-            
-            <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="#">ГОЛОВНА</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Перемикач навігації">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav ms-auto">
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-
-            <div class="container mt-4">
-                @yield('content')
+<div class="d-flex" id="wrapper">
+    <div id="sidebar">
+        <h3>АДМІН ПАНЕЛЬ</h3>
+        <a href="{{ route('admin.patients.index') }}" class="sidebar-link link-blue {{ request()->routeIs('admin.patients.index') ? 'active' : '' }}">Пацієнти</a>
+        <a href="{{ route('admin.doctors.index') }}" class="sidebar-link link-green {{ request()->routeIs('admin.doctors.index') ? 'active' : '' }}">Лікарі</a>
+        <form method="POST" action="{{ route('admin.logout') }}" class="logout-btn mt-3">
+            @csrf
+            <button type="submit" class="btn btn-danger w-100">Вийти</button>
+        </form>
+    </div>
+               
+        <div id="page-content-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-dark d-flex justify-content-center">
+            <div class="container-fluid justify-content-center">
+                <a class="navbar-brand mx-auto" href="#">ГОЛОВНА</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
             </div>
+        </nav>
+        <div class="container-fluid mt-4">
+            @yield('content')
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

@@ -9,41 +9,49 @@ use Illuminate\Http\Request;
 class DoctorAdminController extends Controller
 {
 
-    public function index()
-{
-    $doctors = MyOfficeDoctor::with(['specialties', 'educations', 'placeOfWork'])->get();
+    public function index(Request $request)
+    {
+        $doctorId = $request->input('doctor_id');
 
-    $monthlyDoctorData = DB::table('consultations')
-    ->selectRaw('doctor_id, DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as total')
-    ->groupBy('doctor_id', 'month')
-    ->get()
-    ->groupBy('doctor_id');
+        $doctorsQuery = MyOfficeDoctor::with(['specialties', 'educations', 'placeOfWork', 'consultations']);
 
-
-
-    $doctorChartLabels = [];
-    $doctorChartDatasets = [];
-
-    foreach ($doctors as $doctor) {
-        $data = collect($monthlyDoctorData[$doctor->id] ?? []);
-        $months = $data->pluck('month')->unique()->sort()->values();
-        $doctorChartLabels = $doctorChartLabels + $months->all(); 
-
-        $dataset = [
-            'label' => $doctor->first_name . ' ' . $doctor->last_name,
-            'data' => [],
-        ];
-
-        foreach ($doctorChartLabels as $month) {
-            $value = $data->firstWhere('month', $month)->total ?? 0;
-            $dataset['data'][] = $value;
+        if ($doctorId) {
+            $doctorsQuery->where('id', $doctorId);
         }
 
-        $doctorChartDatasets[] = $dataset;
-    }
+        $doctors = $doctorsQuery->get();
 
-    return view('admin.doctor.index', compact('doctors', 'doctorChartLabels', 'doctorChartDatasets'));
-}
+        $monthlyDoctorData = DB::table('consultations')
+            ->when($doctorId, fn($q) => $q->where('doctor_id', $doctorId))
+            ->selectRaw('doctor_id, DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as total')
+            ->groupBy('doctor_id', 'month')
+            ->get()
+            ->groupBy('doctor_id');
+
+        $doctorChartLabels = [];
+        $doctorChartDatasets = [];
+
+        foreach ($doctors as $doctor) {
+            $data = collect($monthlyDoctorData[$doctor->id] ?? []);
+            $months = $data->pluck('month')->unique()->sort()->values();
+            $doctorChartLabels = array_merge($doctorChartLabels, $months->all());
+
+            $dataset = [
+                'label' => $doctor->first_name . ' ' . $doctor->last_name,
+                'data' => $months->map(function ($month) use ($data) {
+                    return $data->firstWhere('month', $month)?->total ?? 0;
+                }),
+                'fill' => false,
+                'borderColor' => '#' . substr(md5($doctor->id), 0, 6),
+            ];
+
+            $doctorChartDatasets[] = $dataset;
+        }
+
+        $doctorChartLabels = array_values(array_unique($doctorChartLabels));
+
+        return view('admin.doctor.index', compact('doctors', 'doctorChartLabels', 'doctorChartDatasets'));
+    }
 
     public function create()
     {
