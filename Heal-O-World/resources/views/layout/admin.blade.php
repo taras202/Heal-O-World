@@ -112,7 +112,36 @@
     .navbar-nav .nav-link:hover {
         color: #d1ecf1 !important;
     }
+    .admin-sidebar-box {
+    background-color: #495057;
+    padding: 12px 16px;
+    border-radius: 10px;
+    color: #fff;
+    animation: slideFadeIn 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateX(-10px);
+}
 
+    .admin-avatar-sidebar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #00d1ff;
+    }
+
+    @keyframes slideFadeIn {
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .badge {
+    font-size: 0.75rem;
+    padding: 0.3em 0.6em;
+    border-radius: 6px;
+    }
+
+    }
     #page-content-wrapper {
         margin-top: 80px;
         padding: 20px 30px;
@@ -164,7 +193,26 @@
             @csrf
             <button type="submit" class="btn btn-danger w-100">Вийти</button>
         </form>
-    </div>
+
+        @php
+        use Illuminate\Support\Facades\Auth;
+        $admin = Auth::guard('admin')->user(); 
+        @endphp
+
+        <div class="admin-sidebar-box mt-3 mb-4 animate-entry">
+            <div class="d-flex align-items-center gap-3">
+                <img src="{{ asset('images/admin-avatar.png') }}" alt="Admin" class="admin-avatar-sidebar">
+                <div>
+                    <strong>{{ $admin->name ?? 'Адміністратор' }}</strong><br>
+                    <small class="text-light">{{ $admin->email ?? 'admin@example.com' }}</small><br>
+                    <span class="badge bg-info text-dark mt-1">
+                        {{ $admin->role ?? 'Головний адмін' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        </div>
                
         <div id="page-content-wrapper">
         <nav class="navbar navbar-expand-lg navbar-dark d-flex justify-content-center">
