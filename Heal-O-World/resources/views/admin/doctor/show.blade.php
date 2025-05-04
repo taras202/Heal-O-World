@@ -16,9 +16,19 @@
                      alt="Фото" class="card-img-top" style="width: 100%; border-radius: 50%; height: 250px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">{{ $doctor->first_name }} {{ $doctor->last_name }}</h5>
+                    
+                    <div class="mb-3">
+                        <label>email:</label>
+                        <input type="text" class="form-control" value="{{ $doctor->user->email }}" readonly>
+                        <input type="hidden" name="user_id" value="{{ $doctor->user_id }}">
+                    </div>
+ 
                     <p class="card-text"><strong>Стать:</strong> {{ ucfirst($doctor->gender) }}</p>
                     <p class="card-text"><strong>Контакт:</strong> {{ $doctor->contact }}</p>
                     <p class="card-text"><strong>Часовий пояс:</strong> {{ $doctor->time_zone }}</p>
+                    @if($doctor->bio)
+                        <p class="card-text"><strong>Біографія:</strong> {{ $doctor->bio }}</p>
+                    @endif
                 </div>
             </div>
         </div>
@@ -40,6 +50,16 @@
                         <div class="mb-3">
                             <strong>{{ $edu->degree }} — {{ $edu->institution }}</strong><br>
                             <p>Роки: {{ $edu->start_year }} - {{ $edu->end_year }}</p>
+                            <div>
+                                @for($i = 1; $i <= 3; $i++)
+                                    @php
+                                        $photo = "diploma_photo_$i";
+                                    @endphp
+                                    @if($edu->$photo)
+                                        <a href="{{ asset('storage/' . $edu->$photo) }}" target="_blank">Диплом {{ $i }}</a><br>
+                                    @endif
+                                @endfor
+                            </div>
                         </div>
                     @endforeach
 
@@ -58,5 +78,4 @@
             </div>
         </div>
     </div>
-
 @endsection

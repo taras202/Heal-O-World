@@ -1,18 +1,15 @@
 <?php
 
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\admin;
 
-use App\Models\Consultation;
+use App\Http\Controllers\Controller;
 use App\Models\MyOfficeDoctor;
 use App\Models\MyOfficePatient;
-use DB;
 use Illuminate\Http\Request;
 
 class PatientAdminController extends Controller
 {
-
-
     public function index(Request $request)
     {
         $doctors = MyOfficeDoctor::all();
@@ -54,12 +51,6 @@ class PatientAdminController extends Controller
 
         return view('admin.patient.index', compact('patients', 'doctors', 'patientChartLabels', 'patientChartDatasets'));
     }
-
-
-    
-
-
-
 
     public function create()
     {

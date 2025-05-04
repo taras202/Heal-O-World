@@ -19,6 +19,19 @@
         @csrf
         @method('PUT')
 
+        {{-- USER --}}
+        <div class="mb-3">
+            <label>Користувач:</label>
+            <select name="user_id" class="form-control" required>
+                @foreach($users as $user)
+                    <option value="{{ $user->id }}" {{ old('user_id', $doctor->user_id) == $user->id ? 'selected' : '' }}>
+                        {{ $user->name }} ({{ $user->email }})
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        {{-- Фото --}}
         <div class="mb-3">
             <label>Фото:</label><br>
             <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('images/default-avatar.png') }}"
@@ -38,15 +51,20 @@
 
         <div class="mb-3">
             <label>Email:</label>
-            <input type="email" name="email" class="form-control" value="{{ old('email', $doctor->email) }}" required>
+            <input type="email" name="email" class="form-control" value="{{ old('email', $doctor->user->email ?? '') }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Біо:</label>
+            <textarea name="bio" class="form-control" rows="3">{{ old('bio', $doctor->bio) }}</textarea>
         </div>
 
         <div class="mb-3">
             <label>Стать:</label>
             <select name="gender" class="form-control">
-                <option value="male" {{ old('gender', $doctor->gender) == 'male' ? 'selected' : '' }}>Чоловік</option>
-                <option value="female" {{ old('gender', $doctor->gender) == 'female' ? 'selected' : '' }}>Жінка</option>
-                <option value="other" {{ old('gender', $doctor->gender) == 'other' ? 'selected' : '' }}>Інше</option>
+                <option value="чоловік" {{ old('gender', $doctor->gender) == 'чоловік' ? 'selected' : '' }}>Чоловік</option>
+                <option value="жінка" {{ old('gender', $doctor->gender) == 'жінка' ? 'selected' : '' }}>Жінка</option>
+                <option value="інше" {{ old('gender', $doctor->gender) == 'інше' ? 'selected' : '' }}>Інше</option>
             </select>
         </div>
 
@@ -64,15 +82,15 @@
 
         <h4>Спеціалізації</h4>
         @foreach($doctor->specialties as $index => $specialty)
-            <input type="hidden" name="specialties[{{ $index }}][id]" value="{{ $specialty->id }}">
+            <input type="hidden" name="specialties[]" value="{{ $specialty->id }}">
             <div class="mb-2">
                 <strong>{{ $specialty->name }}</strong><br>
                 <label>Досвід (роки):</label>
-                <input type="number" name="specialties[{{ $index }}][experience]" class="form-control"
-                       value="{{ old("specialties.$index.experience", $specialty->pivot->experience) }}" required>
+                <input type="number" name="specialty_data[{{ $index }}][experience]" class="form-control"
+                       value="{{ old("specialty_data.$index.experience", $specialty->pivot->experience) }}">
                 <label>Ціна (грн):</label>
-                <input type="number" name="specialties[{{ $index }}][price]" class="form-control"
-                       value="{{ old("specialties.$index.price", $specialty->pivot->price) }}" required>
+                <input type="number" name="specialty_data[{{ $index }}][price]" class="form-control"
+                       value="{{ old("specialty_data.$index.price", $specialty->pivot->price) }}">
             </div>
         @endforeach
 
@@ -81,19 +99,33 @@
         <h4>Освіта</h4>
         @foreach($doctor->educations as $i => $edu)
             <input type="hidden" name="educations[{{ $i }}][id]" value="{{ $edu->id }}">
-            <div class="mb-2">
+            <div class="mb-3 border rounded p-3">
                 <label>Заклад:</label>
                 <input type="text" name="educations[{{ $i }}][institution]" class="form-control"
                        value="{{ old("educations.$i.institution", $edu->institution) }}">
+
                 <label>Ступінь:</label>
                 <input type="text" name="educations[{{ $i }}][degree]" class="form-control"
                        value="{{ old("educations.$i.degree", $edu->degree) }}">
+
                 <label>Рік початку:</label>
                 <input type="text" name="educations[{{ $i }}][start_year]" class="form-control"
                        value="{{ old("educations.$i.start_year", $edu->start_year) }}">
+
                 <label>Рік завершення:</label>
                 <input type="text" name="educations[{{ $i }}][end_year]" class="form-control"
                        value="{{ old("educations.$i.end_year", $edu->end_year) }}">
+
+                {{-- Дипломи --}}
+                @foreach(['diploma_photo_1', 'diploma_photo_2', 'diploma_photo_3'] as $field)
+                    <div class="mt-2">
+                        @if($edu->$field)
+                            <img src="{{ asset('storage/' . $edu->$field) }}" width="100">
+                        @endif
+                        <label>{{ ucfirst(str_replace('_', ' ', $field)) }}:</label>
+                        <input type="file" name="educations[{{ $i }}][{{ $field }}]" class="form-control">
+                    </div>
+                @endforeach
             </div>
         @endforeach
 

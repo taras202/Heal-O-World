@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\PatientAdminController;
-use App\Http\Controllers\Admin\PatientAnalyticsController;
+use App\Http\Controllers\admin\PatientAdminController;
+use App\Http\Controllers\admin\PatientAnalyticsController;
 use Illuminate\Support\Facades\Route;
 
 

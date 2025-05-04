@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\DoctorAdminController;
+use App\Http\Controllers\admin\DoctorAdminController;
 use Illuminate\Support\Facades\Route;
 
 

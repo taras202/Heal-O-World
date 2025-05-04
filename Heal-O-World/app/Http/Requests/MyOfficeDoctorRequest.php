@@ -6,51 +6,43 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class MyOfficeDoctorRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
-        
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
-            'first_name' => 'required|string|max:255',    
-            'last_name' => 'required|string|max:255',     
-            'bio' => 'nullable|string',                    
-            'gender' => 'nullable|string|in:male,female',  
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',  
-            'contact' => 'nullable|string|max:255',     
-            'time_zone' => 'nullable|integer|max:255',       
-        ];
-    }
+            'user_id' => 'required|exists:users,id',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'bio' => 'nullable|string',
+            'gender' => 'required|in:чоловік,жінка,інше',
+            'photo' => 'nullable|image|max:2048',
+            'contact' => 'required|string|max:255',
+            'time_zone' => 'required|string|max:100',
 
-    public function messages()
-    {
-        return [
-            'first_name.required' => 'Ім\'я є обов\'язковим.',
-            'last_name.required' => 'Прізвище є обов\'язковим.',
-            'gender.in' => 'Стать повинна бути either male or female.',
-            'photo.image' => 'Фото повинно бути зображенням.',
-            'photo.mimes' => 'Фото повинно бути одного з форматів: jpeg, png, jpg, gif, svg.',
-            'photo.max' => 'Максимальний розмір фото 1MB.',
-            'hospital_id.exists' => 'Лікарня з таким ID не існує.',
-        ];
-    }
+            'specialties' => 'nullable|array',
+            'specialties.*' => 'exists:specialties,id',
+            'specialty_data' => 'nullable|array',
+            'specialty_data.*.experience' => 'nullable|numeric|min:0',
+            'specialty_data.*.price' => 'nullable|numeric|min:0',
 
-    public function attributes()
-    {
-        return [
-            'first_name' => 'Ім\'я',
-            'last_name' => 'Прізвище',
-            'bio' => 'Біографія',
-            'gender' => 'Стать',
-            'photo' => 'Фото',
-            'hospital_id' => 'ID лікарні',
-            'country_of_residence' => 'Країна проживання',
-            'city_of_residence' => 'Місто проживання',
-            'contact' => 'Контакт',
-            'time_zone' => 'Часова зона',
+            'educations' => 'nullable|array',
+            'educations.*.institution' => 'required|string|max:255',
+            'educations.*.degree' => 'required|string|max:255',
+            'educations.*.start_year' => 'required|digits:4|integer',
+            'educations.*.end_year' => 'nullable|digits:4|integer|gte:educations.*.start_year',
+            'educations.*.diploma_photo_1' => 'nullable|image|max:2048',
+            'educations.*.diploma_photo_2' => 'nullable|image|max:2048',
+            'educations.*.diploma_photo_3' => 'nullable|image|max:2048',
+
+            'place_of_work' => 'nullable|array',
+            'place_of_work.workplace' => 'required_with:place_of_work|string|max:255',
+            'place_of_work.position' => 'required_with:place_of_work|string|max:255',
+            'place_of_work.country_of_residence' => 'required_with:place_of_work|string|max:255',
+            'place_of_work.city_of_residence' => 'required_with:place_of_work|string|max:255',
         ];
     }
 }
