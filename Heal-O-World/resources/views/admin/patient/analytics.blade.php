@@ -54,6 +54,31 @@
                 @endforeach
             </select>
         </div>
+
+        <div class="col-md-3">
+            <label for="year">Оберіть рік</label>
+                <select name="year" id="year" class="form-control">
+                    <option value="">Виберіть рік</option>
+                    @foreach($years as $year)
+                    <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                    {{ $year }}
+                    </option>
+                    @endforeach
+                </select>
+            </div>
+        <div class="col-md-3">
+            <label for="month">Оберіть місяць</label>
+            <select name="month" id="month" class="form-control">
+                <option value="">Виберіть місяць</option>
+                @foreach(range(1, 12) as $month)
+                    <option value="{{ str_pad($month, 2, '0', STR_PAD_LEFT) }}" 
+                        {{ request('month') == str_pad($month, 2, '0', STR_PAD_LEFT) ? 'selected' : '' }}>
+                        {{ \Carbon\Carbon::create()->month($month)->format('F') }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
         <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-primary me-2">Застосувати</button>
             <a href="{{ route('admin.patients.analytics') }}" class="btn btn-secondary">Зняти фільтр</a>

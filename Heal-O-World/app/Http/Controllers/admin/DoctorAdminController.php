@@ -8,6 +8,8 @@ use App\Models\MyOfficeDoctor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Arr;
 
 class DoctorAdminController extends Controller
 {
@@ -56,12 +58,12 @@ class DoctorAdminController extends Controller
         return view('admin.doctor.index', compact('doctors', 'doctorChartLabels', 'doctorChartDatasets'));
     }
 
-    public function create()
-    {
-        return view('admin.doctor.create');
-    }
+        public function create()
+        {
+            return view('admin.doctor.create');
+        }
 
-    public function store(MyOfficeDoctorRequest $request)
+        public function store(MyOfficeDoctorRequest $request)
     {
         $data = $request->validated();
 
@@ -69,19 +71,40 @@ class DoctorAdminController extends Controller
             $data['photo'] = $this->savePhoto($request->file('photo'), 'doctors');
         }
 
-        $doctor = MyOfficeDoctor::create($data);
+        $doctorData = Arr::except($data, ['email', 'password', 'password_confirmation', 'status']);
 
+        $doctor = MyOfficeDoctor::create($doctorData);
+
+        $this->saveEducations($request, $doctor, $data);
+
+        $this->saveSpecialties($request, $doctor, $data);
+
+        if (!empty($data['place_of_work'])) {
+            $doctor->placeOfWork()->create($data['place_of_work']);
+        }
+
+        return redirect()->route('admin.doctors.index')->with('status', 'Лікар створений!');
+    }
+
+
+    private function saveEducations(Request $request, MyOfficeDoctor $doctor, array $data)
+    {
         if (!empty($data['educations'])) {
-            foreach ($data['educations'] as $educationData) {
+            foreach ($data['educations'] as $index => $educationData) {
+               
                 foreach (['diploma_photo_1', 'diploma_photo_2', 'diploma_photo_3'] as $photoField) {
-                    if ($request->hasFile("educations.{$loop->index}.$photoField")) {
-                        $educationData[$photoField] = $this->savePhoto($request->file("educations.{$loop->index}.$photoField"), 'diplomas');
+                    if ($request->hasFile("educations.{$index}.$photoField")) {
+                        $educationData[$photoField] = $this->savePhoto($request->file("educations.{$index}.$photoField"), 'diplomas');
                     }
                 }
+                
                 $doctor->educations()->create($educationData);
             }
         }
+    }
 
+    private function saveSpecialties(Request $request, MyOfficeDoctor $doctor, array $data)
+    {
         if (!empty($data['specialties'])) {
             foreach ($data['specialties'] as $index => $specialtyId) {
                 $pivotData = $data['specialty_data'][$index] ?? [];
@@ -91,13 +114,8 @@ class DoctorAdminController extends Controller
                 ]);
             }
         }
-
-        if (!empty($data['place_of_work'])) {
-            $doctor->placeOfWork()->create($data['place_of_work']);
-        }
-
-        return redirect()->route('admin.doctors.index')->with('status', 'Лікар створений!');
     }
+
 
     private function savePhoto($file, $folder)
     {
