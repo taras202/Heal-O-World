@@ -127,30 +127,38 @@
 
 <h1>Редагування профілю лікаря</h1>
 
+@if ($errors->any())
+    <div style="background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <form action="{{ route('doctor.profile.update') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
     <div class="profile-container">
-        {{-- Sidebar: Фото профілю --}}
         <div class="profile-sidebar">
             <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('images/default-avatar.png') }}" alt="Фото профілю">
             <label for="photo">Завантажити нове фото:</label>
             <input type="file" name="photo" accept="image/*">
         </div>
 
-        {{-- Main Form --}}
         <div class="profile-main">
 
             <div class="section-block">
                 <label>Ім’я</label>
-                <input type="text" name="first_name" value="{{ $doctor->first_name }}">
+                <input type="text" name="first_name" value="{{ old('first_name', $doctor->first_name) }}">
 
                 <label>Прізвище</label>
-                <input type="text" name="last_name" value="{{ $doctor->last_name }}">
+                <input type="text" name="last_name" value="{{ old('last_name', $doctor->last_name) }}">
 
                 <label>Біографія</label>
-                <textarea name="bio" rows="3">{{ $doctor->bio }}</textarea>
+                <textarea name="bio" rows="3">{{ old('bio', $doctor->bio) }}</textarea>
 
                 <label>Стать</label>
                 <select name="gender">
@@ -160,21 +168,21 @@
                 </select>
 
                 <label>Контакт</label>
-                <input type="text" name="contact" value="{{ $doctor->contact }}">
+                <input type="text" name="contact" value="{{ old('contact', $doctor->contact) }}">
 
                 <label>Часовий пояс</label>
-                <input type="text" name="time_zone" value="{{ $doctor->time_zone }}">
+                <input type="text" name="time_zone" value="{{ old('time_zone', $doctor->time_zone) }}">
             </div>
 
             <div class="section-block specialty-block">
                 <h4>Спеціалізації</h4>
                 @foreach($doctor->specialties as $index => $specialty)
-                    <input type="hidden" name="specialties[{{ $index }}][id]" value="{{ $specialty->id }}">
+                    <input type="hidden" name="specialties[]" value="{{ $specialty->id }}">
                     <label>Спеціальність: <strong>{{ $specialty->name }}</strong></label>
                     <label>Досвід (роки)</label>
-                    <input type="number" name="specialties[{{ $index }}][experience]" value="{{ $specialty->pivot->experience }}">
+                    <input type="number" name="specialty_data[{{ $index }}][experience]" value="{{ old("specialty_data.$index.experience", $specialty->pivot->experience) }}">
                     <label>Ціна (грн)</label>
-                    <input type="number" name="specialties[{{ $index }}][price]" value="{{ $specialty->pivot->price }}">
+                    <input type="number" name="specialty_data[{{ $index }}][price]" value="{{ old("specialty_data.$index.price", $specialty->pivot->price) }}">
                     <hr>
                 @endforeach
             </div>
@@ -184,13 +192,13 @@
                 @foreach($doctor->educations as $i => $edu)
                     <input type="hidden" name="educations[{{ $i }}][id]" value="{{ $edu->id }}">
                     <label>Заклад</label>
-                    <input type="text" name="educations[{{ $i }}][institution]" value="{{ $edu->institution }}">
+                    <input type="text" name="educations[{{ $i }}][institution]" value="{{ old("educations.$i.institution", $edu->institution) }}">
                     <label>Ступінь</label>
-                    <input type="text" name="educations[{{ $i }}][degree]" value="{{ $edu->degree }}">
+                    <input type="text" name="educations[{{ $i }}][degree]" value="{{ old("educations.$i.degree", $edu->degree) }}">
                     <label>Рік початку</label>
-                    <input type="text" name="educations[{{ $i }}][start_year]" value="{{ $edu->start_year }}">
+                    <input type="text" name="educations[{{ $i }}][start_year]" value="{{ old("educations.$i.start_year", $edu->start_year) }}">
                     <label>Рік завершення</label>
-                    <input type="text" name="educations[{{ $i }}][end_year]" value="{{ $edu->end_year }}">
+                    <input type="text" name="educations[{{ $i }}][end_year]" value="{{ old("educations.$i.end_year", $edu->end_year) }}">
                     <hr>
                 @endforeach
             </div>
@@ -198,13 +206,13 @@
             <div class="section-block workplace-block">
                 <h4>Місце роботи</h4>
                 <label>Назва закладу</label>
-                <input type="text" name="place_of_work[workplace]" value="{{ $doctor->placeOfWork->workplace ?? '' }}">
+                <input type="text" name="place_of_work[workplace]" value="{{ old('place_of_work.workplace', $doctor->placeOfWork->workplace ?? '') }}">
                 <label>Посада</label>
-                <input type="text" name="place_of_work[position]" value="{{ $doctor->placeOfWork->position ?? '' }}">
+                <input type="text" name="place_of_work[position]" value="{{ old('place_of_work.position', $doctor->placeOfWork->position ?? '') }}">
                 <label>Країна</label>
-                <input type="text" name="place_of_work[country_of_residence]" value="{{ $doctor->placeOfWork->country_of_residence ?? '' }}">
+                <input type="text" name="place_of_work[country_of_residence]" value="{{ old('place_of_work.country_of_residence', $doctor->placeOfWork->country_of_residence ?? '') }}">
                 <label>Місто</label>
-                <input type="text" name="place_of_work[city_of_residence]" value="{{ $doctor->placeOfWork->city_of_residence ?? '' }}">
+                <input type="text" name="place_of_work[city_of_residence]" value="{{ old('place_of_work.city_of_residence', $doctor->placeOfWork->city_of_residence ?? '') }}">
             </div>
 
             <button type="submit">Зберегти зміни</button>

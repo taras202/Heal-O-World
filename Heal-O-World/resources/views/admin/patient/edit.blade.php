@@ -102,6 +102,6 @@
     </form>
 
     <div class="mt-4">
-    <a href="{{ route('admin.patients.edit', $patient) }}" class="btn btn-secondary">Повернутись до редагування</a>
+    <a href="{{ route('admin.patients.index', $patient) }}" class="btn btn-secondary">Повернутись до списку пацієнтів</a>
     </div>
 @endsection

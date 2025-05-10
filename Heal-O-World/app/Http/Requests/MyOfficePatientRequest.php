@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class MyOfficePatientRequest extends FormRequest
 {
@@ -16,20 +15,21 @@ class MyOfficePatientRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required|string|max:255',       
-            'last_name' => 'required|string|max:255',        
-            'date_of_birth' => 'required|date',              
-            'gender' => 'nullable|string|in:male,female',     
-            'has_insurance' => 'nullable|boolean',            
-            'country_of_residence' => 'nullable|string|max:255', 
-            'city_of_residence' => 'nullable|string|max:255',   
-            'time_zone' => 'nullable|string|max:255',          
-            'height' => 'nullable|numeric|min:0',              
-            'weight' => 'nullable|numeric|min:0',              
-            'notes' => 'nullable|string',                       
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6|confirmed',
+            'photo' => 'nullable|image|max:2048',
+            'date_of_birth' => 'required|date',
+            'gender' => 'required|in:male,female,other',
             'contact' => 'nullable|string|max:255',
-            
-            
+            'has_insurance' => 'boolean',
+            'country_of_residence' => 'nullable|string|max:255',
+            'city_of_residence' => 'nullable|string|max:255',
+            'time_zone' => 'nullable|string|max:255',
+            'height' => 'nullable|numeric',
+            'weight' => 'nullable|numeric',
+            'notes' => 'nullable|string',
         ];
     }
 
@@ -39,6 +39,12 @@ class MyOfficePatientRequest extends FormRequest
         return [
             'first_name.required' => 'Ім\'я є обов\'язковим.',
             'last_name.required' => 'Прізвище є обов\'язковим.',
+            'email.required' => 'Email є обов\'язковим.',
+            'email.email' => 'Email має бути у правильному форматі.',
+            'email.unique' => 'Цей email вже використовується.',
+            'password.required' => 'Пароль є обов\'язковим.',
+            'password.min' => 'Пароль має містити щонайменше 6 символів.',
+            'password.confirmed' => 'Паролі не співпадають.',
             'date_of_birth.required' => 'Дата народження є обов\'язковою.',
             'gender.in' => 'Стать повинна бути either male or female.',
             'has_insurance.boolean' => 'Страхування має бути значенням true або false.',
@@ -53,6 +59,8 @@ class MyOfficePatientRequest extends FormRequest
         return [
             'first_name' => 'Ім\'я',
             'last_name' => 'Прізвище',
+            'password' => 'Пароль',
+            'password_confirmation' => 'Підтвердження пароля',
             'date_of_birth' => 'Дата народження',
             'gender' => 'Стать',
             'has_insurance' => 'Страхування',

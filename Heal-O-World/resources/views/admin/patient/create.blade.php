@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.patients.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.patients.store') }}" method="POST" enctype="multipart/form-data" autocomplete="off">
         @csrf
         <div class="mb-3">
             <label for="photo">Фото:</label><br>
@@ -36,8 +36,19 @@
 
         <div class="mb-3">
             <label for="email">Email:</label>
-            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
+            <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required autocomplete="new-email">
         </div>
+
+        <div class="mb-3">
+            <label for="password">Пароль:</label>
+            <input type="password" name="password" id="password" class="form-control" required autocomplete="new-password">
+        </div>
+
+        <div class="mb-3">
+            <label for="password_confirmation">Підтвердження пароля:</label>
+            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required autocomplete="new-password">
+        </div>
+
 
         <div class="mb-3">
             <label for="date_of_birth">Дата народження:</label>

@@ -7,9 +7,10 @@ use App\Http\Requests\MyOfficePatientRequest;
 use App\Models\MyOfficeDoctor;
 use App\Models\MyOfficePatient;
 use App\Models\User;
-use Illuminate\Container\Attributes\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class PatientAdminController extends Controller
 {
@@ -67,13 +68,33 @@ class PatientAdminController extends Controller
 
     public function store(MyOfficePatientRequest $request)
     {
-        $validated = $request->validated();
+        DB::beginTransaction();
 
-        $validated['user_id'] = auth()->user()->id;
+        try {
+            $user = User::create([
+                'name' => $request->input('first_name') . ' ' . $request->input('last_name'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('password')),
+                'role' => 'patient', 
+            ]);
 
-        MyOfficePatient::create($validated);
+            $validated = $request->validated();
+            $validated['user_id'] = $user->id;
 
-        return redirect()->route('admin.patients.index')->with('status', 'Пацієнт створений!');
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('uploads/patients', 'public');
+                $validated['photo'] = $photoPath;
+            }
+
+            MyOfficePatient::create($validated);
+
+            DB::commit();
+
+            return redirect()->route('admin.patients.index')->with('status', 'Пацієнт створений!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Помилка при створенні пацієнта: ' . $e->getMessage()]);
+        }
     }
 
 
@@ -91,31 +112,46 @@ class PatientAdminController extends Controller
 
     public function update(MyOfficePatientRequest $request, MyOfficePatient $patient)
     {
-        $validated = $request->validated();
+        DB::beginTransaction();
 
-        
-        $patient->update($validated);
+        try {
+            $validated = $request->validated();
 
-        $user = User::findOrFail($patient->user_id);
-        $user->email = $request->input('email');
-        $user->save();
+            if ($request->hasFile('photo')) {
+                if ($patient->photo && Storage::disk('public')->exists($patient->photo)) {
+                    Storage::disk('public')->delete($patient->photo);
+                }
 
-        if ($request->hasFile('photo')) {
-            if ($patient->photo && Storage::disk('public')->exists($patient->photo)) {
-                Storage::disk('public')->delete($patient->photo);
+                $photoPath = $request->file('photo')->store('uploads/patients', 'public');
+                $validated['photo'] = $photoPath;
             }
-    
-            $photoPath = $request->file('photo')->store('uploads/patients', 'public');
-            $validated['photo'] = $photoPath;
-        }
 
-        return redirect()->route('admin.patients.index')->with('status', 'Пацієнт оновлений!');
+            $patient->update($validated);
+
+            $user = $patient->user;
+
+            if ($user && $user->role !== 'admin') {
+                $user->email = $request->input('email');
+
+                if ($request->filled('password')) {
+                    $user->password = Hash::make($request->input('password'));
+                }
+
+                $user->save();
+            }
+
+            DB::commit();
+
+            return redirect()->route('admin.patients.index')->with('status', 'Пацієнт оновлений!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Помилка при оновленні пацієнта: ' . $e->getMessage()]);
+        }
     }
 
     public function destroy(MyOfficePatient $patient)
     {
         $patient->delete();
-
         return redirect()->route('admin.patients.index')->with('status', 'Пацієнт видалений!');
     }
 }

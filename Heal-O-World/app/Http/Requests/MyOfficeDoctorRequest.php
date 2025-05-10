@@ -13,8 +13,15 @@ class MyOfficeDoctorRequest extends FormRequest
 
     public function rules(): array
     {
+        $isUpdate = $this->method() === 'PUT' || $this->method() === 'PATCH';
+
         return [
-            'user_id' => 'required|exists:users,id',
+            'user_id' => $isUpdate ? 'required|exists:users,id' : 'nullable',
+
+            'email' => $isUpdate ? 'nullable' : 'required|email|unique:users,email',
+            'password' => $isUpdate ? 'nullable' : 'required|string|min:6|confirmed',
+            'status' => 'nullable|boolean',
+
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'bio' => 'nullable|string',
