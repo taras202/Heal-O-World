@@ -94,7 +94,7 @@
 
     <div id="doctors-list">
         @foreach($doctors as $doctor)
-            @include('partials.doctor-card', ['doctor' => $doctor])
+            @include('components.doctor-card', ['doctor' => $doctor])
         @endforeach
     </div>
 </div>

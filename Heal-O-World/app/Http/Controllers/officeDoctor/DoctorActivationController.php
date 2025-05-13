@@ -36,7 +36,8 @@ class DoctorActivationController extends Controller
         $data = $request->validated(); 
     
         if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('doctors');
+            $path = $request->file('photo')->store('photos', 'public');
+            $validated['photo'] = $path;
         }
         
         $doctor = $user->doctor()->updateOrCreate(
@@ -57,7 +58,8 @@ class DoctorActivationController extends Controller
         }
     
         return redirect()->route('activation.specialties');
-    }    
+    }
+    
 
     public function editSpecialties()
     {
@@ -101,10 +103,17 @@ class DoctorActivationController extends Controller
     
         $data['doctor_id'] = auth()->user()->doctor->id;
     
-        foreach (['diploma_photo_1', 'diploma_photo_2', 'diploma_photo_3'] as $key) {
-            if ($request->hasFile($key)) {
-                $data[$key] = $request->file($key)->store('diplomas');
-            }
+        if ($request->hasFile('diploma_photo_1')) {
+            $path = $request->file('diploma_photo_1')->store('diploma_photos_1', 'public');
+            $validated['diploma_photo_1'] = $path;
+        }
+        if ($request->hasFile('diploma_photo_2')) {
+            $path = $request->file('diploma_photo_2')->store('diploma_photos_2', 'public');
+            $validated['diploma_photo_2'] = $path;
+        }
+        if ($request->hasFile('diploma_photo_3')) {
+            $path = $request->file('diploma_photo_3')->store('diploma_photos_3', 'public');
+            $validated['diploma_photo_3'] = $path;
         }
 
         if (!isset($data['institution'])) {

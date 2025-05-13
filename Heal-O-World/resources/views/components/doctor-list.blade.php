@@ -1,5 +1,5 @@
 @foreach($doctors as $doctor)
-    @include('partials.doctor-card', ['doctor' => $doctor])
+    @include('components.doctor-card', ['doctor' => $doctor])
 @endforeach
 
 @if($doctors->isEmpty())

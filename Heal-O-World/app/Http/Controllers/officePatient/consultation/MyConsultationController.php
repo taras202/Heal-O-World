@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\officePatient;
+namespace App\Http\Controllers\officePatient\consultation;
 
 use App\Http\Controllers\Controller;
 use App\Models\MyOfficePatient;
@@ -23,7 +23,7 @@ class MyConsultationController extends Controller
             ->when($status, fn($q) => $q->where('status', $status))
             ->with('doctor')
             ->latest()
-            ->get();
+            ->paginate(12);
     
         return view('office-patient.consultation.patient-consultations', compact('consultations', 'status'));
     }    

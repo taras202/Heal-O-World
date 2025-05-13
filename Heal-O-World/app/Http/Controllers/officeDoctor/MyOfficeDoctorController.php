@@ -17,12 +17,16 @@ class MyOfficeDoctorController extends Controller
         $doctor = MyOfficeDoctor::with(['specialties', 'educations', 'placeOfWork'])
                     ->where('user_id', $user->id)
                     ->first();
-    
+        
+        $photoUrl = $doctor->photo ? asset('storage/' . $doctor->photo) : null;
+
         return view('doctor.office-doctor.doctor-office', [
             'user' => $user,
             'doctor' => $doctor,
+            'photoUrl' => $photoUrl,
         ]);
-    }   
+    }
+
     public function update(Request $request)
     {
         $user = Auth::user();

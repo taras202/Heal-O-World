@@ -17,6 +17,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Фото</th>
                 <th>Ім’я</th>
                 <th>Прізвище</th>
@@ -32,9 +33,10 @@
         <tbody>
             @foreach($doctors as $doctor)
                 <tr>
+                    <td>{{ $doctor->id }}</td>
                     <td>
                         <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('images/default-avatar.png') }}"
-                             alt="Фото" width="60" height="60" style="border-radius: 50%;">
+                            alt="Фото" width="60" height="60" style="border-radius: 50%;">
                     </td>
                     <td>{{ $doctor->first_name }}</td>
                     <td>{{ $doctor->last_name }}</td>
@@ -63,9 +65,7 @@
                     </td>
                     <td>
                         <a href="{{ route('admin.doctors.show', $doctor) }}" class="btn btn-sm btn-info">Перегляд</a>
-                        
                         <a href="{{ route('admin.doctors.edit', $doctor) }}" class="btn btn-sm btn-primary">Редагувати</a>
-
                         <form action="{{ route('admin.doctors.destroy', $doctor) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Ви впевнені, що хочете видалити цього лікаря?');">
                             @csrf
                             @method('DELETE')

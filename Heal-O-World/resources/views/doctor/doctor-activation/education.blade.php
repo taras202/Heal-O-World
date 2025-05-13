@@ -123,19 +123,22 @@
             </div>
         </div>
 
-        <div class="mb-6">
-            <label class="block text-gray-700 font-medium mb-2">Фото диплома 1</label>
-            <input type="file" name="diploma_photo_1" accept="image/*" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out">
+        <div class="mb-3">
+            <label for="diploma_photo_1" class="form-label">Photo</label>
+            <input type="file" class="form-control" id="diploma_photo_1" name="diploma_photo_1" required
+            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
         </div>
 
-        <div class="mb-6">
-            <label class="block text-gray-700 font-medium mb-2">Фото диплома 2</label>
-            <input type="file" name="diploma_photo_2" accept="image/*" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out">
+        <div class="mb-3">
+            <label for="diploma_photo_2" class="form-label">Photo</label>
+            <input type="file" class="form-control" id="diploma_photo_2" name="diploma_photo_2" required
+            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
         </div>
 
-        <div class="mb-6">
-            <label class="block text-gray-700 font-medium mb-2">Фото диплома 3</label>
-            <input type="file" name="diploma_photo_3" accept="image/*" class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out">
+        <div class="mb-3">
+            <label for="diploma_photo_3" class="form-label">Photo</label>
+            <input type="file" class="form-control" id="diploma_photo_3" name="diploma_photo_3" required
+            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
         </div>
 
         <div class="flex justify-end">

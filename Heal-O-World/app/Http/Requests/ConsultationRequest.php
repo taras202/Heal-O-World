@@ -8,54 +8,34 @@ class ConsultationRequest extends FormRequest
 {
     public function authorize()
     {
-        
-        return true;
+        return true; 
     }
 
     public function rules()
     {
         return [
-            'patient_id' => 'required|exists:patients,id',  
-            'doctor_id' => 'required|exists:doctors,id',    
-            'google_meet_link' => 'nullable|url',            
-            'appointment_date' => 'required|date',           
-            'consultation_time' => 'required|string',        
-            'diagnosis' => 'nullable|string',                 
-            'prescription' => 'nullable|string',              
-            'status' => 'nullable|string|in:pending,completed,canceled', 
-            'treatment' => 'nullable|string',                
-            'notes' => 'nullable|string',                    
+            'patient_id' => 'nullable|exists:my_office_patients,id', 
+            'doctor_id' => 'required|exists:my_office_doctors,id', 
+            'google_meet_link' => 'nullable|url', 
+            'appointment_date' => 'required|date|after_or_equal:today',
+            'consultation_time' => 'required|date_format:H:i',
+            'diagnosis' => 'nullable|string|max:500',
+            'prescription' => 'nullable|string|max:500',
+            'status' => 'required|in:pending,completed,canceled',
+            'treatment' => 'nullable|string|max:500',
+            'notes' => 'nullable|string|max:1000',
         ];
     }
 
     public function messages()
     {
         return [
-            'patient_id.required' => 'Поле "Пацієнт" є обов\'язковим.',
-            'patient_id.exists' => 'Пацієнт не знайдений в системі.',
-            'doctor_id.required' => 'Поле "Лікар" є обов\'язковим.',
-            'doctor_id.exists' => 'Лікар не знайдений в системі.',
-            'google_meet_link.url' => 'Введений URL для Google Meet є некоректним.',
-            'appointment_date.required' => 'Поле "Дата прийому" є обов\'язковим.',
-            'appointment_date.date' => 'Поле "Дата прийому" має бути коректною датою.',
-            'consultation_time.required' => 'Поле "Час прийому" є обов\'язковим.',
-            'status.in' => 'Статус може бути тільки одним з наступних: pending, completed, canceled.',
-        ];
-    }
-
-    public function attributes()
-    {
-        return [
-            'patient_id' => 'Пацієнт',
-            'doctor_id' => 'Лікар',
-            'google_meet_link' => 'Посилання на Google Meet',
-            'appointment_date' => 'Дата прийому',
-            'consultation_time' => 'Час прийому',
-            'diagnosis' => 'Діагноз',
-            'prescription' => 'Рецепт',
-            'status' => 'Статус',
-            'treatment' => 'Лікування',
-            'notes' => 'Нотатки',
+            'patient_id.required' => 'A patient ID is required.',
+            'doctor_id.required'  => 'A doctor ID is required.',
+            'appointment_date.required' => 'Please provide an appointment date.',
+            'consultation_time.required' => 'Consultation time is required.',
+            'status.required' => 'The status of the consultation is required.',
+            'status.in' => 'The status must be one of the following: pending, completed, canceled.',
         ];
     }
 }

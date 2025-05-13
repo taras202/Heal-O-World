@@ -4,7 +4,6 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyOfficePatientRequest;
-use App\Models\MyOfficeDoctor;
 use App\Models\MyOfficePatient;
 use App\Models\User;
 use Illuminate\Http\Request;

@@ -225,8 +225,6 @@
                 </li>
 
                 <li>Карта пацієнта</li>
-                <li>Обране</li>
-                <li>Баланс</li>
                 <li>
                     <form method="POST" action="{{ route('auth.logout') }}" style="display:inline;">
                         @csrf

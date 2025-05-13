@@ -16,6 +16,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>ID</th>
                 <th>Фото</th>
                 <th>Ім’я</th>
                 <th>Прізвище</th>
@@ -36,9 +37,10 @@
                     $averageDuration = $consultations->avg('duration_minutes');
                 @endphp
                 <tr>
+                    <td>{{ $patient->id }}</td>
                     <td>
                         <img src="{{ $patient->photo ? asset('storage/' . $patient->photo) : asset('images/default-avatar.png') }}"
-                        alt="Фото" width="60" height="60" style="border-radius: 50%;">
+                            alt="Фото" width="60" height="60" style="border-radius: 50%;">
                     </td>
                     <td>{{ $patient->first_name }}</td>
                     <td>{{ $patient->last_name }}</td>
@@ -49,12 +51,11 @@
                         @endforeach
                     </td>
                     <td>{{ $consultations->count() }}</td>
-                    <td>{{ number_format($averageRating, 1) ?? '—' }}</td>
-                    <td>{{ number_format($averageDuration, 1) ?? '—' }}</td>
+                    <td>{{ $averageRating ? number_format($averageRating, 1) : '—' }}</td>
+                    <td>{{ $averageDuration ? number_format($averageDuration, 1) : '—' }}</td>
                     <td>
                         <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-sm btn-info">Перегляд</a>
                         <a href="{{ route('admin.patients.edit', $patient) }}" class="btn btn-sm btn-primary">Редагувати</a>
-
                         <form action="{{ route('admin.patients.destroy', $patient) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Ви впевнені, що хочете видалити цього пацієнта?');">
                             @csrf
                             @method('DELETE')

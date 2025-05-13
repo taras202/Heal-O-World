@@ -14,5 +14,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ConsultationSeeder::class); 
 
+        $this->call(WorkScheduleSeeder::class); 
+
     }
 }

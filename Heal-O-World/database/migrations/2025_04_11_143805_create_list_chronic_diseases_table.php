@@ -14,8 +14,10 @@ return new class extends Migration {
         });
     }
 
-    public function down(): void
+    public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('list_chronic_diseases');
-    }
+        Schema::enableForeignKeyConstraints();
+    }    
 };

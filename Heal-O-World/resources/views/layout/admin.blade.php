@@ -201,7 +201,6 @@
 
         <div class="admin-sidebar-box mt-3 mb-4 animate-entry">
             <div class="d-flex align-items-center gap-3">
-                <img src="{{ asset('images/admin-avatar.png') }}" alt="Admin" class="admin-avatar-sidebar">
                 <div>
                     <strong>{{ $admin->name ?? 'Адміністратор' }}</strong><br>
                     <small class="text-light">{{ $admin->email ?? 'admin@example.com' }}</small><br>

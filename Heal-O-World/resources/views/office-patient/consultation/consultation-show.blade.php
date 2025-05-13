@@ -1,18 +1,28 @@
 @extends('layout.menu-consultation-patient')
 
+@section('content')
 <style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f1f4f9;
+    }
+
     .consultation-details {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
-    max-width: 700px;
-    margin: 2rem auto;
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        padding: 2rem 2.5rem;
+        max-width: 760px;
+        margin: 3rem auto;
+        animation: fadeIn 0.4s ease;
     }
 
     .consultation-details h2 {
-        margin-bottom: 1.5rem;
-        color: #0d3581;
+        margin-bottom: 2rem;
+        color: #003366;
+        font-size: 1.8rem;
+        text-align: center;
+        font-weight: 700;
     }
 
     .consultation-details ul {
@@ -22,28 +32,45 @@
     }
 
     .consultation-details li {
-        padding: 0.8rem 1rem;
+        padding: 1rem 1.2rem;
         border-left: 4px solid #4d8ef7;
-        background-color: #f9f9f9;
-        border-radius: 6px;
-        margin-bottom: 1rem;
+        background-color: #f7faff;
+        border-radius: 8px;
+        margin-bottom: 1.2rem;
         line-height: 1.6;
+        font-size: 1rem;
+        display: flex;
+        flex-wrap: wrap;
     }
 
     .consultation-details li strong {
-        color: #1a1a1a;
+        color: #212529;
+        min-width: 160px;
+        font-weight: 600;
+    }
+
+    .consultation-details li a {
+        color: #0077cc;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .consultation-details li a:hover {
+        text-decoration: underline;
     }
 
     .btn-outline {
         display: inline-block;
         padding: 0.6rem 1.4rem;
         border: 2px solid #0d3581;
-        border-radius: 8px;
+        border-radius: 10px;
         color: #0d3581;
-        text-decoration: none;
+        background-color: transparent;
         font-weight: 600;
-        transition: all 0.2s ease;
+        text-decoration: none;
+        transition: all 0.25s ease-in-out;
         margin-right: 1rem;
+        margin-top: 0.5rem;
     }
 
     .btn-outline:hover {
@@ -60,9 +87,12 @@
         background-color: #d11a2a;
         color: white;
     }
-</style>
 
-@section('content')
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
 
 <div class="consultation-details">
     <h2>Деталі консультації</h2>
@@ -78,7 +108,7 @@
         <li><strong>Нотатки:</strong> {{ $consultation->notes ?? '—' }}</li>
         <li><strong>Посилання на консультацію:</strong>
             @if($consultation->google_meet_link)
-                <a href="{{ $consultation->google_meet_link }}" target="_blank">Перейти</a>
+                <a href="{{ $consultation->google_meet_link }}" target="_blank">Перейти до Meet</a>
             @else
                 Немає
             @endif

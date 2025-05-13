@@ -16,22 +16,17 @@ class MyOfficeDoctorRequest extends FormRequest
         $isUpdate = $this->method() === 'PUT' || $this->method() === 'PATCH';
 
         return [
-            'user_id' => $isUpdate ? 'required|exists:users,id' : 'nullable',
-
-            'email' => $isUpdate ? 'nullable' : 'required|email|unique:users,email',
-            'password' => $isUpdate ? 'nullable' : 'required|string|min:6|confirmed',
-            'status' => 'nullable|boolean',
-
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'bio' => 'nullable|string',
-            'gender' => 'required|in:чоловік,жінка,інше',
+            'gender' => 'required|in:male,female',
             'photo' => 'nullable|image|max:2048',
             'contact' => 'required|string|max:255',
             'time_zone' => 'required|string|max:100',
 
             'specialties' => 'nullable|array',
             'specialties.*' => 'exists:specialties,id',
+
             'specialty_data' => 'nullable|array',
             'specialty_data.*.experience' => 'nullable|numeric|min:0',
             'specialty_data.*.price' => 'nullable|numeric|min:0',

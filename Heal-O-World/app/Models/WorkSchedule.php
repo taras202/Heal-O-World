@@ -15,13 +15,17 @@ class WorkSchedule extends Model
     
     protected $fillable = [
         'doctor_id', 
-        'day_of_the_week', 
-        'hours_with', 
-        'hours_after', 
+        'appointment_date', 
+        'consultation_time',  
     ];
 
     public function doctor()
     {
         return $this->belongsTo(MyOfficeDoctor::class);
+    }
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class, 'consultation_time', 'consultation_time')
+                    ->where('appointment_date', $this->appointment_date);
     }
 }

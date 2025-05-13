@@ -68,13 +68,14 @@
         <div class="doctor-left">
             {{-- Фото --}}
             <div style="margin-bottom: 1rem;">
-                @if ($doctor->photo)
-                    <img src="{{ asset('storage/' . $doctor->photo) }}" alt="{{ $doctor->first_name }}" class="doctor-photo">
-                @else
-                    <div class="doctor-placeholder">
-                        немає фото
-                    </div>
-                @endif
+                <td class="py-3 px-4 text-center">
+                    @if ($doctor->photo)
+                        <img src="{{ asset('storage/' . $doctor->photo) }}" alt="Фото"
+                            class="w-16 h-16 object-cover rounded-lg">
+                    @else
+                        <span class="text-gray-500">Немає фото</span>
+                    @endif
+                </td>
             </div>
 
             {{-- Інформація --}}

@@ -49,6 +49,11 @@ class MyOfficeDoctor extends Model
         return $this->hasMany(Consultation::class, 'doctor_id');
     }
 
+    public function availableTimes()
+    {
+        return $this->hasMany(AvailableTime::class, 'doctor_id');
+    }
+
     public function fullName()
     {
         return $this->first_name . ' ' . $this->last_name;

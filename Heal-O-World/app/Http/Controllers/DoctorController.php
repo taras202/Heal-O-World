@@ -31,7 +31,7 @@ class DoctorController extends Controller
             })
             ->get();
     
-        return view('partials.doctor-list', compact('doctors'));
+        return view('components.doctor-list', compact('doctors'));
     }
     
 }

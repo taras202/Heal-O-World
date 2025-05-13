@@ -41,6 +41,4 @@ class MyOfficePatient extends Model
     {
         return $this->hasOne(MyOfficeDoctor::class);
     }
-
-
 }

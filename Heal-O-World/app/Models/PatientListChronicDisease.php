@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PacientListChronicDisease extends Model
+class PatientListChronicDisease extends Model
 {
     use HasFactory;
 
-    protected $table = 'pacient_list_chronic_diseases'; 
+    protected $table = 'patient_list_chronic_diseases'; 
 
    
     public function patient()

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\officePatient\MyConsultationController;
+use App\Http\Controllers\officePatient\consultation\MyConsultationController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('patient.consultations.')->group(function () {

@@ -116,18 +116,17 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                     <div>
                         <label for="gender" class="block text-base font-medium text-gray-700">Стать</label>
-                        <select name="gender" id="gender"
-                            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
+                        <select name="gender" id="gender">
                             <option value="">Оберіть стать</option>
                             <option value="male">Чоловік</option>
                             <option value="female">Жінка</option>
                         </select>
                     </div>
 
-                    <div>
-                        <label for="photo" class="block text-base font-medium text-gray-700">Фото</label>
-                        <input type="file" name="photo" id="photo"
-                            class="mt-2 block w-full text-base text-gray-600 file:bg-blue-100 file:text-blue-800 file:border-none file:px-5 file:py-3 file:rounded-lg hover:file:bg-blue-200 transition duration-200">
+                    <div class="mb-3">
+                        <label for="photo" class="form-label">Photo</label>
+                        <input type="file" class="form-control" id="photo" name="photo" required
+                        class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
                     </div>
                 </div>
 

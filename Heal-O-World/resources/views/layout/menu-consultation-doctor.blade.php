@@ -223,6 +223,9 @@
                 <li class="{{ request()->routeIs('doctor.consultations.index') ? 'active' : '' }}">
                     <a href="{{ route('doctor.consultations.index') }}">Мої консультації</a>
                 </li>
+                <li class="{{ request()->routeIs('work-schedule.create') ? 'active' : '' }}">
+                    <a href="{{ route('work-schedule.create') }}">Графік роботи</a>
+                </li>
                 <li>Баланс</li>
                 <li>
                     <form method="POST" action="{{ route('auth.logout') }}" style="display:inline;">
