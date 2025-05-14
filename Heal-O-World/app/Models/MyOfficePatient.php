@@ -20,8 +20,6 @@ class MyOfficePatient extends Model
         'country_of_residence',
         'city_of_residence',
         'time_zone',
-        'height',
-        'weight',
         'notes',
         'contact',
         'user_id',

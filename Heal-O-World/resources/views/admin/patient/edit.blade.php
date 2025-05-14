@@ -84,16 +84,6 @@
         </div>
 
         <div class="mb-3">
-            <label for="height">Ріст (см):</label>
-            <input type="number" step="0.01" name="height" id="height" class="form-control" value="{{ old('height', $patient->height) }}">
-        </div>
-
-        <div class="mb-3">
-            <label for="weight">Вага (кг):</label>
-            <input type="number" step="0.01" name="weight" id="weight" class="form-control" value="{{ old('weight', $patient->weight) }}">
-        </div>
-
-        <div class="mb-3">
             <label for="notes">Примітки:</label>
             <textarea name="notes" id="notes" class="form-control">{{ old('notes', $patient->notes) }}</textarea>
         </div>

@@ -14,7 +14,6 @@ class PatientCard extends Model
     protected $fillable = [
         'patient_id',
         'visit_date',
-        'diagnosis',
         'notes',
     ];
 
@@ -23,6 +22,27 @@ class PatientCard extends Model
     {
         return $this->belongsTo(MyOfficePatient::class, 'patient_id');
     }
+
+    public function allergicReactions()
+    {
+        return $this->hasMany(PatientListAllergicReaction::class, 'patient_card_id');
+    }
+
+    public function chronicDiseases()
+    {
+        return $this->hasMany(PatientListChronicDisease::class, 'patient_card_id');
+    }
+
+    public function diseases()
+    {
+        return $this->hasMany(PatientListOfDisease::class, 'patient_card_id');
+    }
+
+    public function diagnoses()
+    {
+        return $this->hasMany(Diagnosis::class, 'patient_card_id');
+    }
+
 
     public $timestamps = true; 
 }

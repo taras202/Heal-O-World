@@ -215,17 +215,6 @@
                 </select>
             </div>
 
-            <div class="form-row">
-                <div class="col">
-                    <label for="height">Зріст (см)</label>
-                    <input type="number" name="height" id="height" required value="{{ old('height', $patient?->height) }}">
-                </div>
-                <div class="col">
-                    <label for="weight">Вага (кг)</label>
-                    <input type="number" name="weight" id="weight" required value="{{ old('weight', $patient?->weight) }}">
-                </div>
-            </div>
-
             <div class="form-group">
                 <label for="notes">Примітки</label>
                 <textarea name="notes" id="notes" rows="3">{{ old('notes', $patient?->notes) }}</textarea>

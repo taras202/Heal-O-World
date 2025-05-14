@@ -11,10 +11,10 @@ class PatientListChronicDisease extends Model
 
     protected $table = 'patient_list_chronic_diseases'; 
 
-   
-    public function patient()
+
+    public function patientCard()
     {
-        return $this->belongsTo(MyOfficePatient::class, 'patient_id');
+        return $this->belongsTo(PatientCard::class, 'patient_card_id');
     }
 
     public function chronicDisease()

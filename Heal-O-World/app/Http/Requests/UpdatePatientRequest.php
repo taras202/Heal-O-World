@@ -22,8 +22,6 @@ class UpdatePatientRequest extends FormRequest
             'country_of_residence' => 'required|string|max:255',
             'city_of_residence' => 'required|string|max:255',
             'time_zone' => 'nullable|string|max:255',
-            'height' => 'required|integer|min:0',
-            'weight' => 'required|integer|min:0',
             'notes' => 'nullable|string',
         ];
     }

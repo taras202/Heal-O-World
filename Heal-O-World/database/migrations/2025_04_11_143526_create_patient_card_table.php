@@ -11,8 +11,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('patient_id')->constrained('my_office_patients')->onDelete('cascade');
             $table->date('visit_date');
-            $table->string('diagnosis');
             $table->text('notes')->nullable();
+            $table->integer('height');
+            $table->integer('weight');
             $table->timestamps();
         });
     }

@@ -17,8 +17,6 @@ return new class extends Migration {
             $table->string('country_of_residence');
             $table->string('city_of_residence');
             $table->string('time_zone')->nullable();
-            $table->integer('height');
-            $table->integer('weight');
             $table->text('notes')->nullable();
             $table->string('contact')->nullable();
             

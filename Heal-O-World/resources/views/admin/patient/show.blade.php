@@ -63,16 +63,6 @@
         </div>
 
         <div class="mb-3">
-            <label for="height">Ріст (см):</label>
-            <input type="text" class="form-control" id="height" value="{{ $patient->height }}" readonly>
-        </div>
-
-        <div class="mb-3">
-            <label for="weight">Вага (кг):</label>
-            <input type="text" class="form-control" id="weight" value="{{ $patient->weight }}" readonly>
-        </div>
-
-        <div class="mb-3">
             <label for="notes">Примітки:</label>
             <textarea class="form-control" id="notes" readonly>{{ $patient->notes ?: 'Немає приміток' }}</textarea>
         </div>

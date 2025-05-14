@@ -27,8 +27,6 @@ class MyOfficePatientRequest extends FormRequest
             'country_of_residence' => 'nullable|string|max:255',
             'city_of_residence' => 'nullable|string|max:255',
             'time_zone' => 'nullable|string|max:255',
-            'height' => 'nullable|numeric',
-            'weight' => 'nullable|numeric',
             'notes' => 'nullable|string',
         ];
     }

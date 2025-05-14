@@ -223,8 +223,10 @@
                 <li class="{{ request()->routeIs('patient.consultations.index') ? 'active' : '' }}">
                     <a href="{{ route('patient.consultations.index') }}">Мої консультації</a>
                 </li>
-
-                <li>Карта пацієнта</li>
+                <li class="{{ request()->routeIs('patient-cards.index') ? 'active' : '' }}">
+                    <a href="{{ route('patient-cards.index') }}">Карта пацієнта</a>
+                </li>
+               
                 <li>
                     <form method="POST" action="{{ route('auth.logout') }}" style="display:inline;">
                         @csrf

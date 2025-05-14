@@ -39,8 +39,6 @@ class MyOfficePatientController extends Controller
             'country_of_residence' => $request->country_of_residence,
             'city_of_residence' => $request->city_of_residence,
             'time_zone' => $request->time_zone,
-            'height' => $request->height,
-            'weight' => $request->weight,
             'notes' => $request->notes,
         ]);
     
@@ -61,8 +59,6 @@ class MyOfficePatientController extends Controller
             'country_of_residence' => $request->country_of_residence,
             'city_of_residence' => $request->city_of_residence,
             'time_zone' => $request->time_zone,
-            'height' => $request->height,
-            'weight' => $request->weight,
             'notes' => $request->notes,
             'contact' => $user->email,
         ]);

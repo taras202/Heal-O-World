@@ -11,16 +11,15 @@ class PatientListAllergicReaction extends Model
 
     protected $table = 'patient_list_allergic_reactions';
 
-    
-    public function patient()
+
+    public function patientCard()
     {
-        return $this->belongsTo(MyOfficePatient::class, 'patient_id');
+        return $this->belongsTo(PatientCard::class, 'patient_card_id');
     }
 
     public function allergicReaction()
     {
         return $this->belongsTo(ListAllergicReaction::class, 'list_allergic_reactions_id');
     }
-
     public $timestamps = true; 
 }
