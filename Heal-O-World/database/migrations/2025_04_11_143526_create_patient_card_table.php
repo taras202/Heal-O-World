@@ -10,10 +10,9 @@ return new class extends Migration {
         Schema::create('patient_card', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_id')->constrained('my_office_patients')->onDelete('cascade');
-            $table->date('visit_date');
             $table->text('notes')->nullable();
-            $table->integer('height');
-            $table->integer('weight');
+            $table->float('height')->nullable(); 
+            $table->float('weight')->nullable(); 
             $table->timestamps();
         });
     }

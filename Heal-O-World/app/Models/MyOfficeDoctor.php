@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\AvailableTime;
+
 
 class MyOfficeDoctor extends Model
 {
@@ -47,11 +49,6 @@ class MyOfficeDoctor extends Model
     public function consultations()
     {
         return $this->hasMany(Consultation::class, 'doctor_id');
-    }
-
-    public function availableTimes()
-    {
-        return $this->hasMany(AvailableTime::class, 'doctor_id');
     }
 
     public function fullName()

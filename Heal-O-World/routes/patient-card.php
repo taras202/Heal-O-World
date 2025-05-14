@@ -11,4 +11,6 @@ Route::get('/patient-cards/{id}', [PatientCardController::class, 'show'])->name(
 
 Route::put('/patient-cards/{id}', [PatientCardController::class, 'update'])->name('patient-cards.update');
 
+Route::get('/patient-cards/{id}/edit', [PatientCardController::class, 'edit'])->name('patient-cards.edit');
+
 Route::delete('/patient-cards/{id}', [PatientCardController::class, 'destroy'])->name('patient-cards.destroy');

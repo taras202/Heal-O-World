@@ -225,7 +225,6 @@
             </button>
         </form>
 
-
         <!-- Phone & Email Section -->
         <div class="profile-block">
             <h4>Телефон та E-mail</h4>

@@ -5,15 +5,23 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
+    public function up()
     {
         Schema::create('patient_list_allergic_reactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_card_id')->constrained('patient_card')->onDelete('cascade');
-            $table->foreignId('list_allergic_reactions_id')->constrained('list_allergic_reactions')->onDelete('cascade');
+            $table->unsignedBigInteger('patient_card_id');
+            $table->unsignedBigInteger('list_allergic_reactions_id');
             $table->timestamps();
+
+            $table->foreign('patient_card_id')
+                ->references('id')->on('patient_card')
+                ->onDelete('cascade');
+
+            $table->foreign('list_allergic_reactions_id')
+                ->references('id')->on('list_allergic_reactions')
+                ->onDelete('cascade')
+                ->name('fk_patient_list_allergic_reactions_list_allergic_reactions_id');
         });
-        
     }
 
     public function down(): void

@@ -46,8 +46,6 @@ class MyOfficePatientRequest extends FormRequest
             'date_of_birth.required' => 'Дата народження є обов\'язковою.',
             'gender.in' => 'Стать повинна бути either male or female.',
             'has_insurance.boolean' => 'Страхування має бути значенням true або false.',
-            'height.numeric' => 'Зріст має бути числовим значенням.',
-            'weight.numeric' => 'Вага має бути числовим значенням.',
             'contact.max' => 'Контактне поле не повинно перевищувати 255 символів.',
         ];
     }
@@ -65,8 +63,6 @@ class MyOfficePatientRequest extends FormRequest
             'country_of_residence' => 'Країна проживання',
             'city_of_residence' => 'Місто проживання',
             'time_zone' => 'Часова зона',
-            'height' => 'Зріст',
-            'weight' => 'Вага',
             'notes' => 'Примітки',
             'contact' => 'Контакт',
         ];

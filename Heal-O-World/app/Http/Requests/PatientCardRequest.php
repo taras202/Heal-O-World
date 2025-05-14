@@ -11,11 +11,12 @@ class PatientCardRequest extends FormRequest
         return true;  
     }
 
-    public function rules()
-    {
+   public function rules()
+     {
         return [
             'patient_id' => 'required|exists:my_office_patients,id',
-            'visit_date' => 'required|date',
+            'height' => 'nullable|numeric', 
+            'weight' => 'nullable|numeric',
             'notes' => 'nullable|string|max:255',
 
             'allergic_reactions.*.patient_card_id' => 'required|exists:patient_card,id',
@@ -36,8 +37,6 @@ class PatientCardRequest extends FormRequest
         return [
             'patient_id.required' => 'Поле "Пацієнт" є обов\'язковим.',
             'patient_id.exists' => 'Пацієнт не знайдений.',
-            'visit_date.required' => 'Дата відвідування є обов\'язковою.',
-            'visit_date.date' => 'Будь ласка, введіть правильну дату.',
             'notes.string' => 'Поле "Нотатки" повинно бути текстом.',
             'notes.max' => 'Нотатки повинні містити не більше 255 символів.',
 

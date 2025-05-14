@@ -11,13 +11,18 @@ class PatientCard extends Model
 
     protected $table = 'patient_card';
 
-    protected $fillable = [
-        'patient_id',
-        'visit_date',
-        'notes',
+    protected $casts = [
+        'height' => 'float',  
+        'weight' => 'float',  
     ];
 
-    
+    protected $fillable = [
+        'patient_id',
+        'notes',
+        'weight',
+        'height',
+    ];
+
     public function patient()
     {
         return $this->belongsTo(MyOfficePatient::class, 'patient_id');
@@ -42,7 +47,6 @@ class PatientCard extends Model
     {
         return $this->hasMany(Diagnosis::class, 'patient_card_id');
     }
-
 
     public $timestamps = true; 
 }
