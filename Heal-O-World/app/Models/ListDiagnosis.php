@@ -5,16 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Diagnosis extends Model
+class ListDiagnosis extends Model
 {
     use HasFactory;
 
-    protected $table = 'diagnoses';
+    protected $table = 'list_diagnoses';
 
     protected $fillable = [
-        'patient_card_id',
         'title',
-        'description',
     ];
 
     public $timestamps = true;

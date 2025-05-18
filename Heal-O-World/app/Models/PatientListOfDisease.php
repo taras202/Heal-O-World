@@ -11,6 +11,10 @@ class PatientListOfDisease extends Model
 
     protected $table = 'patient_list_of_diseases'; 
 
+    protected $fillable = [
+        'patient_card_id',
+        'list_of_diseases_id',
+    ];
 
     public function disease()
     {

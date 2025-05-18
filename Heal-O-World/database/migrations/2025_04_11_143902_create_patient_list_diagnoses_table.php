@@ -7,11 +7,10 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('diagnoses', function (Blueprint $table) {
+        Schema::create('patient_list_diagnoses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('patient_card_id')->constrained('patient_card')->onDelete('cascade');
-            $table->string('title');
-            $table->text('description')->nullable();
+            $table->foreignId('list_diagnoses_id')->constrained('list_chronic_diseases')->onDelete('cascade');
             $table->timestamps();
         });
     }

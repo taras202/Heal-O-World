@@ -16,5 +16,11 @@ class DatabaseSeeder extends Seeder
 
         $this->call(WorkScheduleSeeder::class); 
 
+        $this->call([
+            ListAllergicReactionsSeeder::class,
+            ListChronicDiseasesSeeder::class,
+            ListOfDiseasesSeeder::class,
+            ListDiagnosesSeeder::class,
+        ]);
     }
 }

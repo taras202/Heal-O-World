@@ -10,7 +10,11 @@ class PatientListAllergicReaction extends Model
     use HasFactory;
 
     protected $table = 'patient_list_allergic_reactions';
-
+    
+    protected $fillable = [
+        'patient_card_id',
+        'list_allergic_reactions_id',
+    ];
 
     public function patientCard()
     {

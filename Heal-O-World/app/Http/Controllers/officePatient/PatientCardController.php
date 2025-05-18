@@ -8,6 +8,7 @@ use App\Models\PatientCard;
 use App\Models\Diagnosis;
 use App\Models\ListAllergicReaction;
 use App\Models\ListChronicDisease;
+use App\Models\ListDiagnosis;
 use App\Models\ListOfDisease;
 
 class PatientCardController extends Controller
@@ -15,137 +16,115 @@ class PatientCardController extends Controller
     public function index()
     {
         $patient = auth()->user()->patient;
-
+    
         if (!$patient) {
             return redirect()->route('home')->with('error', 'Пацієнт не знайдений');
         }
-
-        $patientCard = PatientCard::where('patient_id', $patient->id)->first();
-
-        if (!$patientCard) {
-            $patientCard = new PatientCard(); 
-        }
-
+    
+        $patientCard = PatientCard::where('patient_id', $patient->id)->first() ?? null;
+    
         $lists = [
             'allergic_reactions' => ListAllergicReaction::all(),
             'chronic_diseases' => ListChronicDisease::all(),
             'diseases' => ListOfDisease::all(),
-            'diagnoses' => Diagnosis::all(),
+            'diagnoses' => ListDiagnosis::all(),
         ];
+    
+        $sections = [
+            'allergic_reactions' => 'Алергічні реакції',
+            'chronic_diseases' => 'Хронічні захворювання',
+            'diseases' => 'Захворювання',
+            'diagnoses' => 'Діагнози',
+        ];
+    
+        return view('office-patient.patient-card.index', compact('patient', 'patientCard', 'lists', 'sections'));
+    }    
 
-        if (!$patient) {
-            return view('office-patient.patient-card.index')->with('error', 'Пацієнт не знайдений');
-        }
-
-        return view('office-patient.patient-card.index', compact('patient', 'patientCard', 'lists'));
-    }
-
-    public function store(PatientCardRequest $request) 
+    public function store(PatientCardRequest $request)
     {
         $validated = $request->validated();
 
-        $validated['height'] = $validated['height'] ?? null; 
-        $validated['weight'] = $validated['weight'] ?? null; 
+        $patientCard = PatientCard::create([
+            'patient_id' => $validated['patient_id'],
+            'height' => $validated['height'] ?? null,
+            'weight' => $validated['weight'] ?? null,
+            'notes' => $validated['notes'] ?? null,
+        ]);
 
-        $patientCard = PatientCard::create($validated);
+        $this->storeRelations($patientCard, $validated);
 
-        if ($request->has('diagnoses')) {
-            foreach ($validated['diagnoses'] as $diagnosis) {
+        return redirect()->route('patient-cards.show', $patientCard->id)
+            ->with('success', 'Пацієнтську карту створено успішно.');
+    }
+
+    public function update(PatientCardRequest $request, $id)
+    {
+        $patientCard = PatientCard::findOrFail($id);
+        $validated = $request->validated();
+
+        $patientCard->update([
+            'height' => $validated['height'] ?? null,
+            'weight' => $validated['weight'] ?? null,
+            'notes' => $validated['notes'] ?? null,
+        ]);
+
+        $patientCard->diagnoses()->delete();
+        $patientCard->chronicDiseases()->delete();
+        $patientCard->diseases()->delete();
+        $patientCard->allergicReactions()->delete();
+
+        $this->storeRelations($patientCard, $validated);
+
+        return redirect()->route('patient-cards.show', $patientCard->id)
+            ->with('success', 'Пацієнтську карту оновлено успішно.');
+    }
+
+    private function storeRelations(PatientCard $patientCard, array $validated)
+    {
+        if (!empty($validated['diagnoses'])) {
+            foreach ($validated['diagnoses'] as $item) {
                 $patientCard->diagnoses()->create([
-                    'title' => $diagnosis['title'],
-                ]);
+                    'list_diagnoses_id' => $item['list_diagnoses_id'],
+                ]);                
             }
         }
 
-        if ($request->has('chronic_diseases')) {
-            foreach ($validated['chronic_diseases'] as $chronicDisease) {
+        if (!empty($validated['chronic_diseases'])) {
+            foreach ($validated['chronic_diseases'] as $item) {
                 $patientCard->chronicDiseases()->create([
-                    'title' => $chronicDisease['title'],
+                    'list_chronic_diseases_id' => $item['list_chronic_diseases_id'],
                 ]);
             }
         }
 
-        if ($request->has('diseases')) {
-            foreach ($validated['diseases'] as $disease) {
+        if (!empty($validated['diseases'])) {
+            foreach ($validated['diseases'] as $item) {
                 $patientCard->diseases()->create([
-                    'title' => $disease['title'],
+                    'list_of_diseases_id' => $item['list_of_diseases_id'],
                 ]);
             }
         }
 
-        if ($request->has('allergic_reactions')) {
-            foreach ($validated['allergic_reactions'] as $reaction) {
+        if (!empty($validated['allergic_reactions'])) {
+            foreach ($validated['allergic_reactions'] as $item) {
                 $patientCard->allergicReactions()->create([
-                    'title' => $reaction['title'],
+                    'list_allergic_reactions_id' => $item['list_allergic_reactions_id'],
                 ]);
             }
         }
-
-        return redirect()->route('patient-cards.show', $patientCard->id);
     }
 
     public function show($id)
     {
         $patientCard = PatientCard::with([
-            'patient',  
+            'patient',
             'diagnoses',
             'chronicDiseases',
             'diseases',
             'allergicReactions',
-        ])->findOrFail($id);   
+        ])->findOrFail($id);
 
-        return view('office-patient.patient-card.show', compact('patientCard'));   
-    }
-
-
-    public function update(PatientCardRequest $request, $id) 
-    {
-        $patientCard = PatientCard::findOrFail($id);
-        $validated = $request->validated(); 
-
-        $patientCard->update([
-            'height' => $validated['height'] ?? null, 
-            'weight' => $validated['weight'] ?? null,  
-            'notes' => $validated['notes'] ?? null,    
-        ]);
-
-        if ($request->has('diagnoses')) {
-            $patientCard->diagnoses()->delete();  
-            foreach ($validated['diagnoses'] as $diagnosis) {
-                $patientCard->diagnoses()->create([
-                    'title' => $diagnosis['title'],
-                ]);
-            }
-        }
-
-        if ($request->has('chronic_diseases')) {
-            $patientCard->chronicDiseases()->delete();  
-            foreach ($validated['chronic_diseases'] as $chronicDisease) {
-                $patientCard->chronicDiseases()->create([
-                    'title' => $chronicDisease['title'],
-                ]);
-            }
-        }
-
-        if ($request->has('diseases')) {
-            $patientCard->diseases()->delete();  
-            foreach ($validated['diseases'] as $disease) {
-                $patientCard->diseases()->create([
-                    'title' => $disease['title'],
-                ]);
-            }
-        }
-
-        if ($request->has('allergic_reactions')) {
-            $patientCard->allergicReactions()->delete();  
-            foreach ($validated['allergic_reactions'] as $reaction) {
-                $patientCard->allergicReactions()->create([
-                    'title' => $reaction['title'],
-                ]);
-            }
-        }
-
-        return redirect()->route('patient-cards.show', $patientCard->id);
+        return view('office-patient.patient-card.show', compact('patientCard'));
     }
 
     public function edit($id)
@@ -156,17 +135,25 @@ class PatientCardController extends Controller
             'diseases',
             'allergicReactions',
         ])->findOrFail($id);
-
+    
+        $patient = $patientCard->patient;
+    
         $lists = [
-            'allergic_reactions' => ListAllergicReaction::all(),  
-            'chronic_diseases' => ListChronicDisease::all(),      
-            'diseases' => ListOfDisease::all(),                     
-            'diagnoses' => Diagnosis::all(),                  
+            'allergic_reactions' => ListAllergicReaction::all(),
+            'chronic_diseases' => ListChronicDisease::all(),
+            'diseases' => ListOfDisease::all(),
+            'diagnoses' => ListDiagnosis::all(),
         ];
-
-        return view('office-patient.patient-card.edit', compact('patientCard', 'lists'));
-    }
-
+    
+        $sections = [
+            'allergic_reactions' => 'Алергічні реакції',
+            'chronic_diseases' => 'Хронічні захворювання',
+            'diseases' => 'Захворювання',
+            'diagnoses' => 'Діагнози',
+        ];
+    
+        return view('office-patient.patient-card.index', compact('patient', 'patientCard', 'lists', 'sections'));
+    }    
 
     public function destroy($id)
     {
@@ -179,6 +166,6 @@ class PatientCardController extends Controller
 
         $patientCard->delete();
 
-        return response()->json(['message' => 'Patient card and related data deleted successfully']);
+        return response()->json(['message' => 'Пацієнтську карту та пов’язані дані видалено.']);
     }
 }

@@ -45,7 +45,7 @@ class PatientCard extends Model
 
     public function diagnoses()
     {
-        return $this->hasMany(Diagnosis::class, 'patient_card_id');
+        return $this->hasMany(PatientListDiagnosis::class, 'patient_card_id');
     }
 
     public $timestamps = true; 

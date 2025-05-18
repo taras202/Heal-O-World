@@ -55,7 +55,23 @@
         border-radius: 6px;
         cursor: pointer;
     }
+
+    .d-flex {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
 </style>
+
+@if($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <form method="POST" action="{{ isset($patientCard) ? route('patient-cards.update', $patientCard->id) : route('patient-cards.store') }}">
     @csrf
@@ -68,7 +84,7 @@
 
         <div class="form-group">
             <label>Пацієнт</label>
-            <p>{{ $patient->last_name }} {{ $patient->first_name }} {{ $patient->middle_name ?? '' }}</p>
+            <p>{{ $patient->first_name }} {{ $patient->last_name ?? '' }}</p>
             <input type="hidden" name="patient_id" value="{{ $patient->id }}">
         </div>
 
@@ -88,48 +104,65 @@
         </div>
     </div>
 
-    @php
-        $sections = [
-            'allergic_reactions' => 'Алергічні реакції',
-            'chronic_diseases' => 'Хронічні захворювання',
-            'diseases' => 'Історія хвороб',
-            'diagnoses' => 'Діагнози'
-        ];
-    @endphp
+@php
+    $sections = [
+        'diagnoses' => 'Діагнози',
+        'chronic_diseases' => 'Хронічні захворювання',
+        'diseases' => 'Захворювання',
+        'allergic_reactions' => 'Алергічні реакції',
+    ];
 
-    @foreach($sections as $key => $label)
-        <div class="form-section" id="{{ $key }}-section">
-            <h4>{{ $label }}</h4>
-            <div id="{{ $key }}-container">
-                @php
-                    $oldItems = old($key, $patientCard?->$key ?? []);
-                @endphp
+    $fieldMap = [
+        'diagnoses' => 'list_diagnoses_id',
+        'chronic_diseases' => 'list_chronic_diseases_id',
+        'diseases' => 'list_of_diseases_id',
+        'allergic_reactions' => 'list_allergic_reactions_id',
+    ];
+@endphp
 
-                @foreach($oldItems as $i => $item)
-                    <div class="form-group d-flex">
-                        <input type="hidden" name="{{ $key }}[{{ $i }}][patient_card_id]" value="{{ $patientCard?->id }}">
-                        <select name="{{ $key }}[{{ $i }}][{{ $key === 'diagnoses' ? 'diagnosis_id' : 'list_' . $key . '_id' }}]" required>
-                            <option value="">Оберіть...</option>
-                            @foreach($lists[$key] as $listItem)
-                                <option value="{{ $listItem->id }}"
-                                    @if(
-                                        (isset($item['list_' . $key . '_id']) && $item['list_' . $key . '_id'] == $listItem->id)
-                                        || (isset($item['diagnosis_id']) && $item['diagnosis_id'] == $listItem->id)
-                                    )
-                                        selected
-                                    @endif
-                                >
-                                    {{ $listItem->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <button type="button" class="btn-remove" onclick="this.parentElement.remove()">✖</button>
-                    </div>
+<script>
+    window.selectOptions = {
+        @foreach($sections as $key => $label)
+            "{{ $key }}": `
+                @foreach($lists[$key] as $item)
+                    <option value="{{ $item->id }}">{{ $item->title }}</option>
                 @endforeach
-            </div>
-            <button type="button" class="btn-add" onclick="addItem('{{ $key }}')">+ Додати</button>
+            `,
+        @endforeach
+    };
+</script>
+
+@foreach($sections as $key => $label)
+    <div class="form-section" id="{{ $key }}-section">
+        <h4>{{ $label }}</h4>
+        <div id="{{ $key }}-container">
+            @php
+                $fieldName = $fieldMap[$key];
+                $relationItems = $patientCard ? ($patientCard->{\Illuminate\Support\Str::camel($key)} ?? collect()) : collect();
+                $oldItems = old($key, $relationItems->map(fn($item) => [$fieldName => $item->$fieldName])->toArray());
+            @endphp
+
+            @foreach($oldItems as $i => $item)
+                @php
+                    $selectedId = is_array($item) ? $item[$fieldName] ?? null : $item;
+                @endphp
+                <div class="form-group d-flex">
+                    <input type="hidden" name="{{ $key }}[{{ $i }}][patient_card_id]" value="{{ $patientCard?->id }}">
+                    <select name="{{ $key }}[{{ $i }}][{{ $fieldName }}]" required>
+                        <option value="">Оберіть...</option>
+                        @foreach($lists[$key] as $listItem)
+                            <option value="{{ $listItem->id }}" @if($selectedId == $listItem->id) selected @endif>
+                                {{ $listItem->title }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <button type="button" class="btn-remove" onclick="this.parentElement.remove()">✖</button>
+                </div>
+            @endforeach
         </div>
-    @endforeach
+        <button type="button" class="btn-add" onclick="addItem('{{ $key }}')">+ Додати</button>
+    </div>
+@endforeach
 
     <button type="submit" class="btn-primary">
         {{ $patientCard ? 'Оновити карту' : 'Створити карту' }}
@@ -137,29 +170,31 @@
 </form>
 
 <script>
-function addItem(section) {
-    const container = document.getElementById(`${section}-container`);
-    const index = container.children.length;
-    const lists = @json($lists);
+    const fieldMap = {
+        diagnoses: 'list_diagnoses_id',
+        chronic_diseases: 'list_chronic_diseases_id',
+        diseases: 'list_of_diseases_id',
+        allergic_reactions: 'list_allergic_reactions_id',
+    };
 
-    let options = `<option value="">Оберіть...</option>`;
-    for (const item of lists[section]) {
-        options += `<option value="${item.id}">${item.name}</option>`;
-    }
+    function addItem(section) {
+        const fieldName = fieldMap[section];
+        const container = document.getElementById(`${section}-container`);
+        const index = container.children.length;
 
-    const fieldName = section === 'diagnoses' ? 'diagnosis_id' : `list_${section}_id`;
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('form-group', 'd-flex');
 
-    const html = `
-        <div class="form-group d-flex">
-            <input type="hidden" name="${section}[${index}][patient_card_id]" value="{{ $patientCard?->id }}">
+        wrapper.innerHTML = `
+            <input type="hidden" name="${section}[${index}][patient_card_id]" value="">
             <select name="${section}[${index}][${fieldName}]" required>
-                ${options}
+                <option value="">Оберіть...</option>
+                ${window.selectOptions[section] || ''}
             </select>
             <button type="button" class="btn-remove" onclick="this.parentElement.remove()">✖</button>
-        </div>
-    `;
+        `;
 
-    container.insertAdjacentHTML('beforeend', html);
-}
+        container.appendChild(wrapper);
+    }
 </script>
 @endsection
