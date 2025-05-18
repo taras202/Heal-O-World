@@ -12,3 +12,4 @@ require base_path('routes/admin-patient.php');
 require base_path('routes/admin-doctor.php');
 require base_path('routes/work-schedule.php'); 
 require base_path('routes/patient-card.php'); 
+require base_path('routes/admin-patient-card.php'); 

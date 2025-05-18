@@ -50,7 +50,25 @@ class PatientAnalyticsController extends Controller
                 ->orderByDesc('year')
                 ->pluck('year');
 
-    return view('admin.patient.analytics', compact('patients', 'patientChartLabels', 'patientChartDatasets', 'years'));
+    $totalPatients = MyOfficePatient::count();
+
+    $totalConsultations = \App\Models\Consultation::count();
+
+    $averageDuration = null;
+                        
+    $averageRating = \App\Models\Review::whereNotNull('rating')
+                        ->avg('rating');
+
+    return view('admin.patient.analytics', compact(
+        'patients',
+        'patientChartLabels',
+        'patientChartDatasets',
+        'years',
+        'totalPatients',
+        'totalConsultations',
+        'averageDuration',
+        'averageRating',
+    ));
 }
 
 }

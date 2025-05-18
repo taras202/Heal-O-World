@@ -54,6 +54,7 @@
                     <td>{{ $averageRating ? number_format($averageRating, 1) : '—' }}</td>
                     <td>{{ $averageDuration ? number_format($averageDuration, 1) : '—' }}</td>
                     <td>
+                        <a href="{{ route('admin.patient-cards.show', $patient) }}" class="btn btn-sm btn-primary">Карта пацієнта</a>
                         <a href="{{ route('admin.patients.show', $patient) }}" class="btn btn-sm btn-info">Перегляд</a>
                         <a href="{{ route('admin.patients.edit', $patient) }}" class="btn btn-sm btn-primary">Редагувати</a>
                         <form action="{{ route('admin.patients.destroy', $patient) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Ви впевнені, що хочете видалити цього пацієнта?');">

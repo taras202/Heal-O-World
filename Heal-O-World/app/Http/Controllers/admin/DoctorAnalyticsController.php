@@ -53,7 +53,7 @@ class DoctorAnalyticsController extends Controller
 
                 $monthlyConsultations[$month] = ($monthlyConsultations[$month] ?? 0) + 1;
 
-                $ratings = Review::where('consultation_id', $consultation->id)
+                $ratings = Review::where('doctor_id', $doctor->id)
                     ->whereNotNull('rating')
                     ->pluck('rating');
 
