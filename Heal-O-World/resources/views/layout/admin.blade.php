@@ -43,7 +43,7 @@
         color: #00d1ff;
     }
 
-    #sidebar a {
+        #sidebar a {
         display: block;
         color: #cfd8dc;
         padding: 12px 20px;
@@ -51,7 +51,9 @@
         margin-bottom: 10px;
         text-decoration: none;
         transition: all 0.3s ease;
+        text-align: center;
     }
+
 
     #sidebar .link-blue {
         background-color: #007bff;
@@ -84,25 +86,52 @@
         transition: background-color 0.3s ease;
     }
 
+        #sidebar .link-yellow {
+        background-color: #ffc107;
+        color: #212529; 
+    }
+
+    #sidebar .link-yellow:hover {
+        background-color: #e0a800; 
+        color: white;
+    }
+
+    #sidebar .link-yellow.active {
+        font-weight: bold;
+        border-left: 4px solid #e0a800;
+        background-color: #e0a800;
+        color: white;
+    }
+
     .logout-btn button:hover {
         background-color: #c82333;
     }
 
-    .navbar {
+        .navbar {
         position: fixed;
         top: 0;
         left: 265px;
-        width: calc(100% - 250px);
+        width: calc(100% - 265px); 
+        height: 70px; 
         background-color: #0056b3;
         color: white;
         z-index: 1030;
-        padding: 15px 30px;
+        padding: 0 30px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: none;
+        box-sizing: border-box;
     }
 
-    .navbar .navbar-brand {
+        .navbar .navbar-brand {
         font-size: 1.5rem;
         font-weight: 600;
         color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 auto;
     }
 
     .navbar-nav .nav-link {
@@ -189,6 +218,9 @@
         <h3>АДМІН ПАНЕЛЬ</h3>
         <a href="{{ route('admin.patients.index') }}" class="sidebar-link link-blue {{ request()->routeIs('admin.patients.index') ? 'active' : '' }}">Пацієнти</a>
         <a href="{{ route('admin.doctors.index') }}" class="sidebar-link link-green {{ request()->routeIs('admin.doctors.index') ? 'active' : '' }}">Лікарі</a>
+        <a href="{{ route('admin.patient.patient-consultation.index') }}" class="sidebar-link link-yellow {{ request()->routeIs('admin.patient.patient-consultation.index') ? 'active' : '' }}">Перегляд консультацій
+    </a>
+
         <form method="POST" action="{{ route('admin.logout') }}" class="logout-btn mt-3">
             @csrf
             <button type="submit" class="btn btn-danger w-100">Вийти</button>

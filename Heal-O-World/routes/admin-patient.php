@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\admin\PatientAdminController;
 use App\Http\Controllers\admin\PatientAnalyticsController;
+use App\Http\Controllers\admin\PatientConsultationController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,6 +25,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
 
     Route::get('/admin/patient-analytics', [PatientAnalyticsController::class, 'index'])->name('patients.analytics');
 
+    Route::get('/patient-consultations', [PatientConsultationController::class, 'index'])->name('patient.patient-consultation.index');
 
 });
 
