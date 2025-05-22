@@ -264,6 +264,32 @@
                             <input type="text" name="educations[{{ $i }}][end_year]" value="{{ old("educations.$i.end_year", $edu->end_year) }}">
                         </div>
                     </div>
+
+                    {{-- 🎓 Нові поля для фото дипломів --}}
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label>Диплом 1</label>
+                            <input type="file" name="educations[{{ $i }}][diploma_photo_1]">
+                            @if($edu->diploma_photo_1)
+                                <p>Поточне: <a href="{{ asset('storage/' . $edu->diploma_photo_1) }}" target="_blank">Переглянути</a></p>
+                            @endif
+                        </div>
+                        <div class="input-group">
+                            <label>Диплом 2</label>
+                            <input type="file" name="educations[{{ $i }}][diploma_photo_2]">
+                            @if($edu->diploma_photo_2)
+                                <p>Поточне: <a href="{{ asset('storage/' . $edu->diploma_photo_2) }}" target="_blank">Переглянути</a></p>
+                            @endif
+                        </div>
+                        <div class="input-group">
+                            <label>Диплом 3</label>
+                            <input type="file" name="educations[{{ $i }}][diploma_photo_3]">
+                            @if($edu->diploma_photo_3)
+                                <p>Поточне: <a href="{{ asset('storage/' . $edu->diploma_photo_3) }}" target="_blank">Переглянути</a></p>
+                            @endif
+                        </div>
+                    </div>
+
                     <hr>
                 @endforeach
             </div>

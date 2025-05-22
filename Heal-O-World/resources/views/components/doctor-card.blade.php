@@ -183,11 +183,6 @@
     function closeModal(doctorId) {
             document.getElementById(`consultation-modal-${doctorId}`).style.display = 'none';
         }
-        button.addEventListener('click', () => {
-        document.getElementById(`hidden-time-${doctorId}`).value = time.time;
-        document.getElementById(`hidden-date-${doctorId}`).value = date;
-        document.getElementById(`consultation-modal-${doctorId}`).style.display = 'block';
-    });
 </script>
 
 <style>
