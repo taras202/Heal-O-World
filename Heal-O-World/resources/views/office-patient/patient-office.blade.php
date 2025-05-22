@@ -205,13 +205,15 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="time_zone">Часовий пояс</label>
-                <select name="time_zone" id="time_zone">
-                    <option value="">Оберіть</option>
-                    <option value="Europe/Kyiv" {{ old('time_zone', $patient?->time_zone) === 'Europe/Kyiv' ? 'selected' : '' }}>Київ</option>
-                    <option value="Europe/London" {{ old('time_zone', $patient?->time_zone) === 'Europe/London' ? 'selected' : '' }}>Лондон</option>
-                    <!-- Додай інші часові пояси, якщо треба -->
+            <div class="input-group">
+                <label>Часовий пояс</label>
+                <select name="time_zone_id" class="...">
+                    @foreach($timeZones as $tz)
+                        <option value="{{ $tz->id }}"
+                            {{ old('time_zone_id', $patient?->time_zone_id) == $tz->id ? 'selected' : '' }}>
+                            {{ $tz->time_zone }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
 

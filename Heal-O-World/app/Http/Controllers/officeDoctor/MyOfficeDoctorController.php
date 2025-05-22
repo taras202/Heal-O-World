@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Education;
 use App\Models\MyOfficeDoctor;
 use App\Models\PlaceOfWork;
+use App\Models\TimeZone;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -20,10 +21,13 @@ class MyOfficeDoctorController extends Controller
         
         $photoUrl = $doctor->photo ? asset('storage/' . $doctor->photo) : null;
 
+        $timeZones = TimeZone::all();
+
         return view('doctor.office-doctor.doctor-office', [
             'user' => $user,
             'doctor' => $doctor,
             'photoUrl' => $photoUrl,
+            'timeZones' => $timeZones,
         ]);
     }
 
@@ -34,16 +38,18 @@ class MyOfficeDoctorController extends Controller
     
         $request->validate([
             'photo' => 'nullable|image|max:2048',
+            'time_zone_id' => 'nullable|exists:time_zones,id',
         ]);
-    
+        
         $doctor->update($request->only([
             'first_name',
             'last_name',
             'bio',
             'gender',
             'contact',
-            'time_zone',
+            'time_zone_id',  
         ]));
+        
     
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('photo', 'public');

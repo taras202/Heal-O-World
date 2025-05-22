@@ -16,11 +16,11 @@ return new class extends Migration {
             $table->string('has_insurance');
             $table->string('country_of_residence');
             $table->string('city_of_residence');
-            $table->string('time_zone')->nullable();
             $table->text('notes')->nullable();
             $table->string('contact')->nullable();
             
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('time_zone_id')->nullable()->constrained('time_zones')->onDelete('set null');
             
             $table->timestamps();
         });

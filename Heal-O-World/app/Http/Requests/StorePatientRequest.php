@@ -21,7 +21,6 @@ class StorePatientRequest extends FormRequest
             'has_insurance' => 'required|boolean',
             'country_of_residence' => 'required|string|max:255',
             'city_of_residence' => 'required|string|max:255',
-            'time_zone' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
         ];
     }

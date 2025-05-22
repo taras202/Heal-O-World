@@ -19,13 +19,18 @@ class MyOfficePatient extends Model
         'has_insurance',
         'country_of_residence',
         'city_of_residence',
-        'time_zone',
         'notes',
         'contact',
         'user_id',
+        'time_zone_id'
     ];
 
     public $timestamps = true; 
+
+    public function timeZone()
+    {
+        return $this->belongsTo(TimeZone::class, 'time_zone_id');
+    }
 
     public function consultations()
     {

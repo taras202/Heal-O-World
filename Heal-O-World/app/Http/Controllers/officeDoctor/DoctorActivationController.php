@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EducationRequest;
 use App\Http\Requests\MyOfficeDoctorRequest;
 use App\Models\Education;
+use App\Models\MyOfficeDoctor;
 use App\Models\Specialty;
+use App\Models\TimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,19 +16,20 @@ class DoctorActivationController extends Controller
 {
     private function getDoctor()
     {
-        $doctor = Auth::user()->doctor;
-
-        if (!$doctor) {
-            return redirect()->route('activation.personal')->with('error', 'Ви ще не створили профіль лікаря!');
-        }
-
-        return $doctor;
+        return Auth::user()->doctor;
     }
 
     public function editPersonalData()
     {
-        $doctor = $this->getDoctor(); 
-        return view('doctor.doctor-activation.personal', compact('doctor'));
+        $doctor = $this->getDoctor();
+    
+        if (!$doctor) {
+            $doctor = new MyOfficeDoctor();
+        }
+    
+        $timeZones = TimeZone::all();
+    
+        return view('doctor.doctor-activation.personal', compact('doctor', 'timeZones'));
     }
 
     public function updatePersonalData(MyOfficeDoctorRequest $request)
@@ -37,22 +40,22 @@ class DoctorActivationController extends Controller
     
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('photos', 'public');
-            $validated['photo'] = $path;
+            $data['photo'] = $path; 
         }
-        
+    
         $doctor = $user->doctor()->updateOrCreate(
             ['user_id' => $user->id],
             $data
         );
-        
-        if ($request->has('workplace') && $request->has('position') && $request->has('country_of_residence') && $request->has('city_of_residence')) {
+    
+        if ($request->has(['workplace', 'position', 'country_of_residence', 'city_of_residence'])) {
             $doctor->placeOfWork()->updateOrCreate(
                 ['doctor_id' => $doctor->id], 
                 [
                     'workplace' => $request->input('workplace'),
                     'position' => $request->input('position'),
                     'country_of_residence' => $request->input('country_of_residence'),
-                    'city_of_residence' => $request->input('city_of_residence')
+                    'city_of_residence' => $request->input('city_of_residence'),
                 ]
             );
         }
@@ -60,7 +63,6 @@ class DoctorActivationController extends Controller
         return redirect()->route('activation.specialties');
     }
     
-
     public function editSpecialties()
     {
         $specialties = Specialty::all();

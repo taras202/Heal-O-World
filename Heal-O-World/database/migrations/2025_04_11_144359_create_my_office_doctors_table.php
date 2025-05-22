@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->string('photo')->nullable();
             $table->string('contact')->nullable(); 
-            $table->string('time_zone'); 
+
+            $table->foreignId('time_zone_id')->nullable()->constrained('time_zones')->onDelete('set null');
+
             $table->timestamps();
         });
     }

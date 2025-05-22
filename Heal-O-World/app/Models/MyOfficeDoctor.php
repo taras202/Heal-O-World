@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\AvailableTime;
-
 
 class MyOfficeDoctor extends Model
 {
@@ -21,8 +19,13 @@ class MyOfficeDoctor extends Model
         'gender',
         'photo',
         'contact',
-        'time_zone',
+        'time_zone_id'
     ];
+
+    public function timeZone()
+    {
+        return $this->belongsTo(TimeZone::class, 'time_zone_id');
+    }
 
     public function user()
     {

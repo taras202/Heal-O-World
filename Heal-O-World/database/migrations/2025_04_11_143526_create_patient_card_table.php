@@ -19,7 +19,15 @@ return new class extends Migration {
 
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
+
+        Schema::dropIfExists('patient_list_diagnoses');
+        Schema::dropIfExists('patient_list_of_diseases');
+        Schema::dropIfExists('patient_list_chronic_diseases');
+        Schema::dropIfExists('patient_list_allergic_reactions');
+    
         Schema::dropIfExists('patient_card');
-        
+    
+        Schema::enableForeignKeyConstraints();        
     }
 };

@@ -7,22 +7,20 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePatientRequest;
 use App\Http\Requests\UpdatePatientRequest;
 use App\Models\MyOfficePatient;
+use App\Models\TimeZone;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-
 use Illuminate\Validation\Rule;
-
 
 class MyOfficePatientController extends Controller
 {
     public function index()
     {
         $user = Auth::user();
-
         $patient = MyOfficePatient::where('contact', $user->email)->first();
-
-        return view('office-patient.patient-office', compact('user', 'patient'));
-    }
+        $timeZones = TimeZone::all();
+    
+        return view('office-patient.patient-office', compact('user', 'patient', 'timeZones'));
+    }    
     
     public function store(StorePatientRequest $request)
     {
@@ -38,7 +36,6 @@ class MyOfficePatientController extends Controller
             'has_insurance' => $request->has_insurance,
             'country_of_residence' => $request->country_of_residence,
             'city_of_residence' => $request->city_of_residence,
-            'time_zone' => $request->time_zone,
             'notes' => $request->notes,
         ]);
     
@@ -58,9 +55,9 @@ class MyOfficePatientController extends Controller
             'has_insurance' => $request->has_insurance,
             'country_of_residence' => $request->country_of_residence,
             'city_of_residence' => $request->city_of_residence,
-            'time_zone' => $request->time_zone,
             'notes' => $request->notes,
             'contact' => $user->email,
+            'time_zone_id' => $request->time_zone_id,
         ]);
 
         return redirect()->route('patient.office')->with('success', 'Профіль оновлено.');

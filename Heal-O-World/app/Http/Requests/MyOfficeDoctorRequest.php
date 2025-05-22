@@ -22,7 +22,6 @@ class MyOfficeDoctorRequest extends FormRequest
             'gender' => 'required|in:male,female',
             'photo' => 'nullable|image|max:2048',
             'contact' => 'required|string|max:255',
-            'time_zone' => 'required|string|max:100',
 
             'specialties' => 'nullable|array',
             'specialties.*' => 'exists:specialties,id',

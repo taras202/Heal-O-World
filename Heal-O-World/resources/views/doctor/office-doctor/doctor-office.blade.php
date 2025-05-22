@@ -200,10 +200,18 @@
                         <label>Контакт</label>
                         <input type="text" name="contact" value="{{ old('contact', $doctor->contact) }}">
                     </div>
+
                     <div class="input-group">
                         <label>Часовий пояс</label>
-                        <input type="text" name="time_zone" value="{{ old('time_zone', $doctor->time_zone) }}">
+                        <select name="time_zone_id" class="...">
+                            @foreach($timeZones as $tz)
+                                <option value="{{ $tz->id }}" {{ old('time_zone_id', $doctor->time_zone_id) == $tz->id ? 'selected' : '' }}>
+                                    {{ $tz->time_zone }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
+
                     <div class="input-group">
                         <label>Біографія</label>
                         <textarea name="bio" rows="3">{{ old('bio', $doctor->bio) }}</textarea>

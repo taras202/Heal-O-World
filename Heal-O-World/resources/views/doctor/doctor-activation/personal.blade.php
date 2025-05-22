@@ -138,9 +138,15 @@
                     </div>
 
                     <div>
-                        <label for="time_zone" class="block text-base font-medium text-gray-700">Часовий пояс</label>
-                        <input type="number" name="time_zone" id="time_zone" placeholder="+2"
+                        <label for="time_zone_id" class="block text-base font-medium text-gray-700">Часовий пояс</label>
+                        <select name="time_zone_id" id="time_zone_id"
                             class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
+                            @foreach ($timeZones as $zone)
+                                <option value="{{ $zone->id }}" {{ old('time_zone_id', $doctor->time_zone_id) == $zone->id ? 'selected' : '' }}>
+                                    {{ $zone->time_zone }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 

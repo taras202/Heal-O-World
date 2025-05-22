@@ -99,12 +99,13 @@
                     </li>
                 @endforeach
                 <p><strong>Часовий пояс:</strong>
-                    @if(isset($doctor->time_zone))
-                        UTC{{ $doctor->time_zone >= 0 ? '+' : '' }}{{ $doctor->time_zone }}
+                    @if($doctor->timeZone)
+                        {{ $doctor->timeZone->time_zone }}
                     @else
                         Не вказано
                     @endif
                 </p>
+
                 <p><strong>Контакт:</strong> {{ $doctor->contact ?? 'Не вказано' }}</p>
             </ul>
         </div>
