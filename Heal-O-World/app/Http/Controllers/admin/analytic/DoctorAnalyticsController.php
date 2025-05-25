@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\admin\analytic;
 
 use App\Http\Controllers\Controller;
 use App\Models\MyOfficeDoctor;

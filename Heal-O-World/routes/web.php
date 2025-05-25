@@ -10,8 +10,8 @@ require base_path('routes/patient-consultation.php');
 require base_path('routes/admin-auth.php');
 require base_path('routes/admin-patient.php');
 require base_path('routes/admin-doctor.php');
+require base_path('routes/admin-consultation.php');
 require base_path('routes/work-schedule.php'); 
 require base_path('routes/patient-card.php'); 
-require base_path('routes/admin-patient-card.php'); 
-require base_path('routes/link-google-meet.php'); 
-
+require base_path('routes/chat-patient.php'); 
+require base_path('routes/chat-doctor.php'); 

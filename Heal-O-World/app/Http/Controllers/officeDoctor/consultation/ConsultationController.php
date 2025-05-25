@@ -6,6 +6,9 @@ use App\Models\Consultation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ConsultationRequest;
+use App\Models\Chat;
+use App\Models\MyOfficeDoctor;
+use App\Models\MyOfficePatient;
 use App\Models\WorkSchedule;
 use Illuminate\Support\Facades\Auth;
 
@@ -62,16 +65,16 @@ class ConsultationController extends Controller
         $doctor_id = $request->input('doctor_id');
         $consultation_time = $request->input('consultation_time');
         $appointment_date = $request->input('appointment_date');
-
+    
         $schedule = WorkSchedule::where('doctor_id', $doctor_id)
             ->where('consultation_time', $consultation_time)
             ->where('appointment_date', $appointment_date)
             ->first();
-
+    
         if (!$schedule) {
             return back()->withErrors(['error' => 'Вибраний час недоступний або відсутній в графіку лікаря.']);
         }
-
+    
         $consultation = Consultation::create([
             'patient_id' => $patient_id,
             'doctor_id' => $doctor_id,
@@ -79,9 +82,23 @@ class ConsultationController extends Controller
             'appointment_date' => $appointment_date,
             'status' => 'pending', 
         ]);
-
+        
+        $consultation->createGoogleMeetLink();
+        
+        $chat = Chat::firstOrCreate(
+            ['doctor_id' => $doctor_id, 'patient_id' => $patient_id],
+            ['status' => 'active']
+        );
+        
+        if ($chat->wasRecentlyCreated) {
+            $chat->messages()->create([
+                'sender_id' => $patient_id ? MyOfficePatient::find($patient_id)->user_id : null,
+                'message' => 'Пацієнт записався на консультацію. Можете почати спілкування тут.',
+            ]);
+        }
+        
         return redirect()->route('doctor.index')->with('success', 'Консультація була успішно записана!');
-    }
+    }    
 
     public function destroy($id)
     {

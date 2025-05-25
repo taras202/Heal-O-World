@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MyOfficeDoctor;
+
 class LandingController extends Controller
 {
     public function landing()

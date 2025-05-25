@@ -218,7 +218,7 @@
         <h3>АДМІН ПАНЕЛЬ</h3>
         <a href="{{ route('admin.patients.index') }}" class="sidebar-link link-blue {{ request()->routeIs('admin.patients.index') ? 'active' : '' }}">Пацієнти</a>
         <a href="{{ route('admin.doctors.index') }}" class="sidebar-link link-green {{ request()->routeIs('admin.doctors.index') ? 'active' : '' }}">Лікарі</a>
-        <a href="{{ route('admin.patient.patient-consultation.index') }}" class="sidebar-link link-yellow {{ request()->routeIs('admin.patient.patient-consultation.index') ? 'active' : '' }}">Перегляд консультацій
+        <a href="{{ route('admin.patient.consultation.index') }}" class="sidebar-link link-yellow {{ request()->routeIs('admin.patient.consultation.index') ? 'active' : '' }}">Перегляд консультацій
     </a>
 
         <form method="POST" action="{{ route('admin.logout') }}" class="logout-btn mt-3">

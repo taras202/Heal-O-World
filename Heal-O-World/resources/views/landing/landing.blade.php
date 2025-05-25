@@ -152,9 +152,6 @@
     <div class="specialty">Логопед</div>
     <div class="specialty">Стоматолог</div>
     <div class="specialty">Фізіотерапевт</div>
-    <div class="specialty">Мамолог</div>
-    <div class="specialty">Проктолог</div>
-    <div class="specialty">Венеролог</div>
   </div>
 
   {{-- Кнопка весь список лікарів --}}
@@ -177,24 +174,6 @@
     <li>Швидкий запис</li>
     <li>Достовірні відгуки</li>
   </ul>
-</section>
-
-<section class="mission">
-    <div class="choose-doctor-info">
-        <h3>Як правильно обрати лікаря?</h3>
-        <p>Зверніть увагу на спеціалізацію, досвід та відгуки пацієнтів.</p>
-        <button class="contact-button" onclick="document.getElementById('modal').style.display='flex'">Зв'язатися</button>
-    </div>
-
-    <div class="modal" id="modal">
-    <div class="modal-content">
-        <h3>Зв'язатися з нами</h3>
-        <input type="text" placeholder="Ім'я">
-        <input type="tel" placeholder="Телефон">
-        <textarea rows="4" placeholder="Опис проблеми..."></textarea>
-        <button class="contact-button" onclick="document.getElementById('modal').style.display='none'">Надіслати</button>
-    </div>
-    </div>
 </section>
 
 <section class="reviews">

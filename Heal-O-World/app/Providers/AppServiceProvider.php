@@ -15,6 +15,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        Consultation::observe(ConsultationObserver::class);
+        
     }
 }

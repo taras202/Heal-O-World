@@ -197,7 +197,7 @@
                     </span>
                 </p>
             </div>
-            <a href="{{ route('admin.patient.patient-consultation', $consultation->id) }}" class="btn-outline">Детальніше</a>
+            <a href="{{ route('admin.patient.consultation.show', $consultation->id) }}" class="btn-outline">Детальніше</a>
         </li>
     @empty
         <p class="empty-message">Консультацій не знайдено.</p>

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\admin\DoctorAdminController;
-use App\Http\Controllers\admin\DoctorAnalyticsController;
+use App\Http\Controllers\admin\analytic\DoctorAnalyticsController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
@@ -12,6 +12,7 @@ Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function
     Route::get('/doctors/{doctor}/edit', [DoctorAdminController::class, 'edit'])->name('doctors.edit');
     Route::put('/doctors/{doctor}', [DoctorAdminController::class, 'update'])->name('doctors.update');
     Route::delete('/doctors/{doctor}', [DoctorAdminController::class, 'destroy'])->name('doctors.destroy');
+    
     Route::get('/doctors-analytics', [DoctorAnalyticsController::class, 'index'])->name('doctors.analytics');
 });
 
