@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\payment;
 
 use App\Models\Payment;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Stripe\Stripe;
+use App\Http\Controllers\Controller;
 use Stripe\Checkout\Session as StripeSession;
 
 class PaymentController extends Controller

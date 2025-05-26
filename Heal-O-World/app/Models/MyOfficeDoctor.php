@@ -69,5 +69,19 @@ class MyOfficeDoctor extends Model
             ];
         });
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'doctor_id');
+    }
+
+    public function getRatingAttribute()
+    {
+        return round($this->reviews()->avg('rating'), 2) ?? 0;
+    }
+
+    public function getReviewsCountAttribute()
+    {
+        return $this->reviews()->count();
+    }
 }
 

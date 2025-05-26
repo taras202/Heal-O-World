@@ -1,7 +1,6 @@
 <div class="doctor-card">
     <div class="doctor-main">
 
-        <!-- Правий блок — Розклад -->
         <div class="schedule">
             <h5>Запис на онлайн консультацію</h5>
 

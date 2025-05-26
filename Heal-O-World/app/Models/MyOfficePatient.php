@@ -44,4 +44,8 @@ class MyOfficePatient extends Model
     {
         return $this->hasOne(MyOfficeDoctor::class);
     }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'patient_id');
+    }
 }

@@ -11,8 +11,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('doctor_id')->constrained('my_office_doctors')->onDelete('cascade');
             $table->foreignId('patient_id')->constrained('my_office_patients')->onDelete('cascade');
-            $table->string('rating'); 
-            $table->text('content'); 
+            $table->tinyInteger('rating')->unsigned()->default(5); 
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }

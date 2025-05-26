@@ -175,6 +175,14 @@
 
 <ul class="consultation-list">
     @forelse($consultations as $consultation)
+        @php
+            $patientId = auth()->user()->patient->id;
+            $doctorId = $consultation->doctor_id;
+            $hasReviewed = \App\Models\Review::where('doctor_id', $doctorId)
+                ->where('patient_id', $patientId)
+                ->exists();
+        @endphp
+
         <li class="consultation-card">
             <div class="card-content">
                 <p><strong>Дата:</strong> {{ \Carbon\Carbon::parse($consultation->appointment_date)->format('d.m.Y') }}</p>
@@ -186,7 +194,22 @@
                     </span>
                 </p>
             </div>
+
             <a href="{{ route('patient.consultations.show', $consultation->id) }}" class="btn-outline">Детальніше</a>
+
+            @if($consultation->status === 'completed')
+                @php
+                    $hasReviewed = \App\Models\Review::where('doctor_id', $consultation->doctor_id)
+                        ->where('patient_id', auth()->user()->patient->id)
+                        ->exists();
+                @endphp
+
+                @if(! $hasReviewed)
+                    <a href="{{ route('reviews.create', ['doctor' => $consultation->doctor_id, 'consultation' => $consultation->id]) }}" class="btn-outline" style="margin-top: 10px;">
+                        Залишити відгук
+                    </a>
+                @endif
+            @endif
         </li>
     @empty
         <p class="empty-message">Консультацій не знайдено.</p>
