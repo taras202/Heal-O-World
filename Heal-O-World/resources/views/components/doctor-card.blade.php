@@ -9,25 +9,33 @@
             <div class="doctor-details">
                 <h4 class="doctor-name">{{ $doctor->last_name }} {{ $doctor->first_name }}</h4>
 
-                @if($doctor->specialties->count())
-                    <p class="doctor-specialty-list"><strong>Спеціальності:</strong></p>
-                    <ul class="specialties">
-                        @foreach($doctor->specialties as $specialty)
-                            <li>
-                                <strong>{{ $specialty->name }}</strong>
-                                @if(!empty($specialty->pivot->experience) || !empty($specialty->pivot->price))
-                                    —
-                                    @if(!empty($specialty->pivot->experience))
-                                        {{ $specialty->pivot->experience }}
-                                    @endif
-                                    @if(!empty($specialty->pivot->price))
-                                        {{ !empty($specialty->pivot->experience) ? ',' : '' }} {{ $specialty->pivot->price }} грн
-                                    @endif
-                                @endif
-                            </li>
-                        @endforeach
-                    </ul>
-                @endif
+                <p><strong>Напрямок:</strong> 
+                    @if($doctor->specialties->count())
+                        {{ $doctor->specialties->pluck('name')->join(', ') }}
+                    @else
+                        Немає
+                    @endif
+                </p>
+
+                <p><strong>Стаж роботи:</strong> {{ $doctor->experience ?? 'Немає даних' }} років</p>
+
+                <p><strong>Рейтинг:</strong> 
+                    @php
+                        $rating = $doctor->rating ?? 0;
+                        $maxStars = 5;
+                    @endphp
+
+                    @for ($i = 1; $i <= $maxStars; $i++)
+                        @if ($i <= floor($rating))
+                            <span style="color: gold;">★</span>
+                        @elseif ($i - $rating < 1)
+                            <span style="color: gold;">☆</span>
+                        @else
+                            <span style="color: #ccc;">★</span>
+                        @endif
+                    @endfor
+                    ({{ number_format($rating, 1) }})
+                </p>
 
                 <p class="doctor-bio">{{ Str::limit($doctor->bio, 200) }}</p>
                 <p class="doctor-contact"><strong>Контакт:</strong> {{ $doctor->contact ?? 'Немає' }}</p>

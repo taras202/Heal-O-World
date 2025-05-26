@@ -15,3 +15,4 @@ require base_path('routes/work-schedule.php');
 require base_path('routes/patient-card.php'); 
 require base_path('routes/chat-patient.php'); 
 require base_path('routes/chat-doctor.php'); 
+require base_path('routes/payment.php'); 

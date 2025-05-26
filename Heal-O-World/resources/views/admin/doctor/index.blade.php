@@ -9,7 +9,6 @@
     <a href="{{ route('admin.doctors.create') }}" class="btn btn-success mb-3">Створити лікаря</a>
     <a href="{{ route('admin.doctors.analytics') }}" class="btn btn-info mb-3">Переглянути аналітику</a>
 
-
     @if(session('status'))
         <div class="alert alert-success">{{ session('status') }}</div>
     @endif
@@ -27,6 +26,8 @@
                 <th>Спеціалізації</th>
                 <th>Освіта</th>
                 <th>Місце роботи</th>
+                <th>Стаж роботи</th> 
+                <th>Рейтинг</th>    
                 <th>Дії</th>
             </tr>
         </thead>
@@ -63,6 +64,27 @@
                             {{ $doctor->placeOfWork->city_of_residence }}, {{ $doctor->placeOfWork->country_of_residence }}
                         @endif
                     </td>
+
+                    <td>{{ $doctor->experience ?? 'Немає даних' }} років</td>
+
+                    <td>
+                        @php
+                            $rating = $doctor->rating ?? 0;
+                            $maxStars = 5;
+                        @endphp
+
+                        @for ($i = 1; $i <= $maxStars; $i++)
+                            @if ($i <= floor($rating))
+                                <span style="color: gold;">★</span>
+                            @elseif ($i - $rating < 1)
+                                <span style="color: gold;">☆</span> 
+                            @else
+                                <span style="color: #ccc;">★</span>
+                            @endif
+                        @endfor
+                        ({{ number_format($rating, 1) }})
+                    </td>
+
                     <td>
                         <a href="{{ route('admin.doctors.show', $doctor) }}" class="btn btn-sm btn-info">Перегляд</a>
                         <a href="{{ route('admin.doctors.edit', $doctor) }}" class="btn btn-sm btn-primary">Редагувати</a>

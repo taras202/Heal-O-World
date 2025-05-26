@@ -9,7 +9,7 @@
       font-family: 'Segoe UI', sans-serif;
     }
     body {
-      background-color:rgb(255, 255, 255);
+      background-color: rgb(255, 255, 255);
       color: #212529;
     }
     .search {
@@ -20,7 +20,7 @@
     .search input {
       padding: 0.5rem;
       width: 300px;
-      border: 1px solidrgb(4, 50, 95);
+      border: 1px solid rgb(4, 50, 95);
       border-radius: 5px;
     }
     .section {
@@ -35,7 +35,7 @@
       margin-top: 1rem;
     }
     .specialty {
-      background:rgb(152, 173, 194);
+      background: rgb(152, 173, 194);
       border-radius: 50%;
       width: 100px;
       height: 100px;
@@ -53,7 +53,7 @@
       margin-top: 2rem;
     }
     .contact-button {
-      background:rgb(37, 79, 141);
+      background: rgb(37, 79, 141);
       color: white;
       border: none;
       padding: 0.75rem 1.5rem;
@@ -63,23 +63,20 @@
     }
 
     .btn-doctor-list {
-    background-color: rgb(37, 79, 141);
-    color: white;
-    padding: 0.6rem 1.2rem;
-    font-weight: bold;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: 0.2s ease-in-out;
-    display: inline-block;
+      background-color: rgb(37, 79, 141);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      font-weight: bold;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.2s ease-in-out;
+      display: inline-block;
     }
 
-    .btn-doctor-list:hover {
-        background-color: rgb(37, 79, 141);
-    }
-
+    .btn-doctor-list:hover,
     .btn-doctor-list:focus {
-        background-color: rgb(37, 79, 141);
-        outline: none;
+      background-color: rgb(30, 65, 120);
+      outline: none;
     }
 
     .modal {
@@ -106,25 +103,33 @@
       width: 100%;
       margin-bottom: 1rem;
       padding: 0.5rem;
-      border: 1px solidrgb(100, 105, 109);
+      border: 1px solid rgb(100, 105, 109);
       border-radius: 5px;
     }
-    .mission, .why-us, .reviews{
+    .mission, .why-us, .reviews {
       padding: 2rem;
       background: white;
       margin-top: 1rem;
     }
-  </style>
+
+    .no-results {
+      display: none;
+      margin-top: 1rem;
+      color: red;
+      font-weight: bold;
+    }
+</style>
 @endsection
 
 @section('content')
 <div class="search">
-  <input type="text" placeholder="Пошук лікаря за ПІБ...">
+  <input type="text" id="specialtySearch" placeholder="Пошук спеціальності...">
 </div>
 
 <section class="section">
   <h2>Виберіть лікаря</h2>
-  <div class="specialties">
+
+  <div class="specialties" id="specialtyList">
     <div class="specialty">Кардіолог</div>
     <div class="specialty">Педіатр</div>
     <div class="specialty">Терапевт</div>
@@ -154,12 +159,13 @@
     <div class="specialty">Фізіотерапевт</div>
   </div>
 
-  {{-- Кнопка весь список лікарів --}}
-    <div class="doctor-list-button">
-        <a href="{{ route('doctor.index') }}" class="btn-doctor-list">
-            Весь список лікарів
-        </a>
-    </div>
+  <div class="no-results" id="noResults">Нічого не знайдено</div>
+
+  <div class="doctor-list-button">
+    <a href="{{ route('doctor.index') }}" class="btn-doctor-list">
+      Весь список лікарів
+    </a>
+  </div>
 </section>
 
 <section class="mission">
@@ -180,6 +186,27 @@
   <h2>Відгуки</h2>
   <p>"Дуже зручний сервіс, рекомендую всім!" - Ірина</p>
 </section>
-
 @endsection
 
+@section('scripts')
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById('specialtySearch');
+    const specialties = document.querySelectorAll('.specialty');
+    const noResults = document.getElementById('noResults');
+
+    input.addEventListener('input', function () {
+      const value = this.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      specialties.forEach(item => {
+        const match = item.textContent.toLowerCase().includes(value);
+        item.style.display = match ? 'flex' : 'none';
+        if (match) visibleCount++;
+      });
+
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+  });
+</script>
+@endsection

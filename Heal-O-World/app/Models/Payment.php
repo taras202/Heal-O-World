@@ -18,7 +18,7 @@ class Payment extends Model
         'transaction_amount',
         'status',
         'payment_date',
-        'appointment_id',
+        'consultation_id',
         'notes',
         'transaction_id',
     ];
@@ -36,13 +36,13 @@ class Payment extends Model
         return $this->belongsTo(MyOfficePatient::class, 'patient_id');
     }
 
-    public function appointment()
+    public function consultation()
     {
-        return $this->belongsTo(Consultation::class, 'appointment_id');
+        return $this->belongsTo(Consultation::class);
     }
 
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class, 'transaction_id');
+        return $this->hasOne(Transaction::class);
     }
 }

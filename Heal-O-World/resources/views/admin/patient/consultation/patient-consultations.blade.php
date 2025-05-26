@@ -161,7 +161,7 @@
     }
 </style>
 
-<h2 class="section-title">Мої консультації</h2>
+<h2 class="section-title">Консультації</h2>
 
 <form method="GET" class="filter-form">
     <label for="status">Фільтр по статусу:</label>
