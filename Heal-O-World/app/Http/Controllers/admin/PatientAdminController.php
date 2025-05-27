@@ -20,8 +20,10 @@ class PatientAdminController extends Controller
 
         $patientName = $request->get('patient_name');
         if ($patientName) {
-            $patientsQuery->where('first_name', 'like', '%' . $patientName . '%')
-                          ->orWhere('last_name', 'like', '%' . $patientName . '%');
+            $patientsQuery->where(function ($q) use ($patientName) {
+                $q->where('first_name', 'like', '%' . $patientName . '%')
+                  ->orWhere('last_name', 'like', '%' . $patientName . '%');
+            });
         }
 
         if ($doctorId) {
@@ -33,8 +35,6 @@ class PatientAdminController extends Controller
         $patients = $patientsQuery->get();
 
         $patientChartLabels = [];
-        $patientChartDatasets = [];
-
         foreach ($patients as $patient) {
             foreach ($patient->consultations as $consultation) {
                 $month = $consultation->created_at->format('Y-m');
@@ -45,7 +45,6 @@ class PatientAdminController extends Controller
         }
 
         $patientChartLabels = array_values(array_unique($patientChartLabels));
-
         $patientChartDatasets = [
             [
                 'label' => 'Кількість консультацій по пацієнтах',
@@ -74,7 +73,7 @@ class PatientAdminController extends Controller
                 'name' => $request->input('first_name') . ' ' . $request->input('last_name'),
                 'email' => $request->input('email'),
                 'password' => Hash::make($request->input('password')),
-                'role' => 'patient', 
+                'role' => 'patient',
             ]);
 
             $validated = $request->validated();
@@ -96,10 +95,9 @@ class PatientAdminController extends Controller
         }
     }
 
-
     public function show(MyOfficePatient $patient)
     {
-        $users = User::all(); 
+        $users = User::all();
         return view('admin.patient.show', compact('patient', 'users'));
     }
 
@@ -128,14 +126,11 @@ class PatientAdminController extends Controller
             $patient->update($validated);
 
             $user = $patient->user;
-
             if ($user && $user->role !== 'admin') {
                 $user->email = $request->input('email');
-
                 if ($request->filled('password')) {
                     $user->password = Hash::make($request->input('password'));
                 }
-
                 $user->save();
             }
 
@@ -150,7 +145,12 @@ class PatientAdminController extends Controller
 
     public function destroy(MyOfficePatient $patient)
     {
+        if ($patient->photo && Storage::disk('public')->exists($patient->photo)) {
+            Storage::disk('public')->delete($patient->photo);
+        }
+
         $patient->delete();
+
         return redirect()->route('admin.patients.index')->with('status', 'Пацієнт видалений!');
     }
 }

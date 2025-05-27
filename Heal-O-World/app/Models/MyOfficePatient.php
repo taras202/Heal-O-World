@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class MyOfficePatient extends Model
 {
@@ -22,10 +23,11 @@ class MyOfficePatient extends Model
         'notes',
         'contact',
         'user_id',
-        'time_zone_id'
+        'time_zone_id',
+        'photo' 
     ];
 
-    public $timestamps = true; 
+    public $timestamps = true;
 
     public function timeZone()
     {
@@ -36,16 +38,21 @@ class MyOfficePatient extends Model
     {
         return $this->hasMany(Consultation::class, 'patient_id');
     }
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function doctor()
-    {
-        return $this->hasOne(MyOfficeDoctor::class);
-    }
+
     public function reviews()
     {
         return $this->hasMany(Review::class, 'patient_id');
+    }
+
+    public function getPhotoUrlAttribute()
+    {
+        return $this->photo && Storage::disk('public')->exists($this->photo)
+            ? asset('storage/' . $this->photo)
+            : asset('images/default-avatar.png');
     }
 }
