@@ -9,16 +9,6 @@
             <div class="doctor-details">
                 <h4 class="doctor-name">{{ $doctor->last_name }} {{ $doctor->first_name }}</h4>
 
-                <p><strong>Напрямок:</strong> 
-                    @if($doctor->specialties->count())
-                        {{ $doctor->specialties->pluck('name')->join(', ') }}
-                    @else
-                        Немає
-                    @endif
-                </p>
-
-                <p><strong>Стаж роботи:</strong> {{ $doctor->experience ?? 'Немає даних' }} років</p>
-
                 <p><strong>Рейтинг:</strong> 
                     @php
                         $rating = $doctor->rating ?? 0;
@@ -37,7 +27,20 @@
                     ({{ number_format($rating, 1) }})
                 </p>
 
-                <p class="doctor-bio">{{ Str::limit($doctor->bio, 200) }}</p>
+                <p><strong>Напрямок:</strong> 
+                    @if($doctor->specialties->count())
+                        {{ $doctor->specialties->pluck('name')->join(', ') }}
+                    @else
+                        Немає
+                    @endif
+                </p>
+
+                @php
+                    $maxExperience = $doctor->specialties->pluck('pivot.experience')->filter()->sortDesc()->first();
+                @endphp
+
+                <p><strong>Стаж роботи:</strong> {{ $maxExperience ?? 'Немає даних' }}</p>
+
                 <p class="doctor-contact"><strong>Контакт:</strong> {{ $doctor->contact ?? 'Немає' }}</p>
 
                 <a href="{{ route('doctor.show', ['id' => $doctor->id]) }}" class="btn-show-more">Показати повністю</a>

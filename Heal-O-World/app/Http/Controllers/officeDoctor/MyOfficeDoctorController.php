@@ -57,16 +57,20 @@ class MyOfficeDoctorController extends Controller
             $doctor->save();
         }
     
-        if ($request->has('specialties')) {
-            foreach ($request->input('specialties') as $specData) {
-                if (isset($specData['id'])) {
-                    $doctor->specialties()->updateExistingPivot($specData['id'], [
-                        'experience' => $specData['experience'] ?? 0,
-                        'price' => $specData['price'] ?? 0,
-                    ]);
-                }
+        if ($request->has('specialties') && $request->has('specialty_data')) {
+            $specialties = $request->input('specialties'); 
+            $specialtyData = $request->input('specialty_data'); 
+        
+            foreach ($specialties as $index => $specialtyId) {
+                $experience = $specialtyData[$index]['experience'] ?? null;
+                $price = $specialtyData[$index]['price'] ?? null;
+        
+                $doctor->specialties()->updateExistingPivot($specialtyId, [
+                    'experience' => $experience,
+                    'price' => $price,
+                ]);
             }
-        }
+        }        
     
         if ($request->has('educations')) {
             foreach ($request->input('educations') as $eduData) {
