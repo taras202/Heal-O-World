@@ -36,18 +36,26 @@ class DoctorActivationController extends Controller
     {
         $user = Auth::user();
         
-        $data = $request->validated(); 
-    
+        $data = $request->validated();
+
+        $request->validate([
+            'language' => 'nullable|string|in:uk,ru,en',
+        ]);
+        
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('photos', 'public');
             $data['photo'] = $path; 
         }
-    
+
+        if ($request->filled('language')) {
+            $data['language'] = $request->input('language');
+        }
+
         $doctor = $user->doctor()->updateOrCreate(
             ['user_id' => $user->id],
             $data
         );
-    
+
         if ($request->has(['workplace', 'position', 'country_of_residence', 'city_of_residence'])) {
             $doctor->placeOfWork()->updateOrCreate(
                 ['doctor_id' => $doctor->id], 
@@ -59,9 +67,10 @@ class DoctorActivationController extends Controller
                 ]
             );
         }
-    
+
         return redirect()->route('activation.specialties');
     }
+
     
     public function editSpecialties()
     {

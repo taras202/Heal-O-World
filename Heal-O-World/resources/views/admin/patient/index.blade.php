@@ -5,10 +5,8 @@
 @section('content')
     <h2 class="mt-5 text-center">СПИСОК ПАЦІЄНТІВ</h2>
 
-    <div class="d-flex justify-content-between mb-3">
-        <a href="{{ route('admin.patients.create') }}" class="btn btn-success">Додати пацієнта</a>
-        <a href="{{ route('admin.patients.analytics') }}" class="btn btn-info">Переглянути аналітику</a>
-    </div>
+        <a href="{{ route('admin.patients.create') }}" class="btn btn-success mb-3">Додати пацієнта</a>
+        <a href="{{ route('admin.patients.analytics') }}" class="btn btn-info mb-3">Переглянути аналітику</a>
 
     @if(session('status'))
         <div class="alert alert-success">{{ session('status') }}</div>

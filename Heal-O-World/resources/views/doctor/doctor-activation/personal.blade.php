@@ -113,20 +113,29 @@
                         class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4"></textarea>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                     <div>
                         <label for="gender" class="block text-base font-medium text-gray-700">Стать</label>
-                        <select name="gender" id="gender">
+                        <select name="gender" id="gender" class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
                             <option value="">Оберіть стать</option>
-                            <option value="male">Чоловік</option>
-                            <option value="female">Жінка</option>
+                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Чоловік</option>
+                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Жінка</option>
                         </select>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="photo" class="form-label">Photo</label>
-                        <input type="file" class="form-control" id="photo" name="photo" required
-                        class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
+                    <div>
+                        <label for="language" class="block text-base font-medium text-gray-700">Мови</label>
+                        <select name="language[]" id="language" multiple
+                            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4" size="4">
+                            <option value="uk" {{ in_array('uk', old('language', [])) ? 'selected' : '' }}>Українська</option>
+                            <option value="ru" {{ in_array('ru', old('language', [])) ? 'selected' : '' }}>Російська</option>
+                            <option value="en" {{ in_array('en', old('language', [])) ? 'selected' : '' }}>Англійська</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="photo" class="block text-base font-medium text-gray-700">Фото</label>
+                        <input type="file" class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4" id="photo" name="photo" required>
                     </div>
                 </div>
 

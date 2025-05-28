@@ -173,27 +173,38 @@
             <input type="file" name="photo" id="photo" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" />
         </div>
 
-        <!-- Права частина: Основні дані -->
         <div class="profile-main">
             <div class="section-block">
-                <div class="form-row">
-                    <div class="input-group">
-                        <label>Ім’я</label>
-                        <input type="text" name="first_name" value="{{ old('first_name', $doctor->first_name) }}">
-                    </div>
-                    <div class="input-group">
-                        <label>Прізвище</label>
-                        <input type="text" name="last_name" value="{{ old('last_name', $doctor->last_name) }}">
-                    </div>
-                    <div class="input-group">
-                        <label>Стать</label>
-                        <select name="gender">
-                            <option value="male" {{ $doctor->gender == 'male' ? 'selected' : '' }}>Чоловік</option>
-                            <option value="female" {{ $doctor->gender == 'female' ? 'selected' : '' }}>Жінка</option>
-                            <option value="other" {{ $doctor->gender == 'other' ? 'selected' : '' }}>Інше</option>
-                        </select>
-                    </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Ім’я</label>
+                    <input type="text" name="first_name" value="{{ old('first_name', $doctor->first_name) }}">
                 </div>
+                <div class="input-group">
+                    <label>Прізвище</label>
+                    <input type="text" name="last_name" value="{{ old('last_name', $doctor->last_name) }}">
+                </div>
+                <div class="input-group">
+                    <label>Стать</label>
+                    <select name="gender">
+                        <option value="male" {{ $doctor->gender == 'male' ? 'selected' : '' }}>Чоловік</option>
+                        <option value="female" {{ $doctor->gender == 'female' ? 'selected' : '' }}>Жінка</option>
+                        <option value="other" {{ $doctor->gender == 'other' ? 'selected' : '' }}>Інше</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                        <label for="languages">Мови</label>
+                        <select name="languages[]" multiple>
+                        @foreach ($languages as $language)
+                        <option value="{{ $language->id }}"
+                            {{ in_array($language->id, old('languages', $doctor->languages->pluck('language')->toArray())) ? 'selected' : '' }}>
+                            {{ $language->name }}
+                        </option>
+                    @endforeach
+                </select>
+                </div>
+            </div>
+
 
                 <div class="form-row">
                     <div class="input-group">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\officeDoctor;
 
 use App\Http\Controllers\Controller;
+use App\Models\DoctorLanguage;
 use App\Models\Education;
 use App\Models\MyOfficeDoctor;
 use App\Models\PlaceOfWork;
@@ -15,19 +16,30 @@ class MyOfficeDoctorController extends Controller
     public function index()
     {  
         $user = Auth::user();
-        $doctor = MyOfficeDoctor::with(['specialties', 'educations', 'placeOfWork'])
-                    ->where('user_id', $user->id)
-                    ->first();
-        
-        $photoUrl = $doctor->photo ? asset('storage/' . $doctor->photo) : null;
 
+        $doctor = MyOfficeDoctor::with([
+            'specialties', 
+            'educations', 
+            'placeOfWork', 
+            'languages'
+        ])
+        ->where('user_id', $user->id)
+        ->first();
+
+        if (!$doctor) {
+            abort(404, 'Доктор не знайдений');
+        }
+
+        $photoUrl = $doctor->photo ? asset('storage/' . $doctor->photo) : null;
         $timeZones = TimeZone::all();
+        $languages = DoctorLanguage::all();
 
         return view('doctor.office-doctor.doctor-office', [
             'user' => $user,
             'doctor' => $doctor,
             'photoUrl' => $photoUrl,
             'timeZones' => $timeZones,
+            'languages' => $languages,
         ]);
     }
 
@@ -35,47 +47,71 @@ class MyOfficeDoctorController extends Controller
     {
         $user = Auth::user();
         $doctor = MyOfficeDoctor::where('user_id', $user->id)->firstOrFail();
-    
+
         $request->validate([
             'photo' => 'nullable|image|max:2048',
             'time_zone_id' => 'nullable|exists:time_zones,id',
+            'languages' => 'nullable|array',
+            'languages.*' => 'exists:doctor_languages,id',  
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'bio' => 'nullable|string',
+            'gender' => 'nullable|in:male,female,other',  
+            'contact' => 'nullable|string|max:255',
+            'specialties' => 'nullable|array',
+            'specialties.*' => 'exists:specialties,id',
+            'specialty_data' => 'nullable|array',
+            'educations' => 'nullable|array',
+            'educations.*.id' => 'nullable|exists:educations,id',
+            'educations.*.institution' => 'nullable|string|max:255',
+            'educations.*.degree' => 'nullable|string|max:255',
+            'educations.*.start_year' => 'nullable|digits:4|integer',
+            'educations.*.end_year' => 'nullable|digits:4|integer',
+            'place_of_work' => 'nullable|array',
         ]);
-        
+
         $doctor->update($request->only([
             'first_name',
             'last_name',
             'bio',
             'gender',
             'contact',
-            'time_zone_id',  
+            'time_zone_id',
         ]));
-        
-    
+
         if ($request->hasFile('photo')) {
             $path = $request->file('photo')->store('photo', 'public');
-            $doctor->photo = $path;
-            $doctor->save();
+            $doctor->update(['photo' => $path]);
         }
-    
+
+            $doctor->languages()->delete();
+            foreach ($request->input('languages', []) as $lang) {
+                $doctor->languages()->create([
+                    'language' => $lang,
+                ]);
+        }
+
         if ($request->has('specialties') && $request->has('specialty_data')) {
             $specialties = $request->input('specialties'); 
-            $specialtyData = $request->input('specialty_data'); 
-        
+            $specialtyData = $request->input('specialty_data');
+
             foreach ($specialties as $index => $specialtyId) {
                 $experience = $specialtyData[$index]['experience'] ?? null;
                 $price = $specialtyData[$index]['price'] ?? null;
-        
+
                 $doctor->specialties()->updateExistingPivot($specialtyId, [
                     'experience' => $experience,
                     'price' => $price,
                 ]);
             }
-        }        
-    
+        }
+
         if ($request->has('educations')) {
             foreach ($request->input('educations') as $eduData) {
                 if (isset($eduData['id'])) {
-                    $education = Education::where('id', $eduData['id'])->where('doctor_id', $doctor->id)->first();
+                    $education = Education::where('id', $eduData['id'])
+                        ->where('doctor_id', $doctor->id)
+                        ->first();
                     if ($education) {
                         $education->update([
                             'institution' => $eduData['institution'] ?? '',
@@ -87,16 +123,12 @@ class MyOfficeDoctorController extends Controller
                 }
             }
         }
-    
-        $place = $doctor->placeOfWork;
-        if (!$place) {
-            $place = new PlaceOfWork(['doctor_id' => $doctor->id]);
-        }
-    
+
+        $place = $doctor->placeOfWork ?: new PlaceOfWork(['doctor_id' => $doctor->id]);
         $place->fill($request->input('place_of_work', []));
         $place->doctor_id = $doctor->id;
         $place->save();
-    
+
         return redirect()->back()->with('success', 'Профіль оновлено успішно.');
-    }    
+    }
 }

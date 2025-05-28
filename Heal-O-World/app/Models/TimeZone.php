@@ -2,16 +2,36 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TimeZone extends Model
 {
-    use HasFactory;
-
     protected $table = 'time_zones';
 
     protected $fillable = [
-        'time_zone',
-    ];
-}
+            'Europe/Kyiv',
+            'Europe/London',
+            'America/New_York',
+            'Asia/Tokyo',
+            'Europe/Berlin',
+            'Asia/Kolkata',
+            'Australia/Sydney',
+            'America/Los_Angeles',
+            'Europe/Paris',
+            'Africa/Cairo',
+            'America/Chicago',
+            'America/Sao_Paulo',
+            'Asia/Shanghai',
+            'Asia/Singapore',
+            'Asia/Dubai',
+            'Europe/Moscow',
+            'Africa/Nairobi',
+            'Pacific/Auckland',
+            'Asia/Bangkok',
+            'America/Vancouver',
+        ];
+
+        
+        }
+    
+

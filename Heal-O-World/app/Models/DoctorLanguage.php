@@ -9,14 +9,14 @@ class DoctorLanguage extends Model
 {
     use HasFactory;
 
-    protected $table = 'doctor_languages'; 
+    protected $table = 'doctor_languages';
 
     protected $fillable = [
         'doctor_id',
         'language_id',
     ];
 
-    public $timestamps = true; 
+    public $timestamps = true;
 
     
     public function doctor()
@@ -24,4 +24,9 @@ class DoctorLanguage extends Model
         return $this->belongsTo(MyOfficeDoctor::class, 'doctor_id');
     }
 
+    
+    public function language()
+    {
+        return $this->belongsTo(DoctorLanguage::class, 'language_id');
+    }
 }

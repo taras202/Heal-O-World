@@ -54,6 +54,16 @@ class MyOfficeDoctor extends Model
         return $this->hasMany(Consultation::class, 'doctor_id');
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'doctor_id');
+    }
+
+    public function languages()
+    {
+        return $this->hasMany(DoctorLanguage::class, 'doctor_id');
+    }
+
     public function fullName()
     {
         return $this->first_name . ' ' . $this->last_name;
@@ -69,10 +79,6 @@ class MyOfficeDoctor extends Model
             ];
         });
     }
-    public function reviews()
-    {
-        return $this->hasMany(Review::class, 'doctor_id');
-    }
 
     public function getRatingAttribute()
     {
@@ -84,4 +90,3 @@ class MyOfficeDoctor extends Model
         return $this->reviews()->count();
     }
 }
-

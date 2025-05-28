@@ -232,25 +232,43 @@
         <div style="color: #718096; font-style: italic;">Ще немає відгуків від пацієнтів.</div>
     @endforelse
 </div>
+<div class="reviews-section">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
 
-{{-- JavaScript для вкладок --}}
-<script>
-    const tabs = document.querySelectorAll('.tab');
-    const contents = document.querySelectorAll('.tab-content');
+        <div class="back-button-wrapper">
+            <a href="{{ route('doctor.index') }}" class="back-button"
+               style="display: flex; align-items: center; background-color: #e2e8f0; padding: 0.5rem 1rem; border-radius: 8px; color: #2c5282; text-decoration: none; font-weight: 500;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     viewBox="0 0 16 16" style="margin-right: 0.5rem;">
+                    <path fill-rule="evenodd"
+                          d="M15 8a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 0 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 0 1 .708.708L2.707 7.5H14.5a.5.5 0 0 1 .5.5z"/>
+                </svg>
+                Повернутися до списку лікарів
+            </a>
+        </div>
+    </div>
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            tabs.forEach(item => item.classList.remove('active'));
-            tab.classList.add('active');
-
-            contents.forEach(content => {
-                content.classList.remove('active');
-                if (content.id === tab.dataset.tab) {
-                    content.classList.add('active');
-                }
-            });
-        });
-    });
-</script>
+    @forelse($doctor->reviews as $review)
+        <div class="review-block">
+            <div class="review-header">
+                <div class="review-author">{{ $review->user->name ?? 'Анонім' }}</div>
+                <div class="review-rating">
+                    @for ($i = 1; $i <= 5; $i++)
+                        {{ $i <= $review->rating ? '★' : '☆' }}
+                    @endfor
+                    <span style="color: #718096; margin-left: 0.25rem;">({{ $review->rating }}/5)</span>
+                </div>
+            </div>
+            <div class="review-comment">
+                {{ $review->comment }}
+            </div>
+            <div class="review-date">
+                {{ $review->created_at->translatedFormat('d M Y, H:i') }}
+            </div>
+        </div>
+    @empty
+        
+    @endforelse
+</div>
 
 @endsection

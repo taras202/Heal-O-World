@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -34,11 +33,13 @@ class TimeZoneDoctorSeeder extends Seeder
         ];
 
         foreach ($timezones as $tz) {
-            DB::table('time_zones')->insert([
-                'time_zone' => $tz,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            DB::table('time_zones')->updateOrInsert(
+                ['time_zone' => $tz],
+                [
+                    'updated_at' => now(),
+                    'created_at' => DB::raw('IFNULL(created_at, NOW())'),
+                ]
+            );
         }
     }
 }
