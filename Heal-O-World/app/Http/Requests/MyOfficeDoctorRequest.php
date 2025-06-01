@@ -23,6 +23,9 @@ class MyOfficeDoctorRequest extends FormRequest
             'photo' => 'nullable|image|max:2048',
             'contact' => 'required|string|max:255',
 
+            'languages' => 'nullable|array',
+            'languages.*' => 'exists:languages,code',
+
             'specialties' => 'nullable|array',
             'specialties.*' => 'exists:specialties,id',
 

@@ -220,21 +220,19 @@
                 <li class="{{ request()->routeIs('doctor.office') ? 'active' : '' }}">
                     <a href="{{ route('doctor.office') }}">Мій профіль</a>
                 </li>
+
                 <li class="{{ request()->routeIs('doctor.consultations.index') ? 'active' : '' }}">
                     <a href="{{ route('doctor.consultations.index') }}">Мої консультації</a>
                 </li>
-                @php
-                    $hasChat = \App\Models\Chat::where('doctor_id', Auth::id())->exists();
-                @endphp
 
-                @if ($hasChat)
-                    <li class="{{ request()->routeIs('doctor.chat') ? 'active' : '' }}">
-                        <a href="{{ route('doctor.chat') }}">💬 Чат з лікарем</a>
-                    </li>
-                @endif
+                <li class="{{ request()->routeIs('patient.chat') ? 'active' : '' }}">
+                    <a href="{{ route('doctor.chat') }}">💬 Чат з пацієнтом</a>
+                </li>
+
                 <li class="{{ request()->routeIs('work-schedule.create') ? 'active' : '' }}">
                     <a href="{{ route('work-schedule.create') }}">Графік роботи</a>
                 </li>
+
                 <li>
                     <form method="POST" action="{{ route('auth.logout') }}" style="display:inline;">
                         @csrf

@@ -61,8 +61,8 @@ class MyOfficeDoctor extends Model
 
     public function languages()
     {
-        return $this->hasMany(DoctorLanguage::class, 'doctor_id');
-    }
+        return $this->belongsToMany(Language::class, 'doctor_languages', 'doctor_id', 'language_id');
+    }    
 
     public function fullName()
     {

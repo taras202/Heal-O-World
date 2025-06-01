@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(WorkScheduleSeeder::class); 
 
-        $this->call(DoctorLanguagesSeeder::class);
+        $this->call(LanguagesSeeder::class);
 
         $this->call([
             ListAllergicReactionsSeeder::class,

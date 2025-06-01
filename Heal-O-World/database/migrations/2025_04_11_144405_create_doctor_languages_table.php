@@ -11,9 +11,9 @@ return new class extends Migration
         Schema::create('doctor_languages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('doctor_id')->constrained('my_office_doctors')->onDelete('cascade');
-            $table->string('language'); 
+            $table->foreignId('language_id')->constrained('languages')->onDelete('cascade');
             $table->timestamps();
-        });
+        });        
     }
 
     public function down()

@@ -18,15 +18,13 @@ class DoctorLanguage extends Model
 
     public $timestamps = true;
 
-    
     public function doctor()
     {
         return $this->belongsTo(MyOfficeDoctor::class, 'doctor_id');
     }
 
-    
     public function language()
     {
-        return $this->belongsTo(DoctorLanguage::class, 'language_id');
+        return $this->belongsTo(Language::class, 'language_id'); 
     }
 }

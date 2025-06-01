@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\officeDoctor;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MyOfficeDoctorRequest;
 use App\Models\DoctorLanguage;
 use App\Models\Education;
 use App\Models\MyOfficeDoctor;
 use App\Models\PlaceOfWork;
 use App\Models\TimeZone;
+use Google\Service\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -43,92 +45,82 @@ class MyOfficeDoctorController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(MyOfficeDoctorRequest $request)
     {
         $user = Auth::user();
         $doctor = MyOfficeDoctor::where('user_id', $user->id)->firstOrFail();
-
-        $request->validate([
-            'photo' => 'nullable|image|max:2048',
-            'time_zone_id' => 'nullable|exists:time_zones,id',
-            'languages' => 'nullable|array',
-            'languages.*' => 'exists:doctor_languages,id',  
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'bio' => 'nullable|string',
-            'gender' => 'nullable|in:male,female,other',  
-            'contact' => 'nullable|string|max:255',
-            'specialties' => 'nullable|array',
-            'specialties.*' => 'exists:specialties,id',
-            'specialty_data' => 'nullable|array',
-            'educations' => 'nullable|array',
-            'educations.*.id' => 'nullable|exists:educations,id',
-            'educations.*.institution' => 'nullable|string|max:255',
-            'educations.*.degree' => 'nullable|string|max:255',
-            'educations.*.start_year' => 'nullable|digits:4|integer',
-            'educations.*.end_year' => 'nullable|digits:4|integer',
-            'place_of_work' => 'nullable|array',
-        ]);
-
+    
         $doctor->update($request->only([
             'first_name',
             'last_name',
             'bio',
             'gender',
             'contact',
-            'time_zone_id',
         ]));
-
+    
         if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('photo', 'public');
+            if ($doctor->photo && Storage::disk('public')->exists($doctor->photo)) {
+                Storage::disk('public')->delete($doctor->photo);
+            }
+            $path = $request->file('photo')->store('photos', 'public');
             $doctor->update(['photo' => $path]);
         }
-
+    
+        if ($request->filled('language')) {
+            $languages = collect($request->input('language'))->map(fn($lang) => ['language' => $lang])->toArray();
             $doctor->languages()->delete();
-            foreach ($request->input('languages', []) as $lang) {
-                $doctor->languages()->create([
-                    'language' => $lang,
-                ]);
+            $doctor->languages()->createMany($languages);
+        } else {
+            $doctor->languages()->delete();
         }
-
-        if ($request->has('specialties') && $request->has('specialty_data')) {
-            $specialties = $request->input('specialties'); 
+    
+        if ($request->filled('specialties') && $request->filled('specialty_data')) {
+            $specialties = $request->input('specialties');
             $specialtyData = $request->input('specialty_data');
-
+    
             foreach ($specialties as $index => $specialtyId) {
-                $experience = $specialtyData[$index]['experience'] ?? null;
-                $price = $specialtyData[$index]['price'] ?? null;
-
-                $doctor->specialties()->updateExistingPivot($specialtyId, [
-                    'experience' => $experience,
-                    'price' => $price,
-                ]);
+                if ($doctor->specialties->contains($specialtyId)) {
+                    $experience = $specialtyData[$index]['experience'] ?? null;
+                    $price = $specialtyData[$index]['price'] ?? null;
+    
+                    $doctor->specialties()->updateExistingPivot($specialtyId, [
+                        'experience' => $experience,
+                        'price' => $price,
+                    ]);
+                }
             }
         }
-
-        if ($request->has('educations')) {
+    
+        if ($request->filled('educations')) {
             foreach ($request->input('educations') as $eduData) {
-                if (isset($eduData['id'])) {
+                if (!empty($eduData['id'])) {
                     $education = Education::where('id', $eduData['id'])
                         ->where('doctor_id', $doctor->id)
                         ->first();
                     if ($education) {
                         $education->update([
-                            'institution' => $eduData['institution'] ?? '',
-                            'degree' => $eduData['degree'] ?? '',
-                            'start_year' => $eduData['start_year'] ?? '',
-                            'end_year' => $eduData['end_year'] ?? '',
+                            'institution' => $eduData['institution'] ?? $education->institution,
+                            'degree' => $eduData['degree'] ?? $education->degree,
+                            'start_year' => $eduData['start_year'] ?? $education->start_year,
+                            'end_year' => $eduData['end_year'] ?? $education->end_year,
                         ]);
                     }
                 }
             }
         }
-
-        $place = $doctor->placeOfWork ?: new PlaceOfWork(['doctor_id' => $doctor->id]);
-        $place->fill($request->input('place_of_work', []));
-        $place->doctor_id = $doctor->id;
-        $place->save();
-
+    
+        $placeData = $request->input('place_of_work', []);
+        if (!empty($placeData)) {
+            $place = $doctor->placeOfWork ?: new PlaceOfWork(['doctor_id' => $doctor->id]);
+            $place->fill($placeData);
+            $place->doctor_id = $doctor->id;
+            $place->save();
+        } else {
+            if ($doctor->placeOfWork) {
+                $doctor->placeOfWork()->delete();
+            }
+        }
+    
         return redirect()->back()->with('success', 'Профіль оновлено успішно.');
     }
 }

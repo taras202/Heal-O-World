@@ -176,14 +176,17 @@
         <div class="profile-main">
             <div class="section-block">
             <div class="form-row">
+
                 <div class="input-group">
                     <label>Ім’я</label>
                     <input type="text" name="first_name" value="{{ old('first_name', $doctor->first_name) }}">
                 </div>
+
                 <div class="input-group">
                     <label>Прізвище</label>
                     <input type="text" name="last_name" value="{{ old('last_name', $doctor->last_name) }}">
                 </div>
+
                 <div class="input-group">
                     <label>Стать</label>
                     <select name="gender">
@@ -192,17 +195,7 @@
                         <option value="other" {{ $doctor->gender == 'other' ? 'selected' : '' }}>Інше</option>
                     </select>
                 </div>
-                <div class="input-group">
-                        <label for="languages">Мови</label>
-                        <select name="languages[]" multiple>
-                        @foreach ($languages as $language)
-                        <option value="{{ $language->id }}"
-                            {{ in_array($language->id, old('languages', $doctor->languages->pluck('language')->toArray())) ? 'selected' : '' }}>
-                            {{ $language->name }}
-                        </option>
-                    @endforeach
-                </select>
-                </div>
+
             </div>
 
 
@@ -226,6 +219,20 @@
                     <div class="input-group">
                         <label>Біографія</label>
                         <textarea name="bio" rows="3">{{ old('bio', $doctor->bio) }}</textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="languages">Мови</label>
+                        <select name="languages[]" id="languages" multiple>
+                            @php
+                                $selectedLanguages = old('languages', $doctor->languages->pluck('id')->toArray());
+                            @endphp
+                            @foreach ($languages as $language)
+                                <option value="{{ $language->id }}" {{ in_array($language->id, $selectedLanguages) ? 'selected' : '' }}>
+                                    {{ $language->name }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
@@ -260,10 +267,12 @@
                             <label>Заклад</label>
                             <input type="text" name="educations[{{ $i }}][institution]" value="{{ old("educations.$i.institution", $edu->institution) }}">
                         </div>
+
                         <div class="input-group">
                             <label>Ступінь</label>
                             <input type="text" name="educations[{{ $i }}][degree]" value="{{ old("educations.$i.degree", $edu->degree) }}">
                         </div>
+
                         <div class="input-group">
                             <label>Рік початку</label>
                             <input type="text" name="educations[{{ $i }}][start_year]" value="{{ old("educations.$i.start_year", $edu->start_year) }}">
@@ -276,7 +285,7 @@
                         </div>
                     </div>
 
-                    {{-- 🎓 Нові поля для фото дипломів --}}
+
                     <div class="form-row">
                         <div class="input-group">
                             <label>Диплом 1</label>

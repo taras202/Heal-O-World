@@ -123,15 +123,23 @@
                         </select>
                     </div>
 
-                    <div>
-                        <label for="language" class="block text-base font-medium text-gray-700">Мови</label>
-                        <select name="language[]" id="language" multiple
-                            class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4" size="4">
-                            <option value="uk" {{ in_array('uk', old('language', [])) ? 'selected' : '' }}>Українська</option>
-                            <option value="ru" {{ in_array('ru', old('language', [])) ? 'selected' : '' }}>Російська</option>
-                            <option value="en" {{ in_array('en', old('language', [])) ? 'selected' : '' }}>Англійська</option>
-                        </select>
-                    </div>
+                    <select 
+                        name="languages[]" 
+                        id="languages" 
+                        multiple
+                        class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4 bg-white"
+                        size="{{ is_array($availableLanguages) ? count($availableLanguages) : 3 }}"
+                    >
+                        @if (is_array($availableLanguages))
+                            @foreach ($availableLanguages as $code => $label)
+                                <option value="{{ $code }}" {{ in_array($code, old('languages', $selectedLanguages ?? [])) ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        @else
+                            <option disabled>Мови не завантажені</option>
+                        @endif
+                    </select>
 
                     <div>
                         <label for="photo" class="block text-base font-medium text-gray-700">Фото</label>

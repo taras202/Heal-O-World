@@ -125,19 +125,19 @@
 
         <div class="mb-3">
             <label for="diploma_photo_1" class="form-label">Photo</label>
-            <input type="file" class="form-control" id="diploma_photo_1" name="diploma_photo_1" required
+            <input type="file" class="form-control" id="diploma_photo_1" name="diploma_photo_1" 
             class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
         </div>
 
         <div class="mb-3">
             <label for="diploma_photo_2" class="form-label">Photo</label>
-            <input type="file" class="form-control" id="diploma_photo_2" name="diploma_photo_2" required
+            <input type="file" class="form-control" id="diploma_photo_2" name="diploma_photo_2" 
             class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
         </div>
 
         <div class="mb-3">
             <label for="diploma_photo_3" class="form-label">Photo</label>
-            <input type="file" class="form-control" id="diploma_photo_3" name="diploma_photo_3" required
+            <input type="file" class="form-control" id="diploma_photo_3" name="diploma_photo_3" 
             class="mt-2 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 p-4">
         </div>
 
