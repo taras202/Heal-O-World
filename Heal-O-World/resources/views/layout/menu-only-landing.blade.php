@@ -109,11 +109,10 @@
         }
         .search-header {
             display: flex;
+            justify-content: center;
             gap: 0.5rem;
-            align-items: center;
-            margin-left: auto;
-            margin-right: 1rem;
             flex-wrap: wrap;
+            margin-top: 1rem;
         }
 
         .search-header input {
@@ -150,6 +149,11 @@
                 <a href="{{ route('auth.select-role') }}">Вхід</a>
             @endif
         </div>
+
+        <div class="search-header">
+            <input type="text" id="specialtySearch" placeholder="Пошук спеціальності...">
+            <input type="text" id="doctorSearch" placeholder="Пошук лікаря...">
+        </div>
     </header>
 
     <main class="@yield('main-class')">
@@ -163,3 +167,6 @@
     @yield('scripts')
 </body>
 </html>
+@section('scripts')
+
+@endsection

@@ -80,71 +80,35 @@
         color: white;
     }
     .filter-bar {
-    display: flex;
-    overflow-x: auto;
-    white-space: nowrap;
-    gap: 8px;
-    padding: 10px 0;
-    border-bottom: 1px solid #ccc;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+        overflow-x: auto;
     }
-
-    /* Додатково: стилі для посилань */
     .filter-bar a {
-        flex: 0 0 auto;
-        padding: 6px 12px;
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        background-color: #f7f7f7;
+        padding: 0.4rem 1rem;
+        background: #f3f4f6;
+        border-radius: 8px;
         text-decoration: none;
-        color: #333;
-        transition: background-color 0.2s ease;
+        color: #111;
+        white-space: nowrap;
+        transition: background 0.2s;
     }
-
-    .filter-bar a:hover {
-        background-color: #e2e2e2;
-    }
-
+    .filter-bar a:hover,
     .filter-bar a.active {
-        background-color: #007bff;
-        color: white;
-        border-color: #007bff;
+        background: #d0e3fa;
     }
 </style>
 @endsection
 
 @section('content')
 <div class="container" style="max-width: 1200px; margin: auto; padding: 2rem;">
+
     <div class="filter-bar">
-        <a href="#" data-specialty="Кардіолог">Кардіолог</a>
-        <a href="#" data-specialty="Педіатр">Педіатр</a>
-        <a href="#" data-specialty="Терапевт">Терапевт</a>
-        <a href="#" data-specialty="Дерматолог">Дерматолог</a>
-        <a href="#" data-specialty="Хірург">Хірург</a>
-        <a href="#" data-specialty="Офтальмолог">Офтальмолог</a>
-        <a href="#" data-specialty="Отоларинголог">Отоларинголог</a>
-        <a href="#" data-specialty="Уролог">Уролог</a>
-        <a href="#" data-specialty="Травматолог">Травматолог</a>
-        <a href="#" data-specialty="Невропатолог">Невропатолог</a>
-        <a href="#" data-specialty="Нарколог">Нарколог</a>
-        <a href="#" data-specialty="Онколог">Онколог</a>
-        <a href="#" data-specialty="Ендокринолог">Ендокринолог</a>
-        <a href="#" data-specialty="Гастроентеролог">Гастроентеролог</a>
-        <a href="#" data-specialty="Пульмонолог">Пульмонолог</a>
-        <a href="#" data-specialty="Ревматолог">Ревматолог</a>
-        <a href="#" data-specialty="Алерголог">Алерголог</a>
-        <a href="#" data-specialty="Інфекціоніст">Інфекціоніст</a>
-        <a href="#" data-specialty="Гінеколог">Гінеколог</a>
-        <a href="#" data-specialty="Андролог">Андролог</a>
-        <a href="#" data-specialty="Нефролог">Нефролог</a>
-        <a href="#" data-specialty="Гематолог">Гематолог</a>
-        <a href="#" data-specialty="Психіатр">Психіатр</a>
-        <a href="#" data-specialty="Психотерапевт">Психотерапевт</a>
-        <a href="#" data-specialty="Логопед">Логопед</a>
-        <a href="#" data-specialty="Стоматолог">Стоматолог</a>
-        <a href="#" data-specialty="Фізіотерапевт">Фізіотерапевт</a>
-        <a href="#" data-specialty="Мамолог">Мамолог</a>
-        <a href="#" data-specialty="Проктолог">Проктолог</a>
-        <a href="#" data-specialty="Венеролог">Венеролог</a>
+        @foreach($specialties as $specialty)
+            <a href="#" data-specialty="{{ $specialty->name }}">{{ $specialty->name }}</a>
+        @endforeach
         <a href="#" data-specialty="all" class="active">Усі спеціальності</a>
     </div>
 

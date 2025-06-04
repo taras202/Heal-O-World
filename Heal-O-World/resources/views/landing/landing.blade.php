@@ -1,4 +1,4 @@
-@extends('layout.menu')
+@extends('layout.menu-only-landing')
 
 @section('styles')
 <style>
@@ -16,6 +16,8 @@
       margin-top: 1rem;
       display: flex;
       justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
     .search input {
       padding: 0.5rem;
@@ -43,23 +45,29 @@
       align-items: center;
       justify-content: center;
       font-size: 0.9rem;
-      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      color: #000;
+      font-weight: 600;
       transition: background 0.3s;
     }
     .specialty:hover {
       background: #adb5bd;
     }
-    .choose-doctor-info {
+
+    .doctors {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
       margin-top: 2rem;
     }
-    .contact-button {
-      background: rgb(37, 79, 141);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
+    .doctor {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 10px;
+      width: 220px;
+      text-align: center;
     }
 
     .btn-doctor-list {
@@ -71,6 +79,7 @@
       text-decoration: none;
       transition: 0.2s ease-in-out;
       display: inline-block;
+      margin-top: 1rem;
     }
 
     .btn-doctor-list:hover,
@@ -79,33 +88,6 @@
       outline: none;
     }
 
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 10px;
-      width: 90%;
-      max-width: 500px;
-    }
-    .modal-content input,
-    .modal-content textarea {
-      width: 100%;
-      margin-bottom: 1rem;
-      padding: 0.5rem;
-      border: 1px solid rgb(100, 105, 109);
-      border-radius: 5px;
-    }
     .mission, .why-us, .reviews {
       padding: 2rem;
       background: white;
@@ -122,41 +104,16 @@
 @endsection
 
 @section('content')
-<div class="search">
-  <input type="text" id="specialtySearch" placeholder="Пошук спеціальності...">
-</div>
 
 <section class="section">
   <h2>Виберіть лікаря</h2>
 
   <div class="specialties" id="specialtyList">
-    <div class="specialty">Кардіолог</div>
-    <div class="specialty">Педіатр</div>
-    <div class="specialty">Терапевт</div>
-    <div class="specialty">Дерматолог</div>
-    <div class="specialty">Хірург</div>
-    <div class="specialty">Офтальмолог</div>
-    <div class="specialty">Отоларинголог</div>
-    <div class="specialty">Уролог</div>
-    <div class="specialty">Травматолог</div>
-    <div class="specialty">Невропатолог</div>
-    <div class="specialty">Нарколог</div>
-    <div class="specialty">Онколог</div>
-    <div class="specialty">Ендокринолог</div>
-    <div class="specialty">Гастроентеролог</div>
-    <div class="specialty">Пульмонолог</div>
-    <div class="specialty">Ревматолог</div>
-    <div class="specialty">Алерголог</div>
-    <div class="specialty">Інфекціоніст</div>
-    <div class="specialty">Гінеколог</div>
-    <div class="specialty">Андролог</div>
-    <div class="specialty">Нефролог</div>
-    <div class="specialty">Гематолог</div>
-    <div class="specialty">Психіатр</div>
-    <div class="specialty">Психотерапевт</div>
-    <div class="specialty">Логопед</div>
-    <div class="specialty">Стоматолог</div>
-    <div class="specialty">Фізіотерапевт</div>
+    @foreach($specialties as $specialty)
+      <a href="{{ route('doctor.index', ['specialty' => $specialty->id]) }}" class="specialty">
+        {{ $specialty->name }}
+      </a>
+    @endforeach
   </div>
 
   <div class="no-results" id="noResults">Нічого не знайдено</div>
@@ -191,22 +148,47 @@
 @section('scripts')
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById('specialtySearch');
+    const specialtyInput = document.getElementById('specialtySearch');
+    const doctorInput = document.getElementById('doctorSearch');
     const specialties = document.querySelectorAll('.specialty');
+    const doctors = document.querySelectorAll('.doctor');
     const noResults = document.getElementById('noResults');
 
-    input.addEventListener('input', function () {
-      const value = this.value.trim().toLowerCase();
-      let visibleCount = 0;
-
+    function filterSpecialties() {
+      const value = specialtyInput.value.trim().toLowerCase();
+      let count = 0;
       specialties.forEach(item => {
         const match = item.textContent.toLowerCase().includes(value);
         item.style.display = match ? 'flex' : 'none';
-        if (match) visibleCount++;
+        if (match) count++;
       });
+      noResults.style.display = count === 0 ? 'block' : 'none';
+    }
 
-      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    function filterDoctors() {
+      const text = doctorInput.value.trim().toLowerCase();
+      const spec = specialtyInput.value.trim().toLowerCase();
+      let count = 0;
+
+      doctors.forEach(doctor => {
+        const name = doctor.dataset.name;
+        const specialty = doctor.dataset.specialty;
+
+        const matchName = name.includes(text);
+        const matchSpec = specialty.includes(spec);
+
+        const visible = matchName && matchSpec;
+        doctor.style.display = visible ? 'block' : 'none';
+        if (visible) count++;
+      });
+    }
+
+    specialtyInput.addEventListener('input', () => {
+      filterSpecialties();
+      filterDoctors();
     });
+
+    doctorInput.addEventListener('input', filterDoctors);
   });
 </script>
 @endsection

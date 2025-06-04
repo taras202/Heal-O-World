@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MyOfficeDoctor;
+use App\Models\Specialty;
 
 class DoctorController extends Controller
 {
     public function index()
     {
         $doctors = MyOfficeDoctor::with('specialties')->get();
-        return view('doctor.open-view.index', compact('doctors'));
+        $specialties = Specialty::orderBy('name')->get(); 
+
+        return view('doctor.open-view.index', compact('doctors', 'specialties'));
     }
 
     public function show($id)

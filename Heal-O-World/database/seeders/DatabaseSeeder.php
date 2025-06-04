@@ -14,10 +14,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(TimeZoneDoctorSeeder::class);
 
-        $this->call(ConsultationSeeder::class); 
-
-        $this->call(WorkScheduleSeeder::class); 
-
         $this->call(LanguagesSeeder::class);
 
         $this->call([
