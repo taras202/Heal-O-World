@@ -110,8 +110,8 @@
 
   <div class="specialties" id="specialtyList">
     @foreach($specialties as $specialty)
-      <a href="{{ route('doctor.index', ['specialty' => $specialty->id]) }}" class="specialty">
-        {{ $specialty->name }}
+      <a href="{{ route('doctor.index', ['specialty' => $specialty->name]) }}" class="specialty">
+          {{ $specialty->name }}
       </a>
     @endforeach
   </div>

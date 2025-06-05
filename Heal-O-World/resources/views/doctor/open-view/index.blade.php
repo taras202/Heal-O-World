@@ -107,9 +107,18 @@
 
     <div class="filter-bar">
         @foreach($specialties as $specialty)
-            <a href="#" data-specialty="{{ $specialty->name }}">{{ $specialty->name }}</a>
+            <a href="{{ route('doctor.index', ['specialty' => $specialty->name]) }}"
+            data-specialty="{{ $specialty->name }}"
+            class="{{ ($specialtyFilter ?? '') === $specialty->name ? 'active' : '' }}">
+                {{ $specialty->name }}
+            </a>
         @endforeach
-        <a href="#" data-specialty="all" class="active">Усі спеціальності</a>
+
+        <a href="{{ route('doctor.index', ['specialty' => 'all']) }}"
+        data-specialty="all"
+        class="{{ ($specialtyFilter ?? '') === 'all' || empty($specialtyFilter) ? 'active' : '' }}">
+            Усі спеціальності
+        </a>
     </div>
 
     <div id="doctors-list">

@@ -271,4 +271,24 @@
     @endforelse
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll(".tab");
+        const contents = document.querySelectorAll(".tab-content");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                // Remove active from all tabs and contents
+                tabs.forEach(t => t.classList.remove("active"));
+                contents.forEach(c => c.classList.remove("active"));
+
+                // Activate the clicked tab and corresponding content
+                tab.classList.add("active");
+                const target = tab.getAttribute("data-tab");
+                document.getElementById(target).classList.add("active");
+            });
+        });
+    });
+</script>
+
 @endsection

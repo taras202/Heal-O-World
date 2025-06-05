@@ -122,6 +122,48 @@
             font-size: 0.9rem;
             width: 200px;
         }
+        .search-header button {
+            padding: 0.4rem 1rem;
+            background-color: rgb(37, 79, 141);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-header button:hover {
+            background-color: rgb(30, 65, 120);
+        }
+        .suggestion-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ccc;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .suggestion-list li {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .suggestion-list li:hover {
+            background-color: #f0f0f0;
+        }
+
         @yield('styles')
     </style>
 </head>
@@ -151,10 +193,26 @@
         </div>
 
         <div class="search-header">
-            <input type="text" id="specialtySearch" placeholder="Пошук спеціальності...">
-            <input type="text" id="doctorSearch" placeholder="Пошук лікаря...">
+            <input type="text" id="searchBySpecialty" placeholder="Пошук по спеціальності...">
+            <button id="btnSpecialty">Пошук спеціальності</button>
+
+            <div class="search-container" style="position: relative; max-width: 400px; margin: 0 auto;">
+                <div style="display: flex; gap: 0.5rem;">
+                    <input
+                        type="text"
+                        id="doctorSearchInput"
+                        placeholder="Введіть ім’я лікаря..."
+                        class="form-control"
+                        autocomplete="off"
+                        style="flex: 1;"
+                    />
+                    <button id="btnDoctorSearch">Пошук</button>
+                </div>
+                <ul id="doctorSuggestions" class="suggestion-list"></ul>
+            </div>
         </div>
     </header>
+
 
     <main class="@yield('main-class')">
         @yield('content')
@@ -165,8 +223,103 @@
     </footer>
 
     @yield('scripts')
-</body>
-</html>
-@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnSpecialty = document.getElementById('btnSpecialty');
+        if (btnSpecialty) {
+            btnSpecialty.addEventListener('click', function() {
+                const specialtyInput = document.getElementById('searchBySpecialty');
+                if (!specialtyInput) return;
 
-@endsection
+                const specialty = specialtyInput.value.trim();
+                if (specialty.length < 2) {
+                    alert('Введіть спеціальність для пошуку.');
+                    return;
+                }
+
+                window.location.href = `/doctor/search-by-specialty?q=${encodeURIComponent(specialty)}`;
+            });
+        }
+
+        const btnDoctorSearch = document.getElementById('btnDoctorSearch');
+        const doctorSearchInput = document.getElementById('doctorSearchInput');
+        const suggestionBox = document.getElementById('doctorSuggestions');
+
+        if (btnDoctorSearch && doctorSearchInput && suggestionBox) {
+            btnDoctorSearch.addEventListener('click', function() {
+                const query = doctorSearchInput.value.trim();
+                if (query.length < 2) {
+                    alert('Введіть щонайменше 2 символи для пошуку.');
+                    return;
+                }
+
+                fetch(`/doctor/search-doctors?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        suggestionBox.innerHTML = '';
+                        if (data.length === 0) {
+                            suggestionBox.innerHTML = '<li>Нічого не знайдено</li>';
+                            return;
+                        }
+                        data.forEach(doctor => {
+                            const li = document.createElement('li');
+                            li.textContent = `${doctor.first_name} ${doctor.last_name}`;
+                            li.addEventListener('click', function() {
+                                window.location.href = `/doctor/${doctor.id}`;
+                            });
+                            suggestionBox.appendChild(li);
+                        });
+                    })
+                    .catch(() => {
+                        suggestionBox.innerHTML = '<li>Помилка пошуку</li>';
+                    });
+            });
+
+            doctorSearchInput.addEventListener('input', function() {
+                const query = doctorSearchInput.value.trim();
+                clearTimeout(window.searchTimeout);
+                if (query.length < 2) {
+                    suggestionBox.innerHTML = '';
+                    return;
+                }
+                window.searchTimeout = setTimeout(() => {
+                    fetch(`/doctor/search-doctors?q=${encodeURIComponent(query)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            suggestionBox.innerHTML = '';
+                            if (data.length === 0) {
+                                suggestionBox.innerHTML = '<li>Нічого не знайдено</li>';
+                                return;
+                            }
+                            data.forEach(doctor => {
+                                const li = document.createElement('li');
+                                li.textContent = `${doctor.first_name} ${doctor.last_name}`;
+                                li.addEventListener('click', function() {
+                                    window.location.href = `/doctor/${doctor.id}`;
+                                });
+                                suggestionBox.appendChild(li);
+                            });
+                        })
+                        .catch(() => {
+                            suggestionBox.innerHTML = '<li>Помилка пошуку</li>';
+                        });
+                }, 300);
+            });
+        }
+    });
+</script>
+
+
+<script>
+    document.getElementById("btnSpecialty").addEventListener("click", function () {
+        const specialty = document.getElementById("searchBySpecialty").value.trim();
+
+        if (specialty.length < 2) {
+            alert("Введіть спеціальність для пошуку.");
+            return;
+        }
+
+        window.location.href = `/doctor/search-by-specialty?q=${encodeURIComponent(specialty)}`;
+    });
+</script>
+</body>
