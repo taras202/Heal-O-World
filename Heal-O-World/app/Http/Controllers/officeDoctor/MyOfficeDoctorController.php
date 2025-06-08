@@ -9,7 +9,7 @@ use App\Models\Education;
 use App\Models\MyOfficeDoctor;
 use App\Models\PlaceOfWork;
 use App\Models\TimeZone;
-use Google\Service\Storage;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -123,4 +123,20 @@ class MyOfficeDoctorController extends Controller
     
         return redirect()->back()->with('success', 'Профіль оновлено успішно.');
     }
+
+    // DoctorActivationController.php
+
+    public function deletePhoto()
+    {
+        $doctor = Auth::user()->doctor;
+
+        if ($doctor && $doctor->photo) {
+            \Storage::disk('public')->delete($doctor->photo);
+            $doctor->update(['photo' => null]);
+        }
+
+        return back()->with('success', 'Фото профілю видалено');
+    }
+
+
 }

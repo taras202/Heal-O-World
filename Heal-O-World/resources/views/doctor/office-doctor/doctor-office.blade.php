@@ -160,18 +160,32 @@
         </ul>
     </div>
 @endif
-
-<form action="{{ route('doctor.profile.update') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
-
     <div class="profile-container">
-        
-        <!-- Ліва частина: Фото лікаря -->
-        <div class="profile-sidebar">
-            <label for="photo">Фото профілю</label>
-            <input type="file" name="photo" id="photo" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" />
-        </div>
+            
+            <div class="profile-sidebar space-y-4">
+                    <label for="photo" class="block font-semibold">Фото профілю</label>
+
+                    <div class="relative w-32 h-32">
+                        <img id="photo-preview" src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('default-avatar.png') }}" alt="Фото лікаря" class="rounded-full object-cover w-full h-full border shadow" />
+                        
+                        @if ($doctor->photo)
+                            <form method="POST" action="{{ route('doctor.photo.delete') }}" class="absolute top-0 right-0">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="bg-red-500 text-white p-1 rounded-full hover:bg-red-600 text-xs">×</button>
+                            </form>
+                        @endif
+                    </div>
+
+    <form action="{{ route('doctor.profile.update') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+                <!-- Input file -->
+                <input type="file" name="photo" id="photo" accept="image/*"
+                    class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" />
+
+            </div>
 
         <div class="profile-main">
             <div class="section-block">
@@ -240,6 +254,7 @@
             <!-- Спеціалізації -->
             <div class="section-block specialty-block">
                 <h4>Спеціалізації</h4>
+                @if ($doctor->specialties->count())
                 @foreach($doctor->specialties as $index => $specialty)
                     <input type="hidden" name="specialties[]" value="{{ $specialty->id }}">
                     <label><strong>{{ $specialty->name }}</strong></label>
@@ -255,6 +270,7 @@
                     </div>
                     <hr>
                 @endforeach
+                @endif
             </div>
 
             <!-- Освіта -->
@@ -345,4 +361,12 @@
 
     </div>
 </form>
+<script>
+document.getElementById('photo').addEventListener('change', function (event) {
+    const [file] = event.target.files;
+    if (file) {
+        document.getElementById('photo-preview').src = URL.createObjectURL(file);
+    }
+});
+</script>
 @endsection

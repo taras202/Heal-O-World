@@ -3,7 +3,7 @@
         <!-- Лівий блок — фото + деталі -->
         <div class="doctor-info">
             <div class="profile-sidebar">
-                <img src="{{ $photoUrl ?? asset('images/default-photo.jpg') }}" alt="Фото лікаря" class="profile-photo">
+                <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('images/default-photo.jpg') }}" alt="Фото лікаря" class="profile-photo">
             </div>
 
             <div class="doctor-details">

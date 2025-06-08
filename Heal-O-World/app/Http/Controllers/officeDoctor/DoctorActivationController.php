@@ -12,6 +12,7 @@ use App\Models\Specialty;
 use App\Models\TimeZone;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class DoctorActivationController extends Controller
 {
@@ -40,31 +41,33 @@ class DoctorActivationController extends Controller
     public function updatePersonalData(MyOfficeDoctorRequest $request)
     {
         $user = Auth::user();
-
         $data = $request->validated();
 
         $request->validate([
-            'language' => 'nullable|array',
-            'language.*' => 'in:uk,ru,en',
+            'languages' => 'nullable|array',
+            'languages.*' => 'in:uk,ru,en',
         ]);
-
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('photos', 'public');
-            $data['photo'] = $path;
-        }
 
         $doctor = MyOfficeDoctor::updateOrCreate(
             ['user_id' => $user->id],
             $data
         );
 
+        if ($request->hasFile('photo')) {
+            if ($doctor->photo && Storage::disk('public')->exists($doctor->photo)) {
+                Storage::disk('public')->delete($doctor->photo);
+            }
+            $path = $request->file('photo')->store('photos', 'public');
+            $doctor->update(['photo' => $path]);
+        }
+
         if ($request->filled('languages')) {
             $languageCodes = $request->input('languages');
-            $languageIds = \App\Models\Language::whereIn('code', $languageCodes)->pluck('id')->toArray();
+            $languageIds = Language::whereIn('code', $languageCodes)->pluck('id')->toArray();
             $doctor->languages()->sync($languageIds);
         } else {
             $doctor->languages()->detach();
-        }        
+        }
 
         if ($request->filled(['workplace', 'position', 'country_of_residence', 'city_of_residence'])) {
             $doctor->placeOfWork()->updateOrCreate(
@@ -84,6 +87,7 @@ class DoctorActivationController extends Controller
 
         return redirect()->route('activation.specialties')->with('success', 'Персональні дані збережено');
     }
+
 
     public function editSpecialties()
     {
@@ -128,24 +132,24 @@ class DoctorActivationController extends Controller
     {
         $data = $request->validated();
 
-        $doctor = auth()->user()->doctor;
-
+        $doctor = $this->getDoctor();
         $data['doctor_id'] = $doctor->id;
 
-        if ($request->hasFile('diploma_photo_1')) {
-            $data['diploma_photo_1'] = $request->file('diploma_photo_1')->store('diploma_photos_1', 'public');
+        foreach ([1, 2, 3] as $index) {
+        $key = "diploma_photo_$index";
+        if ($request->hasFile($key)) {
+            $data[$key] = $request->file($key)->store("diploma_photos_$index", 'public');
         }
-        if ($request->hasFile('diploma_photo_2')) {
-            $data['diploma_photo_2'] = $request->file('diploma_photo_2')->store('diploma_photos_2', 'public');
-        }
-        if ($request->hasFile('diploma_photo_3')) {
-            $data['diploma_photo_3'] = $request->file('diploma_photo_3')->store('diploma_photos_3', 'public');
         }
 
-        Education::create($data);
+        $education = Education::updateOrCreate(
+            ['doctor_id' => $doctor->id],
+            $data
+        );
 
         return redirect()->route('doctor.office')->with('success', 'Освіта збережена');
     }
+
 
     public function showDoctorDashboard()
     {

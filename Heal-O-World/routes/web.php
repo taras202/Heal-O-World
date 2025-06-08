@@ -18,3 +18,5 @@ require base_path('routes/chat-doctor.php');
 require base_path('routes/payment.php'); 
 require base_path('routes/review.php'); 
 require base_path('routes/admin-static-contents.php'); 
+require base_path('routes/doctor-photo.php'); 
+

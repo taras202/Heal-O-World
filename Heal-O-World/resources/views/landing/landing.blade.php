@@ -125,6 +125,18 @@
   </div>
 </section>
 
+  <section class="doctors">
+    @foreach($doctors as $doctor)
+      <div class="doctor" data-name="{{ strtolower($doctor->first_name . ' ' . $doctor->last_name) }}" data-specialty="{{ strtolower($doctor->specialties->pluck('name')->join(' ')) }}">
+        <img src="{{ $doctor->photo ? asset('storage/' . $doctor->photo) : asset('default-avatar.png') }}" alt="Фото {{ $doctor->first_name }}" style="width:100px; height:100px; border-radius: 50%; object-fit: cover;">
+        <h3>{{ $doctor->first_name }} {{ $doctor->last_name }}</h3>
+        <p>{{ $doctor->specialties->pluck('name')->join(', ') }}</p>
+        <a href="{{ route('doctor.show', $doctor->id) }}" class="btn-doctor-list">Переглянути профіль</a>
+      </div>
+    @endforeach
+  </section>
+
+
 <section class="mission">
   <h2>{{ $content->mission_title }}</h2>
   <p>{{ $content->mission_text }}</p>
