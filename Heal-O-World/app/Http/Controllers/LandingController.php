@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MyOfficeDoctor;
 use App\Models\Specialty;
+use App\Models\StaticContent;
 
 class LandingController extends Controller
 {
@@ -11,8 +12,11 @@ class LandingController extends Controller
     {
         $specialties = Specialty::all();
         $doctors = MyOfficeDoctor::with('specialties')->get();
-        return view('landing.landing', compact('specialties', 'doctors'));
-    }    
+        $content = StaticContent::first(); // ← додаємо
+
+        return view('landing.landing', compact('specialties', 'doctors', 'content'));
+    }
+ 
 
     public function about()
     {
@@ -23,4 +27,12 @@ class LandingController extends Controller
     {
         return view('landing.contact');
     }
+
+    public function index()
+    {
+        $content = \App\Models\StaticContent::first(); 
+        return view('landing.index', compact('content'));
+    }
+
+
 }

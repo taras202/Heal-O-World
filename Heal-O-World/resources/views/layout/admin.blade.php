@@ -86,7 +86,7 @@
         transition: background-color 0.3s ease;
     }
 
-        #sidebar .link-yellow {
+    #sidebar .link-yellow {
         background-color: #ffc107;
         color: #212529; 
     }
@@ -102,6 +102,24 @@
         background-color: #e0a800;
         color: white;
     }
+    #sidebar .link-purple {
+        background-color: #6f42c1; 
+        color: white;
+    }
+
+    #sidebar .link-purple:hover {
+        background-color: #5936a2; 
+        color: white;
+    }
+
+    #sidebar .link-purple.active {
+        font-weight: bold;
+        border-left: 4px solid #5936a2;
+        background-color: #5936a2;
+        color: white;
+    }
+
+    
 
     .logout-btn button:hover {
         background-color: #c82333;
@@ -219,7 +237,10 @@
         <a href="{{ route('admin.patients.index') }}" class="sidebar-link link-blue {{ request()->routeIs('admin.patients.index') ? 'active' : '' }}">Пацієнти</a>
         <a href="{{ route('admin.doctors.index') }}" class="sidebar-link link-green {{ request()->routeIs('admin.doctors.index') ? 'active' : '' }}">Лікарі</a>
         <a href="{{ route('admin.patient.consultation.index') }}" class="sidebar-link link-yellow {{ request()->routeIs('admin.patient.consultation.index') ? 'active' : '' }}">Перегляд консультацій
+        <a href="{{ route('admin.static-contents.edit', ['static_content' => 1]) }}"class="sidebar-link link-purple {{ request()->routeIs('admin.static-contents.edit') ? 'active' : '' }}">Редагування статичних розділів
+       </a>        
     </a>
+</a>
 
         <form method="POST" action="{{ route('admin.logout') }}" class="logout-btn mt-3">
             @csrf

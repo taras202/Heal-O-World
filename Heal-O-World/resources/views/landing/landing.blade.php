@@ -126,23 +126,24 @@
 </section>
 
 <section class="mission">
-  <h2>Наша місія</h2>
-  <p>Ми прагнемо зробити медицину доступною та якісною для кожного.</p>
+  <h2>{{ $content->mission_title }}</h2>
+  <p>{{ $content->mission_text }}</p>
 </section>
 
 <section class="why-us">
-  <h2>Чому варто обрати нас?</h2>
+  <h2>{{ $content->why_us_title }}</h2>
   <ul>
-    <li>Сертифіковані лікарі</li>
-    <li>Швидкий запис</li>
-    <li>Достовірні відгуки</li>
+    @foreach (explode("\n", $content->why_us_list) as $item)
+      <li>{{ trim($item) }}</li>
+    @endforeach
   </ul>
 </section>
 
 <section class="reviews">
-  <h2>Відгуки</h2>
-  <p>"Дуже зручний сервіс, рекомендую всім!" - Ірина</p>
+  <h2>{{ $content->reviews_title }}</h2>
+  <p>{{ $content->reviews_text }}</p>
 </section>
+
 @endsection
 
 @section('scripts')

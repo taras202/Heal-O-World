@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Heal-O-World | @yield('title')</title>
     <style>
         html, body {
@@ -10,7 +10,7 @@
             padding: 0;
             height: 100%;
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(180deg,rgb(255, 255, 255),rgb(255, 255, 255));
+            background: linear-gradient(180deg, #fff, #fff);
             color: #212529;
         }
 
@@ -21,7 +21,7 @@
         }
 
         header {
-            background: linear-gradient(180deg,rgb(13, 54, 129),rgb(39, 95, 151));
+            background: linear-gradient(180deg, rgb(13, 54, 129), rgb(39, 95, 151));
             padding: 2rem 1rem 1rem;
             text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -39,40 +39,50 @@
             margin: 0 auto 1.5rem;
         }
 
-        .nav-buttons {
+        nav.nav-buttons {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
             gap: 1rem;
         }
 
-        .nav-buttons a {
+        
+
+        nav.nav-buttons a,
+        .btn {
             padding: 0.6rem 1.4rem;
-            background: linear-gradient(135deg,rgb(254, 254, 255),rgb(255, 255, 255));
-            border: none;
+            background: linear-gradient(135deg, #fefeFF, #fff);
             border-radius: 12px;
             color: #212529;
             font-weight: 600;
             text-decoration: none;
+            box-shadow: 0 4px 10px rgba(28, 50, 122, 0.06);
             transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            user-select: none;
         }
 
-        .nav-buttons a:hover {
+        nav.nav-buttons a:hover,
+        .btn:hover {
             background: linear-gradient(135deg,rgb(252, 252, 252), #bcc0c4);
             transform: translateY(-2px);
+        }
+        .btn.search-btn {
+            color: black;
         }
 
         main {
             flex: 1;
-            padding: 2rem;
-            padding-bottom: 4rem;
+            padding: 2rem 1rem 4rem;
             max-width: 1200px;
             margin: 0 auto;
+            width: 100%;
         }
 
         footer {
-            background: linear-gradient(180deg,rgb(13, 54, 129),rgb(39, 95, 151));
+            background: linear-gradient(180deg, rgb(13, 54, 129), rgb(39, 95, 151));
             color: white;
             text-align: center;
             padding: 1.2rem;
@@ -80,49 +90,55 @@
         }
 
         @media (max-width: 600px) {
-            .nav-buttons a {
+            nav.nav-buttons a {
                 padding: 0.6rem 1rem;
                 font-size: 0.9rem;
             }
-
             .logo {
                 width: 70px;
                 height: 70px;
                 margin-bottom: 1rem;
             }
         }
-        .dashboard-link {
-            padding: 0.6rem 1.4rem;
-            background: linear-gradient(135deg, rgb(254, 254, 255), rgb(255, 255, 255));
-            border: none;
-            border-radius: 12px;
-            color: #212529;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease-in-out;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
-        }
 
-        .dashboard-link:hover {
-            background: linear-gradient(135deg, rgb(252, 252, 252), #bcc0c4);
-            transform: translateY(-2px);
-        }
         .search-header {
             display: flex;
             justify-content: center;
-            gap: 0.5rem;
+            align-items: center;
             flex-wrap: wrap;
-            margin-top: 1rem;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding: 0 1rem;
+            position: relative;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .search-header input {
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .search-box select,
+        .search-box input {
             padding: 0.4rem 0.8rem;
             border: 1px solid rgb(4, 50, 95);
             border-radius: 5px;
             font-size: 0.9rem;
+        }
+
+        .search-box select {
+            min-width: 180px;
+        }
+
+        .search-box input {
             width: 200px;
         }
-        .search-header button {
+
+        .search-box button {
             padding: 0.4rem 1rem;
             background-color: rgb(37, 79, 141);
             color: white;
@@ -131,11 +147,13 @@
             font-weight: 600;
             cursor: pointer;
             transition: background 0.3s ease;
+            user-select: none;
         }
 
-        .search-header button:hover {
+        .search-box button:hover {
             background-color: rgb(30, 65, 120);
         }
+
         .suggestion-list {
             position: absolute;
             top: 100%;
@@ -169,9 +187,10 @@
 </head>
 <body>
     <header>
-        <img src="{{ asset('images/logo.webp') }}" alt="GMS Logo" class="logo">
+    <img src="{{ asset('images/logo.webp') }}" alt="GMS Logo" class="logo" />
 
-        <div class="nav-buttons">
+    <div class="nav-search-wrapper">
+        <nav class="nav-buttons" aria-label="Головна навігація">
             <a href="{{ route('landing') }}">Головна</a>
             <a href="{{ route('doctor.index') }}">Лікарі</a>
             <a href="{{ route('about') }}">Про нас</a>
@@ -186,33 +205,160 @@
                         default => '#',
                     };
                 @endphp
-                <a href="{{ $dashboardRoute }}" class="dashboard-link">Мій кабінет</a>
+                <a href="{{ $dashboardRoute }}" class="btn">Мій кабінет</a>
             @else
-                <a href="{{ route('auth.select-role') }}">Вхід</a>
+                <a href="{{ route('auth.select-role') }}" class="btn">Вхід</a>
             @endif
-        </div>
+        </nav>
 
-        <div class="search-header">
-            <input type="text" id="searchBySpecialty" placeholder="Пошук по спеціальності...">
-            <button id="btnSpecialty">Пошук спеціальності</button>
+        <div class="search-header" role="search" aria-label="Пошук лікарів">
+            <div class="search-box" aria-label="Пошук по спеціальності">
+                <select name="specialty" id="specialtySelect" aria-label="Виберіть спеціальність">
+                    <option value="">Виберіть спеціальність</option>
+                    @foreach($specialties as $spec)
+                        <option value="{{ $spec->name }}" {{ (isset($specialtyFilter) && $spec->name === $specialtyFilter) ? 'selected' : '' }}>
+                            {{ $spec->name }}
+                        </option>
+                    @endforeach
+                </select>
+                <button id="btnSpecialty" type="button" class="btn search-btn">Пошук спеціальності</button>
+            </div>
 
-            <div class="search-container" style="position: relative; max-width: 400px; margin: 0 auto;">
-                <div style="display: flex; gap: 0.5rem;">
-                    <input
-                        type="text"
-                        id="doctorSearchInput"
-                        placeholder="Введіть ім’я лікаря..."
-                        class="form-control"
-                        autocomplete="off"
-                        style="flex: 1;"
-                    />
-                    <button id="btnDoctorSearch">Пошук</button>
-                </div>
-                <ul id="doctorSuggestions" class="suggestion-list"></ul>
+            <div class="search-box" aria-label="Пошук лікаря за прізвищем">
+                <input
+                    type="text"
+                    id="doctorSearchInput"
+                    placeholder="Введіть прізвище лікаря..."
+                    autocomplete="off"
+                    aria-autocomplete="list"
+                    aria-controls="doctorSuggestions"
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    role="combobox"
+                />
+                <button id="btnDoctorSearch" type="button" class="btn search-btn">Пошук</button>
+                <ul id="doctorSuggestions" class="suggestion-list" role="listbox" aria-label="Підказки лікарів" tabindex="-1"></ul>
             </div>
         </div>
-    </header>
+    </div>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const select = document.getElementById('specialtySelect');
+                const btnSpecialty = document.getElementById('btnSpecialty');
+                const btnDoctorSearch = document.getElementById('btnDoctorSearch');
+                const doctorSearchInput = document.getElementById('doctorSearchInput');
+                const suggestionBox = document.getElementById('doctorSuggestions');
+
+                btnSpecialty.addEventListener('click', () => {
+                    const specialty = select.value.trim();
+                    if (specialty.length < 2) {
+                        showMessage('Виберіть спеціальність для пошуку.', true);
+                        return;
+                    }
+                    window.location.href = `/doctor/search-by-specialty?q=${encodeURIComponent(specialty)}`;
+                });
+
+                function showMessage(message, isError = false) {
+                    suggestionBox.innerHTML = `<li style="color: ${isError ? 'red' : 'gray'};">${message}</li>`;
+                    suggestionBox.style.display = 'block';
+                    doctorSearchInput.setAttribute('aria-expanded', 'true');
+                }
+
+                function clearSuggestions() {
+                    suggestionBox.innerHTML = '';
+                    suggestionBox.style.display = 'none';
+                    doctorSearchInput.setAttribute('aria-expanded', 'false');
+                }
+
+                function performDoctorSearch(query) {
+                    fetch(`/doctor/search-doctors?q=${encodeURIComponent(query)}`)
+                        .then(res => {
+                            if (!res.ok) throw new Error('Network response was not ok');
+                            return res.json();
+                        })
+                        .then(data => {
+                            suggestionBox.innerHTML = '';
+                            if (data.length === 0) {
+                                showMessage('Нічого не знайдено');
+                                return;
+                            }
+                            data.forEach(doc => {
+                                const li = document.createElement('li');
+                                li.textContent = `${doc.first_name} ${doc.last_name}`;
+                                li.setAttribute('role', 'option');
+                                li.tabIndex = 0;
+                                li.addEventListener('click', () => {
+                                    window.location.href = `/doctor/${doc.id}`;
+                                });
+                                li.addEventListener('keydown', (e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        window.location.href = `/doctor/${doc.id}`;
+                                    }
+                                });
+                                suggestionBox.appendChild(li);
+                            });
+                            suggestionBox.style.display = 'block';
+                            doctorSearchInput.setAttribute('aria-expanded', 'true');
+                        })
+                        .catch(() => {
+                            showMessage('Помилка пошуку', true);
+                        });
+                }
+
+                function debounce(fn, delay) {
+                    let timeoutId;
+                    return function(...args) {
+                        clearTimeout(timeoutId);
+                        timeoutId = setTimeout(() => fn.apply(this, args), delay);
+                    };
+                }
+
+                btnDoctorSearch.addEventListener('click', () => {
+                    const query = doctorSearchInput.value.trim();
+                    if (query.length < 2) {
+                        showMessage('Введіть щонайменше 2 символи для пошуку.', true);
+                        return;
+                    }
+                    performDoctorSearch(query);
+                });
+
+                doctorSearchInput.addEventListener('input', debounce(() => {
+                    const query = doctorSearchInput.value.trim();
+                    if (query.length < 2) {
+                        clearSuggestions();
+                        return;
+                    }
+                    performDoctorSearch(query);
+                }, 300));
+
+                doctorSearchInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const query = doctorSearchInput.value.trim();
+                        if (query.length < 2) {
+                            showMessage('Введіть щонайменше 2 символи для пошуку.', true);
+                            return;
+                        }
+                        performDoctorSearch(query);
+                    } else if (e.key === 'ArrowDown') {
+                        const firstItem = suggestionBox.querySelector('li');
+                        if (firstItem) {
+                            firstItem.focus();
+                            e.preventDefault();
+                        }
+                    }
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!suggestionBox.contains(e.target) && e.target !== doctorSearchInput) {
+                        clearSuggestions();
+                    }
+                });
+            });
+        </script>
+    </header>
 
     <main class="@yield('main-class')">
         @yield('content')
@@ -223,103 +369,5 @@
     </footer>
 
     @yield('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const btnSpecialty = document.getElementById('btnSpecialty');
-        if (btnSpecialty) {
-            btnSpecialty.addEventListener('click', function() {
-                const specialtyInput = document.getElementById('searchBySpecialty');
-                if (!specialtyInput) return;
-
-                const specialty = specialtyInput.value.trim();
-                if (specialty.length < 2) {
-                    alert('Введіть спеціальність для пошуку.');
-                    return;
-                }
-
-                window.location.href = `/doctor/search-by-specialty?q=${encodeURIComponent(specialty)}`;
-            });
-        }
-
-        const btnDoctorSearch = document.getElementById('btnDoctorSearch');
-        const doctorSearchInput = document.getElementById('doctorSearchInput');
-        const suggestionBox = document.getElementById('doctorSuggestions');
-
-        if (btnDoctorSearch && doctorSearchInput && suggestionBox) {
-            btnDoctorSearch.addEventListener('click', function() {
-                const query = doctorSearchInput.value.trim();
-                if (query.length < 2) {
-                    alert('Введіть щонайменше 2 символи для пошуку.');
-                    return;
-                }
-
-                fetch(`/doctor/search-doctors?q=${encodeURIComponent(query)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        suggestionBox.innerHTML = '';
-                        if (data.length === 0) {
-                            suggestionBox.innerHTML = '<li>Нічого не знайдено</li>';
-                            return;
-                        }
-                        data.forEach(doctor => {
-                            const li = document.createElement('li');
-                            li.textContent = `${doctor.first_name} ${doctor.last_name}`;
-                            li.addEventListener('click', function() {
-                                window.location.href = `/doctor/${doctor.id}`;
-                            });
-                            suggestionBox.appendChild(li);
-                        });
-                    })
-                    .catch(() => {
-                        suggestionBox.innerHTML = '<li>Помилка пошуку</li>';
-                    });
-            });
-
-            doctorSearchInput.addEventListener('input', function() {
-                const query = doctorSearchInput.value.trim();
-                clearTimeout(window.searchTimeout);
-                if (query.length < 2) {
-                    suggestionBox.innerHTML = '';
-                    return;
-                }
-                window.searchTimeout = setTimeout(() => {
-                    fetch(`/doctor/search-doctors?q=${encodeURIComponent(query)}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            suggestionBox.innerHTML = '';
-                            if (data.length === 0) {
-                                suggestionBox.innerHTML = '<li>Нічого не знайдено</li>';
-                                return;
-                            }
-                            data.forEach(doctor => {
-                                const li = document.createElement('li');
-                                li.textContent = `${doctor.first_name} ${doctor.last_name}`;
-                                li.addEventListener('click', function() {
-                                    window.location.href = `/doctor/${doctor.id}`;
-                                });
-                                suggestionBox.appendChild(li);
-                            });
-                        })
-                        .catch(() => {
-                            suggestionBox.innerHTML = '<li>Помилка пошуку</li>';
-                        });
-                }, 300);
-            });
-        }
-    });
-</script>
-
-
-<script>
-    document.getElementById("btnSpecialty").addEventListener("click", function () {
-        const specialty = document.getElementById("searchBySpecialty").value.trim();
-
-        if (specialty.length < 2) {
-            alert("Введіть спеціальність для пошуку.");
-            return;
-        }
-
-        window.location.href = `/doctor/search-by-specialty?q=${encodeURIComponent(specialty)}`;
-    });
-</script>
 </body>
+</html>
