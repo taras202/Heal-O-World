@@ -22,11 +22,18 @@
 
         header {
             background: linear-gradient(180deg, rgb(13, 54, 129), rgb(39, 95, 151));
-            padding: 2rem 1rem 1rem;
-            text-align: center;
+            padding: 1rem 2rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             position: relative;
             z-index: 10;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
         }
 
         .logo {
@@ -36,83 +43,15 @@
             object-fit: cover;
             border: 3px solid rgb(172, 175, 177);
             box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-            margin: 0 auto 1.5rem;
+            flex-shrink: 0;
         }
 
-        nav.nav-buttons {
+        .search-wrapper {
+            flex: 1 1 500px;
             display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
             gap: 1rem;
-        }
-
-        
-
-        nav.nav-buttons a,
-        .btn {
-            padding: 0.6rem 1.4rem;
-            background: linear-gradient(135deg, #fefeFF, #fff);
-            border-radius: 12px;
-            color: #212529;
-            font-weight: 600;
-            text-decoration: none;
-            box-shadow: 0 4px 10px rgba(28, 50, 122, 0.06);
-            transition: all 0.3s ease-in-out;
-            border: none;
-            cursor: pointer;
-            display: inline-block;
-            user-select: none;
-        }
-
-        nav.nav-buttons a:hover,
-        .btn:hover {
-            background: linear-gradient(135deg,rgb(252, 252, 252), #bcc0c4);
-            transform: translateY(-2px);
-        }
-        .btn.search-btn {
-            color: black;
-        }
-
-        main {
-            flex: 1;
-            padding: 2rem 1rem 4rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        footer {
-            background: linear-gradient(180deg, rgb(13, 54, 129), rgb(39, 95, 151));
-            color: white;
-            text-align: center;
-            padding: 1.2rem;
-            box-shadow: 0 -2px 10px rgba(20, 16, 231, 0.1);
-        }
-
-        @media (max-width: 600px) {
-            nav.nav-buttons a {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-            }
-            .logo {
-                width: 70px;
-                height: 70px;
-                margin-bottom: 1rem;
-            }
-        }
-
-        .search-header {
-            display: flex;
-            justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            padding: 0 1rem;
-            position: relative;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
+            justify-content: center;
         }
 
         .search-box {
@@ -141,7 +80,7 @@
         .search-box button {
             padding: 0.4rem 1rem;
             background-color: rgb(37, 79, 141);
-            color: white;
+            color: black;
             border: none;
             border-radius: 5px;
             font-weight: 600;
@@ -154,6 +93,74 @@
             background-color: rgb(30, 65, 120);
         }
 
+        nav.nav-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+
+        nav.nav-buttons a,
+        .btn {
+            padding: 0.6rem 1.4rem;
+            background: linear-gradient(135deg, #fefeFF, #fff);
+            border-radius: 12px;
+            color: #212529;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(28, 50, 122, 0.06);
+            transition: all 0.3s ease-in-out;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        nav.nav-buttons a:hover,
+        .btn:hover {
+            background: linear-gradient(135deg,rgb(252, 252, 252), #bcc0c4);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 900px) {
+            .header-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .search-wrapper {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                margin: 1rem 0;
+            }
+            nav.nav-buttons {
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .logo {
+                width: 70px;
+                height: 70px;
+            }
+            nav.nav-buttons a {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            .search-box input {
+                width: 150px;
+            }
+            .search-box select {
+                min-width: 140px;
+            }
+        }
+
+        /* Додаткові стилі для списку підказок */
         .suggestion-list {
             position: absolute;
             top: 100%;
@@ -181,66 +188,76 @@
         .suggestion-list li:hover {
             background-color: #f0f0f0;
         }
+        footer {
+            background: linear-gradient(180deg,rgb(13, 54, 129),rgb(39, 95, 151));
+            color: white;
+            text-align: center;
+            padding: 1.2rem;
+            box-shadow: 0 -2px 10px rgba(20, 16, 231, 0.1);
+        }
+        
 
         @yield('styles')
     </style>
 </head>
 <body>
     <header>
-    <img src="{{ asset('images/logo.webp') }}" alt="GMS Logo" class="logo" />
+        <div class="header-container">
+            <a href="{{ route('landing') }}" aria-label="Перейти на головну">
+                <img src="{{ asset('images/logo.webp') }}" alt="GMS Logo" class="logo" />
+            </a>
 
-    <div class="nav-search-wrapper">
-        <nav class="nav-buttons" aria-label="Головна навігація">
-            <a href="{{ route('landing') }}">Головна</a>
-            <a href="{{ route('doctor.index') }}">Лікарі</a>
-            <a href="{{ route('about') }}">Про нас</a>
-            <a href="{{ route('contact') }}">Контакти</a>
+            <div class="search-wrapper" role="search" aria-label="Пошук лікарів та спеціальностей">
+                <div class="search-box" aria-label="Пошук по спеціальності">
+                    <select name="specialty" id="specialtySelect" aria-label="Виберіть спеціальність">
+                        <option value="">Виберіть спеціальність</option>
+                        @foreach($specialties as $spec)
+                            <option value="{{ $spec->name }}" {{ (isset($specialtyFilter) && $spec->name === $specialtyFilter) ? 'selected' : '' }}>
+                                {{ $spec->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <button id="btnSpecialty" type="button" class="btn search-btn">Пошук спеціальності</button>
+                </div>
 
-            @if(Auth::check())
-                @php
-                    $role = Auth::user()->role;
-                    $dashboardRoute = match ($role) {
-                        'doctor' => route('doctor.office'),
-                        'patient' => route('patient.office'),
-                        default => '#',
-                    };
-                @endphp
-                <a href="{{ $dashboardRoute }}" class="btn">Мій кабінет</a>
-            @else
-                <a href="{{ route('auth.select-role') }}" class="btn">Вхід</a>
-            @endif
-        </nav>
-
-        <div class="search-header" role="search" aria-label="Пошук лікарів">
-            <div class="search-box" aria-label="Пошук по спеціальності">
-                <select name="specialty" id="specialtySelect" aria-label="Виберіть спеціальність">
-                    <option value="">Виберіть спеціальність</option>
-                    @foreach($specialties as $spec)
-                        <option value="{{ $spec->name }}" {{ (isset($specialtyFilter) && $spec->name === $specialtyFilter) ? 'selected' : '' }}>
-                            {{ $spec->name }}
-                        </option>
-                    @endforeach
-                </select>
-                <button id="btnSpecialty" type="button" class="btn search-btn">Пошук спеціальності</button>
+                <div class="search-box" aria-label="Пошук лікаря за прізвищем" style="position:relative;">
+                    <input
+                        type="text"
+                        id="doctorSearchInput"
+                        placeholder="Введіть прізвище лікаря..."
+                        autocomplete="off"
+                        aria-autocomplete="list"
+                        aria-controls="doctorSuggestions"
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
+                        role="combobox"
+                    />
+                    <button id="btnDoctorSearch" type="button" class="btn search-btn">Пошук</button>
+                    <ul id="doctorSuggestions" class="suggestion-list" role="listbox" aria-label="Підказки лікарів" tabindex="-1"></ul>
+                </div>
             </div>
 
-            <div class="search-box" aria-label="Пошук лікаря за прізвищем">
-                <input
-                    type="text"
-                    id="doctorSearchInput"
-                    placeholder="Введіть прізвище лікаря..."
-                    autocomplete="off"
-                    aria-autocomplete="list"
-                    aria-controls="doctorSuggestions"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    role="combobox"
-                />
-                <button id="btnDoctorSearch" type="button" class="btn search-btn">Пошук</button>
-                <ul id="doctorSuggestions" class="suggestion-list" role="listbox" aria-label="Підказки лікарів" tabindex="-1"></ul>
-            </div>
+            <nav class="nav-buttons" aria-label="Головна навігація">
+                <a href="{{ route('landing') }}">Головна</a>
+                <a href="{{ route('doctor.index') }}">Лікарі</a>
+                <a href="{{ route('about') }}">Про нас</a>
+                <a href="{{ route('contact') }}">Контакти</a>
+
+                @if(Auth::check())
+                    @php
+                        $role = Auth::user()->role;
+                        $dashboardRoute = match ($role) {
+                            'doctor' => route('doctor.office'),
+                            'patient' => route('patient.office'),
+                            default => '#',
+                        };
+                    @endphp
+                    <a href="{{ $dashboardRoute }}" class="btn">Мій кабінет</a>
+                @else
+                    <a href="{{ route('auth.select-role') }}" class="btn">Вхід</a>
+                @endif
+            </nav>
         </div>
-    </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
