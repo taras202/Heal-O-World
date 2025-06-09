@@ -159,7 +159,7 @@
                     <p><strong>Місто:</strong> {{ $doctor->placeOfWork->city_of_residence }}</p>
                     <p><strong>Поточне місце роботи:</strong> {{ $doctor->placeOfWork->workplace }}</p>
                     <p><strong>Посада:</strong> {{ $doctor->placeOfWork->position }}</p>
-                    <p><strong>Володіння мовами:</strong> {{ $doctor->languages ?? 'Не вказано' }}</p>
+                    <p class="mt-6 font-semibold text-gray-700">Володіння мовами: {{ $doctor->languages->pluck('name')->join(', ') }}</p>
                 @else
                     <p>Інформація про місце роботи відсутня</p>
                 @endif

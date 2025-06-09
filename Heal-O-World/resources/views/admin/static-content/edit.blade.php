@@ -1,22 +1,7 @@
-@extends('layout.admin-no-header')
+@extends('layout.admin')
 
-@section('content')
+@push('styles')
 <style>
-    html, body {
-        height: 100%;
-        margin: 0;
-        background: #e9ecef;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
     .form-container {
         background: #f8f9fa;
         border-radius: 12px;
@@ -29,6 +14,7 @@
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
+        margin: 40px auto;
     }
 
     h1 {
@@ -53,7 +39,6 @@
         padding: 10px 15px;
         font-size: 1rem;
         transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        box-sizing: border-box;
         resize: vertical;
     }
 
@@ -92,7 +77,6 @@
         border: none;
         transition: background-color 0.3s ease;
         min-width: 140px;
-        user-select: none;
     }
 
     .btn-primary {
@@ -123,27 +107,25 @@
     }
 
     .alert {
-        max-width: 100%;
-        margin: 0 0 30px 0;
         border-radius: 8px;
         font-weight: 600;
         font-size: 1rem;
         padding: 15px 20px;
     }
 </style>
+@endpush
 
+@section('content')
 <div class="form-container">
-    <h1>Редагування статичних розділів</h1>
+    <h2 class="mt-5 text-center">РЕДАГУВАННЯ СТАТИЧНИХ РОЗДІЛІВ</h2>
 
-    {{-- Повідомлення про успіх --}}
     @if(session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    {{-- Повідомлення про помилки валідації --}}
     @if ($errors->any())
         <div class="alert alert-danger">
-            <ul class="mb-0" style="padding-left: 20px;">
+            <ul class="mb-0 ps-3">
                 @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
@@ -156,33 +138,33 @@
         @method('PUT')
 
         <div class="mb-3">
-            <label for="mission_title">Заголовок (Наша місія)</label>
+            <label for="mission_title">ЗАГОЛОВОК (Наша місія)</label>
             <input type="text" id="mission_title" name="mission_title" class="form-control" value="{{ old('mission_title', $staticContent->mission_title) }}" required>
         </div>
 
         <div class="mb-4">
-            <label for="mission_text">Текст (Наша місія)</label>
+            <label for="mission_text">ТЕКСТ (Наша місія)</label>
             <textarea id="mission_text" name="mission_text" class="form-control" rows="5" required>{{ old('mission_text', $staticContent->mission_text) }}</textarea>
         </div>
 
         <div class="mb-3">
-            <label for="why_us_title">Заголовок (Чому варто обрати нас)</label>
+            <label for="why_us_title">ЗАГОЛОВОК (Чому варто обрати нас)</label>
             <input type="text" id="why_us_title" name="why_us_title" class="form-control" value="{{ old('why_us_title', $staticContent->why_us_title) }}" required>
         </div>
 
         <div class="mb-4">
-            <label for="why_us_list">Пункти списку (Чому варто обрати нас)</label>
+            <label for="why_us_list">ПУНКТИ СПИСКУ (Чому варто обрати нас)</label>
             <textarea id="why_us_list" name="why_us_list" class="form-control" rows="5" placeholder="Кожен пункт з нового рядка" required>{{ old('why_us_list', $staticContent->why_us_list) }}</textarea>
             <small class="form-text">Напишіть кожен пункт з нового рядка.</small>
         </div>
 
         <div class="mb-3">
-            <label for="reviews_title">Заголовок (Відгуки)</label>
+            <label for="reviews_title">ЗАГОЛОВОК (Відгуки)</label>
             <input type="text" id="reviews_title" name="reviews_title" class="form-control" value="{{ old('reviews_title', $staticContent->reviews_title) }}" required>
         </div>
 
         <div class="mb-4">
-            <label for="reviews_text">Текст відгуків</label>
+            <label for="reviews_text">ТЕКСТ ВІДГУКІВ</label>
             <textarea id="reviews_text" name="reviews_text" class="form-control" rows="5" required>{{ old('reviews_text', $staticContent->reviews_text) }}</textarea>
         </div>
 

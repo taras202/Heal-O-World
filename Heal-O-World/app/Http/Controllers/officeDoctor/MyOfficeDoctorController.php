@@ -12,6 +12,8 @@ use App\Models\TimeZone;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\Language;
+
 
 class MyOfficeDoctorController extends Controller
 {
@@ -34,7 +36,7 @@ class MyOfficeDoctorController extends Controller
 
         $photoUrl = $doctor->photo ? asset('storage/' . $doctor->photo) : null;
         $timeZones = TimeZone::all();
-        $languages = DoctorLanguage::all();
+        $languages = Language::all();
 
         return view('doctor.office-doctor.doctor-office', [
             'user' => $user,
@@ -66,14 +68,13 @@ class MyOfficeDoctorController extends Controller
             $doctor->update(['photo' => $path]);
         }
     
-        if ($request->filled('language')) {
-            $languages = collect($request->input('language'))->map(fn($lang) => ['language' => $lang])->toArray();
-            $doctor->languages()->delete();
-            $doctor->languages()->createMany($languages);
+        if ($request->filled('languages')) {
+            $doctor->languages()->sync($request->input('languages'));
         } else {
-            $doctor->languages()->delete();
+            $doctor->languages()->detach();
         }
-    
+
+
         if ($request->filled('specialties') && $request->filled('specialty_data')) {
             $specialties = $request->input('specialties');
             $specialtyData = $request->input('specialty_data');

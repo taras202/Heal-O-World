@@ -24,7 +24,8 @@ class MyOfficeDoctorRequest extends FormRequest
             'contact' => 'required|string|max:255',
 
             'languages' => 'nullable|array',
-            'languages.*' => 'exists:languages,code',
+            'languages.*' => 'exists:languages,id', 
+
 
             'specialties' => 'nullable|array',
             'specialties.*' => 'exists:specialties,id',
