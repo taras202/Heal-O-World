@@ -5,7 +5,6 @@ namespace App\Http\Controllers\officePatient;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PatientCardRequest;
 use App\Models\PatientCard;
-use App\Models\Diagnosis;
 use App\Models\ListAllergicReaction;
 use App\Models\ListChronicDisease;
 use App\Models\ListDiagnosis;

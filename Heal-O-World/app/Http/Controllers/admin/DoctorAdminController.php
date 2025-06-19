@@ -8,12 +8,9 @@ use App\Models\MyOfficeDoctor;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Hash;
 
 class DoctorAdminController extends Controller
 {
-
     public function index(Request $request)
     {
         $doctorId = $request->input('doctor_id');

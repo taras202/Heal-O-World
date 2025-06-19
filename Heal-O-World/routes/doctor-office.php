@@ -9,7 +9,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/doctor/my/office', [MyOfficeDoctorController::class, 'index'])->name('doctor.office');
     Route::put('/doctor/profile/update', [MyOfficeDoctorController::class, 'update'])->name('doctor.profile.update');
 
-
     Route::get('/activation/personal-data', [DoctorActivationController::class, 'editPersonalData'])->name('activation.personal');
     Route::post('/activation/personal-data', [DoctorActivationController::class, 'updatePersonalData']);
 
@@ -21,3 +20,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/activation/step/{step}', [ProgressBarController::class, 'step'])->name('activation.step');
 });
+
+Route::delete('/doctor/photo/delete', [MyOfficeDoctorController::class, 'deletePhoto'])->name('doctor.photo.delete');

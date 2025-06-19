@@ -4,16 +4,13 @@ namespace App\Http\Controllers\officeDoctor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MyOfficeDoctorRequest;
-use App\Models\DoctorLanguage;
 use App\Models\Education;
 use App\Models\MyOfficeDoctor;
 use App\Models\PlaceOfWork;
 use App\Models\TimeZone;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\Models\Language;
-
 
 class MyOfficeDoctorController extends Controller
 {
@@ -74,7 +71,6 @@ class MyOfficeDoctorController extends Controller
             $doctor->languages()->detach();
         }
 
-
         if ($request->filled('specialties') && $request->filled('specialty_data')) {
             $specialties = $request->input('specialties');
             $specialtyData = $request->input('specialty_data');
@@ -125,8 +121,6 @@ class MyOfficeDoctorController extends Controller
         return redirect()->back()->with('success', 'Профіль оновлено успішно.');
     }
 
-    // DoctorActivationController.php
-
     public function deletePhoto()
     {
         $doctor = Auth::user()->doctor;
@@ -138,6 +132,4 @@ class MyOfficeDoctorController extends Controller
 
         return back()->with('success', 'Фото профілю видалено');
     }
-
-
 }

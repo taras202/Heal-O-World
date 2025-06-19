@@ -31,6 +31,7 @@ class PatientChatController extends Controller
             abort(403, 'Невідома роль користувача');
         }
     }
+    
     public function sendMessage(Request $request, Chat $chat)
     {
         $request->validate([

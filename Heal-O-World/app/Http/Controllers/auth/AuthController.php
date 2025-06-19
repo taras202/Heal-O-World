@@ -47,7 +47,6 @@ class AuthController
     
         return $this->redirectByRole($role);
     }
-    
 
     public function login(UserLoginRequest $request)
     {
@@ -71,7 +70,6 @@ class AuthController
     
         return back()->withErrors(['email' => 'Невірні дані для входу']);
     }
-    
 
     protected function redirectByRole($role)
     {

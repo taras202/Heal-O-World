@@ -92,4 +92,3 @@ class MyOfficePatientController extends Controller
         return response()->json(['message' => 'E-mail оновлено.']);
     }
 }
-

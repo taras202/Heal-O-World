@@ -4,7 +4,6 @@ use App\Http\Controllers\admin\PatientAdminController;
 use App\Http\Controllers\admin\analytic\PatientAnalyticsController;
 use Illuminate\Support\Facades\Route;
 
-
 Route::prefix('admin')->name('admin.')->middleware('auth:admin')->group(function () {
     Route::get('/patients', [PatientAdminController::class, 'index'])->name('patients.index');
     Route::get('/patients/create', [PatientAdminController::class, 'create'])->name('patients.create');

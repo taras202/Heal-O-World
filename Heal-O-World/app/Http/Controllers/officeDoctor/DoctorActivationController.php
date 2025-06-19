@@ -88,7 +88,6 @@ class DoctorActivationController extends Controller
         return redirect()->route('activation.specialties')->with('success', 'Персональні дані збережено');
     }
 
-
     public function editSpecialties()
     {
         $specialties = Specialty::all();
@@ -149,7 +148,6 @@ class DoctorActivationController extends Controller
 
         return redirect()->route('doctor.office')->with('success', 'Освіта збережена');
     }
-
 
     public function showDoctorDashboard()
     {

@@ -53,7 +53,6 @@ class PaymentController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
     
     public function paymentSuccess(Request $request)
     {
@@ -66,7 +65,6 @@ class PaymentController extends Controller
         
         return view('payments.cancel');
     }
-
     
     public function handleWebhook(Request $request)
     {
@@ -110,7 +108,6 @@ class PaymentController extends Controller
         }
     }
 
-    
     public function releasePayment($appointment_id)
     {
         $payment = Payment::where('appointment_id', $appointment_id)->first();

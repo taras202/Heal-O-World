@@ -59,6 +59,7 @@ class ConsultationController extends Controller
     
         return redirect()->back()->with('success', 'Консультація успішно додана!');
     }    
+    
     public function book(Request $request)
     {
         $patient_id = $request->input('patient_id');

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\officePatient\MyConsultationController;
 use App\Http\Controllers\officePatient\MyOfficePatientController;
 use Illuminate\Support\Facades\Route;
 

@@ -12,11 +12,10 @@ class LandingController extends Controller
     {
         $specialties = Specialty::all();
         $doctors = MyOfficeDoctor::with('specialties')->get();
-        $content = StaticContent::first(); // ← додаємо
+        $content = StaticContent::first();
 
         return view('landing.landing', compact('specialties', 'doctors', 'content'));
     }
- 
 
     public function about()
     {
@@ -30,7 +29,7 @@ class LandingController extends Controller
 
     public function index()
     {
-        $content = \App\Models\StaticContent::first(); 
+        $content = StaticContent::first(); 
         return view('landing.index', compact('content'));
     }
 

@@ -35,7 +35,6 @@ class StaticContentController extends Controller
         return view('admin.static-content.edit', compact('staticContent', 'specialties'));
     }
 
-
     public function update(Request $request)
     {
         $admin = Auth::guard('admin')->user();
@@ -66,8 +65,4 @@ class StaticContentController extends Controller
         return redirect()->route('admin.static-contents.edit')->with('success', 'Зміни збережено!');
 
     }
-
-
 }
-
-

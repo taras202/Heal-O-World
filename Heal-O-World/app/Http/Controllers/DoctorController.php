@@ -62,20 +62,20 @@ class DoctorController extends Controller
     }
 
     public function searchBySpecialty(Request $request)
-        {
-            $query = $request->query('q', '');
+    {
+        $query = $request->query('q', '');
 
-            $specialties = Specialty::orderBy('name')->get();
-            $specialtyFilter = $query;
+        $specialties = Specialty::orderBy('name')->get();
+        $specialtyFilter = $query;
 
-            $doctors = MyOfficeDoctor::with('specialties')
-                ->when($query !== '', function ($q) use ($query) {
-                    $q->whereHas('specialties', function ($q2) use ($query) {
-                        $q2->where('name', 'LIKE', '%' . $query . '%');
-                    });
-                })
-                ->get();
+        $doctors = MyOfficeDoctor::with('specialties')
+            ->when($query !== '', function ($q) use ($query) {
+                $q->whereHas('specialties', function ($q2) use ($query) {
+                    $q2->where('name', 'LIKE', '%' . $query . '%');
+                });
+            })
+            ->get();
 
-            return view('doctor.open-view.index', compact('doctors', 'specialties', 'specialtyFilter'));
-        }
+        return view('doctor.open-view.index', compact('doctors', 'specialties', 'specialtyFilter'));
+    }
 }
